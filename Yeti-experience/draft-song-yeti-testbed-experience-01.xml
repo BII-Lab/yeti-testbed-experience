@@ -701,10 +701,11 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
           ZSK separately.
           </t>
       </list>
-      The MZSK experiment is still in progress. There were some
-      findings, including discovering that the large responses caused
-      problems on on authority server, and issues with IXFR. These
-      will be detailed in a seperate report.
+      The MZSK Yeti part of the experiment is still in progress, and is
+      expected to finish in 2016-04. There have been some findings, including
+      discovering that the large responses caused problems on on authority
+      server, and issues with IXFR. These will be detailed in a seperate
+      report.
       </t>
 
       </section> <!-- title="MZSK Yeti experiment" -->
