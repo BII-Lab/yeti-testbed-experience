@@ -85,6 +85,21 @@
       </address>
     </author>
 
+    <author fullname="Dong Liu" initials="D." surname="Liu">
+      <organization>Beijing Internet Institute</organization>
+      <address>
+        <postal>
+          <street>2508 Room, 25th Floor, Tower A, Time Fortune</street>
+          <city>Beijing</city>
+          <region></region>
+          <code>100028</code>
+          <country>P. R. China</country>
+        </postal>
+        <email>dliu@biigroup.com</email>
+        <uri>http://www.biigroup.com/</uri>
+      </address>
+    </author>
+
     <date/>
 
     <!-- Meta-data Declarations -->
@@ -136,7 +151,7 @@
   </list></t>
     <t>Starting from May 2015, three coordinators began to build this live
    experimental environment and called for participants.  At the time of
-   writing, there are 14 Yeti root servers with 13 operators, and
+   writing, there are 15 Yeti root servers with 14 operators, and
    experimental traffic from volunteers, universities, DNS vendors,
    mirrored traffic non-Yeti traffic, and RIPE Atlas probes.  Some
    experiments have been proposed and have been verified in lab tests.</t>
@@ -152,8 +167,8 @@
   
   <t>In order to let people know the technical activities in Yeti DNS
    project, this document reports and discusses issues on root DNS
-   services, based on experiences so far from the experiments in the
-   Yeti DNS project.</t>
+   services, based on experiences so far from the testbed construction and 
+   experiments in the Yeti DNS project.</t>
 
     </section>
 
@@ -392,13 +407,14 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
       
       <section title="Yeti Root Servers">
 
-      <t> In Yeti Root system, authoritative servers donated and operated by
+      <t> In Yeti root system, authoritative servers donated and operated by
    Yeti volunteers are configured as a slave to the Yeti DM.  As the
-   time of writing, there are 14 Yeti root servers distributed around
-   the world.  As one of operational research goal, all authoritative
-   servers are required to work in an IPv6-only environment. In addition,
-   until the IANA root, Yeti root server only serve the Yeti root zone, 
-   other than root-servers.org zone and .arpa zone.</t>
+   time of writing, there are 15 Yeti root servers distributed around
+   the world.  It is expected 25 root servers can be supported in Yeti considering 
+   the packet size of priming response within IPv6 MTU 1280 Octets. As one of 
+   operational research goal,  all authoritative servers are required to work in 
+   an IPv6-only environment. In addition, until the IANA root, Yeti root server 
+   only serve the Yeti root zone, other than root-servers.org zone and .arpa zone.</t>
 
           <figure>
   <artwork> 
@@ -431,6 +447,8 @@ dahu2.yeti.eu.org              3600000    IN   AAAA     2001:67c:217c:6::2
 yeti.aquaray.com               3600000    IN   AAAA     2a02:ec0:200::1                         
 .                              3600000    IN   NS       yeti-ns.switch.ch                       
 yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29    
+.                              3600000    IN   NS       yeti-ns.lab.nic.cl                      
+yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001   
   ]]>
   </artwork>
 </figure>
@@ -467,7 +485,7 @@ yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29
       DNSSEC key of the Yeti root (the KSK) changes often (typically every three 
       months), it is required that resolver operator to configure your resolver 
       compliant to RFC 5011 for automatic update. For Yeti resolver, it is also
-      Interesting to try some mechanism end-system resolvers to signal to a server 
+      interesting to try some mechanism end-system resolvers to signal to a server 
       about their DNSSEC key status, like <xref target="I-D.wessels-edns-key-tag"/> 
       and <xref target="I-D.wkumari-dnsop-trust-management"/> mentioned.</t>
 
@@ -497,7 +515,7 @@ yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29
 
     <section title="Experiments in Yeti Testbed">
       
-      <t> The main goal of Yeti DNS Project is to act as an experimental
+      <t>The main goal of Yeti DNS Project is to act as an experimental
    network. Experiments will be conducted on this network.  In order
    to make the findings that result from these experiments more
    rigorous, an experiment protocol is proposed.</t>
@@ -522,87 +540,63 @@ yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29
        <t> In this section, we are going to introduce some experiments implemented and 
         planned in Yeti project.</t>
 
-      <section title="Naming Scheme and Glue Issue">
-    
+      <section title="Root Naming Scheme">
+
       <t>In root server history, the naming scheme for individual root servers
-   was not fixed.  Current IANA Root server adopt [a-m].root-servers.net
-   to represent 13 servers which are labeled with letter from A to M.
-   For example, L root operated by ICANN uses l.root-servers.net to
-   represent their server as NS.  One reason behind this naming scheme
-   is that the common suffix 'root-servers.net' can be compressed in DNS
-   message to produce a smaller DNS response.</t>
+   was not fixed.  Current IANA Root server adopt [a-m].root-servers.net naming 
+   scheme to represent 13 servers which are labeled with letter from A to M.
+   One reason behind this naming scheme is that DNS label compression can be used 
+   to produce a smaller DNS response within 512 bytes.  But in Yeti testbed there is 
+   a chance to design and test alternative naming schemes carrying following desired 
+   properties.</t>
 
-      <t>Different from the IANA root naming scheme, the Yeti root system uses
-   separate and normal domains for root servers (shown in figure 2).
-   The motivation of this naming scheme in Yeti is that it intentionally
-   produces larger packets for priming responses. Note that currently, the Yeti 
-   root has a priming response which is almost the same size as the IANA root. 
-   Yeti has no compression, and has one more name server, but it also has no 
-   IPv4 addresses.</t>
+    <t> <list style="symbols">
+        <t>All information of priming response from Root server should be authenticated 
+          with DNSSEC. Not only the NS RR and DNSEKY, but also AAAA RR in additional 
+          section. Currently root-servers.net is not signed.</t>
+        <t>Root zone should be authoritative for root name so that AAAA RR will be 
+          included in prime response as authoritative results. Currently the IANA root 
+          zone is not authoritative for root name</t>
+        <t>To produce larger response packet to try the limit of the system regrading 
+          more root servers added. In IANA root practice the limit of 512B is still 
+          observed</t>
+      </list></t>
 
-   <t>the change of name scheme not only affects the size of priming response, but also
-   changes the content in additional section of the response.When a resolver bootstraps, 
-   it sends a 'NS-for-dot' query to one of
-   the root servers that it knows about, which is called a priming
-   query.  It looks like this with the "dig" command:</t>
+      <t>Currently, there are two naming schemes as experiments in Yeti testbed. 
+        One is to use separate and normal domains for root servers (shown in figure 2). 
+        It intentionally produces larger packets for priming responses without 
+        compression. Note that currently, the Yeti root has a priming response which 
+        is almost the same size as the IANA root. Yeti has no compression, and has two 
+        more name server, but it also has no IPv4 addresses. The size of the response 
+        will increase when more servers are added into system. </t>
 
-      <t>$ dig @a.root-servers.net -t ns +norecurse +edns +nodnssec </t>
+      <t>Besides, there is also a glue issue for this naming scheme in which the priming 
+        response dose not contain glue for all root severs. It is documented as a technical 
+        findings [Yeti-glue-issue]. There are two approaches: one is to patch BIND 9 so that it includes the glue addresses in the additional section.  The other one is to add a 
+        zone file for each root server and answer for all of them at each Yeti server.  That 
+        means each Yeti root server would have a small zone file for "bii.dns-lab.net", 
+         "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net", and so on.</t>
 
-      <t>Normally in the IANA root system the priming response contains the
-   _names_ of the root servers in the answer section and the _addresses_
-   of the root servers in the additional section.  The additional
-   section data is what the resolvers need to actually perform
-   recursion.  Shown as below: </t>
-          <figure>
-  <artwork> 
-    <![CDATA[
-In priming response : 
+       <t>Another naming scheme under Yeti lab test is to use a special non-delegated TLD, 
+        like bii.yeti-dns for root server operated by BII. The benefit of non-delegated TLD 
+        naming scheme are in two aspects: 1) the response to a priming query is protected by DNSSEC; 2) To meet political reason that the zone authoritative for root server is 
+        not delegated and belong to particular companies or organizations except IANA.</t>
 
-Answer Section: 
----------------
-.        518400  IN  NS  a.root-servers.net.
-.        518400  IN  NS  b.root-servers.net.
-  ...
-.        518400  IN  NS  m.root-servers.net.
+        <t>The only obvious concern of this naming scheme is the size of the signed response 
+          with RRSIG for each root server and optionally DNSSKEY RR. There is a Lab test 
+          result regarding the different size of priming response in Octet : 1) with no additional data, with RRISG in additional section , with DNSKEY+RRSIG in 
+          additional section (7 keys in MZSK experiment)</t>
 
-Addtional section: 
-------------------
-a.root-servers.net.     3600000  IN  A 198.41.0.4
-b.root-servers.net.     3600000  IN  A 192.228.79.201
-  ...
-m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
 
-          ]]>
-  </artwork>
-</figure>
-      <t>In IANA root system, all the root server returns the "a.root-
-   servers.net" addresses in the additional section, because root
-   servers not only answer for root zone, but also answer for "root-
-   servers.net" zone.  Note that BIND will not behave like this if it is
-   not configured for the "root-servers.net" zone.  NSD and Knot happily
-   return such "glue" in the additional section, whether configured for
-   the "root-servers.net" zone or not.</t>
-    
-      <t>The Yeti root naming scheme uses separate and independent domain for
-   individual root servers.  It this case, the priming response from
-   Yeti root servers will only contain the A &amp; AAAA records of that
-   responding server in BIND 9.  However it is desired that the Yeti root servers
-   respond to priming queries with the addresses of all Yeti root
-   servers in the additional section.  This will make them operate as
-   similar to the IANA root servers as possible.</t>
-
-      <t>In Yeti root system, there are two approaches adopted in different
-   root servers.  One is to patch BIND 9 so that it includes the glue
-   addresses in the additional section.  The other one is to add a zone
-   file for each root server and answer for all of them at each Yeti
-   server.  That means each Yeti root server would have a small zone
-   file for "bii.dns-lab.net", "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net",
-   and so on.</t>
-
+    <texttable>
+    <ttcol>No additional data</ttcol>
+    <ttcol>RRSIG </ttcol>
+    <ttcol>RRISG +DNSKEY </ttcol>
+    <c>753</c><c>3296</c><c>4004</c>
+  </texttable>
       </section>
+     
       <section title="Multiple-Signers with Multi-ZSK">
-  
-
       <t>According to the Problem statement of Yeti DNS project, more
    independent participants and operators of root system is desirable.
    As the name implies, multi-ZSK (MZSK) mode introduces different ZSKs 
@@ -614,71 +608,25 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
    on; even the encryption algorithm may vary (although this may cause
    some problem with older versions of the Unbound resolver).</t>
 
-      <section title="MZSK lab experiment">
-      <t>Following the Yeti experiment protocol, a lab test was done to
-   verify the concept and validity of Multi-ZSK.  The purpose of the
-   test is two-fold: 1) To test whether this proposal can be implemented
-   by current DNS protocol &amp; software (to see if there should be some
-   extra modification to protocol or software), and 2) To demonstrate
-   the impact of Multi-ZSK proposal to the current root system.</t>
+    <section title="MZSK lab experiment">
 
-       <t>The experiment is run like this: build a test topology like figure 3,
-   with 2 Root servers and a resolver (BIND 9).  The hint file of this
-   test only contains the two DM servers.  In the first time slot, Root
-   A is up and Root B is turned off.  Let resolver bootstrap from Root A
-   and query a certain signed TLD (or a junk query).  For the second time
-   slot, turn off Root A and turn on Root B.  Let resolver shift to Root
-   B to look up another TLD (or a junk query). The test result of different
-   time slot is compared to see whether the resolver can validate the DNSSEC
-   signature.</t>
-  
-            <figure>
-  <artwork> 
-    <![CDATA[
-+---------------+          +---------------+  
-|    Root A     |          |     Root B    |  
-|   (ZSK A)     |          |     (ZSK B)   |  
-+-------+-------+          +--------+------+  
-        |                           |        
---------+------------+--------------+--------                       
-                     |                        
-           +---------+----------+             
-           |                    |                      
-           |     Resolver       |                        
-           +--------------------+  
-          ]]>
-  </artwork>
-</figure>
-<t>Figure 3. Multi-ZSK lab test topology</t>
+      <t>In the lab test phase, we simply setup two root servers (A and B) 
+        and a resolver switch between them (BIND only). Root A and Root B use their own 
+        ZSK to sign the zone. It is proved that Multi-ZSK works by adding 
+        multiple ZSK to the root zone. As a result, the resolver will cache 
+        the key sets instead of single ZSK to validate the data no matter it 
+        is signed by Root A or Root B. We also test Unbound who can pass the 
+        test with more than 10 DMs and 10 ZSKs.</t>
 
-      <t>There are two cases in this test:</t>
-<t> <list style="symbols">
-      <t>Case 1: Assign one ZSK to the smart sign process on each DM, which 
-        means the root zone only contain one single ZSK.</t>
-
-      <t>Case 2: Assign both ZSK A and ZSK B to the smart sign process on
-      each DM, which means the root zone contains two ZSK.  In this case,
-      it is required that Root A and Root B to share their public ZSK to
-      each other before root zone is signed.</t>
-</list></t>
-
-    <t>In case 1 SERVFAIL is received during switching because the resolver
-   can not validate the signature signed by Root B after switching.  In
-   case 2 NOERROR is received.  It is the actual demonstration of how
-   Multi-ZSK works by adding multiple ZSK to the root zone.  As a
-   result, the resolver will cache the key sets instead of single ZSK to
-   validate the data no matter it is signed by Root A or Root B.  As
-   follow-up test, Unbound also passed the test with more than 10 DMs
-   and 10 ZSKs.</t>
-    
       <t> Although more DM and ZSK can be added into the test, adding more ZSKs
    to root zone enlarges the DNS response size for DNSKEY queries
    which may be a concern given the limitation of DNS packet size.
    Current IANA root server operators are inclined to keep the packets
    size as small as possible.  So the number of DM and ZSK will be
    parameter which is decided based on operation experience.  In the
-   current Yeti root testbed, there will be 3 DMs, each with a separate
+   current Yeti root testbed, there is 3 DMs, each with a separate
    ZSK.</t>
+
       </section> <!-- title="MZSK lab experiment" -->
 
       <section title="MZSK Yeti experiment">
@@ -688,8 +636,8 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
       <list style="symbols">
           <t>Phase 1. In the first phase, we confirmed that using
           multiple ZSK works in the wild. We insured that using
-          the maximum number of ZSK continues to work. Here one of the
-          DM (BII) created and added 5 ZSK using the existing
+          the maximum number of ZSK continues to work in resolver side. 
+          Here one of the DM (BII) created and added 5 ZSK using the existing
           synchronization mechanism. (If all 3 ZSK are rolling then we
           have 6 total. To get this number we add 5.)
           </t>
@@ -702,10 +650,11 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
           </t>
       </list>
       The MZSK Yeti part of the experiment is still in progress, and is
-      expected to finish in 2016-04. There have been some findings, including
-      discovering that the large responses caused problems on on authority
-      server, and issues with IXFR. These will be detailed in a seperate
-      report.
+      expected to finish by the end of 2016-04. There have been some findings, 
+      including discovering that IPv6 fragmented packets are not forwarded on 
+      an Ethernet bridge with netfilter ip6_tables loaded on one authority server, 
+      and issues with IXFR falling back to AXFR due to multiple signers which 
+      will be detailed in a separate draft describing as a problem statement.
       </t>
 
       </section> <!-- title="MZSK Yeti experiment" -->
@@ -859,6 +808,10 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
         </t>
 
           </section>
+          <section title= "SOA update delay issue">
+          <t>It is observed one server on Yeti testbed have some bugs on SOA update with more than 10 hours delay. It is running on Bundy 1.2.0 on FreeBSD 10.2-RELEASE. It is now fixed by checking DM's SOA status in regular base. But it still need some work to 
+            find the bug in code path to improve the software. </t>
+          </section>
     </section>
 
     <section title="IANA Considerations">
@@ -873,8 +826,7 @@ m.root-servers.net.     3600000  IN  AAAA  2001:dc3::35
       Thanks to Antonio Prado and Stephane Bortzmeyer who helped to review the document 
       and give many editing suggestions.</t>
 
-      <t>Acknowledgment to all the Yeti participant and volunteers who make the experimental testbed 
-      become functional and workable. </t>
+      <t>Acknowledgment to all the Yeti participant and volunteers who make the experimental testbed become functional and workable. </t>
     
     </section>
   </middle>
