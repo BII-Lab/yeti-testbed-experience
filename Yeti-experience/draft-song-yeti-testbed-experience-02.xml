@@ -20,6 +20,8 @@
 <!ENTITY I-D.wessels-edns-key-tag SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-wessels-edns-key-tag-00.xml">
 <!ENTITY I-D.andrews-tcp-and-ipv6-use-minmtu SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-andrews-tcp-and-ipv6-use-minmtu-04.xml">
 
+<!ENTITY I-D.bortzmeyer-dname-root SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-bortzmeyer-dname-root-00.xml">
+
 
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -120,8 +122,8 @@
 
    <t>REMOVE BEFORE PUBLICATION: Although this document is submitted as an
    individual submission, comments are welcome in the IETF DNSOP
-   (DNS Operations) working group mailing list.  The source of the 
-   document is currently place at GitHub <xref target="xml-file"/>.</t>
+   (DNS Operations) working group mailing list.  The source of the document 
+   is currently place at GitHub <xref target="xml-file"/>.</t>
 
     </abstract>
 
@@ -538,9 +540,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
       <t>Besides, there is also a glue issue for this naming scheme in which the priming 
         response dose not contain glue for all root severs. It is documented as a technical 
-        findings [Yeti-glue-issue]. There are two approaches: one is to patch BIND 9 so that it includes the glue addresses in the additional section.  The other one is to add a 
-        zone file for each root server and answer for all of them at each Yeti server.  That 
-        means each Yeti root server would have a small zone file for "bii.dns-lab.net", 
+        findings <xref target="Yeti-glue-issue"/>. There are two approaches: one is to patch BIND 9 so that it includes the glue addresses in the additional section.  The other one is to add a zone file for each root server and answer for all of them at each Yeti server.  That means each Yeti root server would have a small zone file for "bii.dns-lab.net", 
          "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net", and so on.</t>
 
        <t>Another naming scheme under Yeti lab test is to use a special non-delegated TLD, 
@@ -560,11 +560,13 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
     <c>753</c><c>3296</c><c>4004</c>
   </texttable>
 
-      <t>REMOVE BEFORE PUBLICATION: Modification of IANA root zone by adding new TLD is 
-        controversial even for scientific purpose. There are non-trivial discussions 
-        on this issue in yeti discuss mailing list. People argued that this kind of 
-        experiment should based on community consensus from technical bodies like IETF 
-        and be operated with a limited duration, such as 60 days. </t>
+      <t>REMOVE BEFORE PUBLICATION: We found that modification of IANA root zone 
+        by adding new TLD is so controversial even for scientific purpose. There 
+        are non-trivial discussions on this issue in yeti discuss mailing list, 
+        regarding the proposal .yeti-dns for root name or .local for new AS112 
+        <xref target="I-D.bortzmeyer-dname-root"/>. It is argued that this kind 
+        of experiment should based on community consensus from technical bodies 
+        like IETF and be operated within a limited duration, such as 60 days.</t>
 
       </section>
       <section title="Multiple-Signers with Multi-ZSK">
@@ -812,6 +814,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
       &RFC1034;&RFC1035;&RFC2460;&RFC6781;&RFC4968;&RFC7626;&RFC5011;
       &I-D.muks-dns-message-fragments;&I-D.wkumari-dnsop-trust-management;
       &I-D.andrews-tcp-and-ipv6-use-minmtu;&I-D.wessels-edns-key-tag;
+      &I-D.bortzmeyer-dname-root;
 
     <reference anchor="Renumbering-J-Root" target="https://indico.dns-oarc.net/event/24/session/10/contribution/10/material/slides/0.pdf">
               <front>
@@ -888,7 +891,16 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
                 <date year="2015" /> 
             </front>
      </reference>
+
+    <reference anchor="Yeti-glue-issue" target="http://yeti-dns.org/resource/Yeti-glue-issue.txt">
+            <front>
+                <title>Yeti Glue Issue</title>
+                <author ></author>
+                <date year="2015" /> 
+            </front>
+     </reference>
     </references>
+
 
 <section anchor="appendix" title=" The Yeti root server in hint file ">
 

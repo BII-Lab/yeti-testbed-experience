@@ -634,12 +634,14 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
              | 753                | 3296   | 4004           |
              +--------------------+--------+----------------+
 
-   REMOVE BEFORE PUBLICATION: Modification of IANA root zone by adding
-   new TLD is controversial even for scientific purpose.  There are non-
-   trivial discussions on this issue in yeti discuss mailing list.
-   People argued that this kind of experiment should based on community
-   consensus from technical bodies like IETF and be operated with a
-   limited duration, such as 60 days.
+   REMOVE BEFORE PUBLICATION: We found that modification of IANA root
+   zone by adding new TLD is so controversial even for scientific
+   purpose.  There are non-trivial discussions on this issue in yeti
+   discuss mailing list, regarding the proposal .yeti-dns for root name
+   or .local for new AS112 [I-D.bortzmeyer-dname-root].  It is argued
+   that this kind of experiment should based on community consensus from
+   technical bodies like IETF and be operated within a limited duration,
+   such as 60 days.
 
 4.2.  Multiple-Signers with Multi-ZSK
 
@@ -664,8 +666,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
    matter it is signed by Root A or Root B.  We also test Unbound who
    can pass the test with more than 10 DMs and 10 ZSKs.
 
-   Although more DM and ZSK can be added into the test, adding more ZSKs
-   to root zone enlarges the DNS response size for DNSKEY queries which
 
 
 
@@ -674,6 +674,8 @@ Song, et al.            Expires October 28, 2016               [Page 12]
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
 
+   Although more DM and ZSK can be added into the test, adding more ZSKs
+   to root zone enlarges the DNS response size for DNSKEY queries which
    may be a concern given the limitation of DNS packet size.  Current
    IANA root server operators are inclined to keep the packets size as
    small as possible.  So the number of DM and ZSK will be parameter
@@ -720,8 +722,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
    This experiment proposal aims to find an automatic way for hint-file
    updating.  The already-completed work is a shell script tool which
-   provides the function that update a hint-file in file system
-
 
 
 
@@ -730,6 +730,7 @@ Song, et al.            Expires October 28, 2016               [Page 13]
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
 
+   provides the function that update a hint-file in file system
    automatically with DNSSEC and trust anchor validation.
    [Hintfile-Auto-Update]
 
@@ -777,7 +778,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
    team to analyze the problem and make recommendations.  The design
    team put together a plan[ICANN-ROOT-ROLL].  The Yeti project can use
    this as a basis for an experimental KSK roll.  The experiment may not
-   be identical, since the time-lines laid out in the current IANA plan
 
 
 
@@ -786,6 +786,7 @@ Song, et al.            Expires October 28, 2016               [Page 14]
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
 
+   be identical, since the time-lines laid out in the current IANA plan
    are very long, and the Yeti project would like to conduct the
    experiment in a shorter time.
 
@@ -827,7 +828,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
    handle IPv6 fragments correctly which causes failure when they are
    doing AXRF/IXFR in TCP.  The bug covers several OS and one VM
    platform (listed below).
-
 
 
 
@@ -934,15 +934,15 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
               draft-andrews-tcp-and-ipv6-use-minmtu-04 (work in
               progress), October 2015.
 
+   [I-D.bortzmeyer-dname-root]
+              Bortzmeyer, S., "Using DNAME in the root for the
+              delegation of special-use TLDs", draft-bortzmeyer-dname-
+              root-00 (work in progress), April 2016.
+
    [I-D.muks-dns-message-fragments]
               Sivaraman, M., Kerr, S., and D. Song, "DNS message
               fragments", draft-muks-dns-message-fragments-00 (work in
               progress), July 2015.
-
-   [I-D.wessels-edns-key-tag]
-              Wessels, D., "The EDNS Key Tag Option", draft-wessels-
-              edns-key-tag-00 (work in progress), July 2015.
-
 
 
 
@@ -953,6 +953,10 @@ Song, et al.            Expires October 28, 2016               [Page 17]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
+
+   [I-D.wessels-edns-key-tag]
+              Wessels, D., "The EDNS Key Tag Option", draft-wessels-
+              edns-key-tag-00 (work in progress), July 2015.
 
    [I-D.wkumari-dnsop-trust-management]
               Kumari, W., Huston, G., Hunt, E., and R. Arends,
@@ -997,10 +1001,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
               DOI 10.17487/RFC6781, December 2012,
               <http://www.rfc-editor.org/info/rfc6781>.
 
-   [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
-              DOI 10.17487/RFC7626, August 2015,
-              <http://www.rfc-editor.org/info/rfc7626>.
-
 
 
 
@@ -1009,6 +1009,10 @@ Song, et al.            Expires October 28, 2016               [Page 18]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
+
+   [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
+              DOI 10.17487/RFC7626, August 2015,
+              <http://www.rfc-editor.org/info/rfc7626>.
 
    [ROOT-FAQ]
               Karrenberg, D., "DNS Root Name Server FAQ", 2007,
@@ -1031,6 +1035,10 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
    [Yeti-DNS-Project]
               "Website of Yeti DNS Project", <http://www.yeti-dns.org>.
 
+   [Yeti-glue-issue]
+              "Yeti Glue Issue", 2015,
+              <http://yeti-dns.org/resource/Yeti-glue-issue.txt>.
+
 Appendix A.  The Yeti root server in hint file
 
    REMOVE BEFORE PUBLICATION: Currently in Yeti testbed, there are cases
@@ -1042,14 +1050,6 @@ Appendix A.  The Yeti root server in hint file
    SHA256([a-e])) to offset the effect of name compression.  According
    to the Yeti policy those servers will be reclaimed if qualified
    volunteers apply to host a Yeti server.
-
-
-
-
-
-
-
-
 
 
 
