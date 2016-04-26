@@ -117,6 +117,12 @@
    multiple root zone signer, and so on. This project was founded in
    May 2015 and has since built a live root DNS server system testbed
    with volunteer root server and resolver operations.</t>
+
+   <t>REMOVE BEFORE PUBLICATION: Although this document is submitted as an
+   individual submission, comments are welcome in the IETF DNSOP
+   (DNS Operations) working group mailing list.  The source of the 
+   document is currently place at GitHub <xref target="xml-file"/>.</t>
+
     </abstract>
 
   </front>
@@ -409,56 +415,19 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
       <t> In Yeti root system, authoritative servers donated and operated by
    Yeti volunteers are configured as a slave to the Yeti DM.  As the
-   time of writing, there are 15 Yeti root servers distributed around
-   the world.  It is expected 25 root servers can be supported in Yeti considering 
-   the packet size of priming response within IPv6 MTU 1280 Octets. As one of 
-   operational research goal,  all authoritative servers are required to work in 
-   an IPv6-only environment. In addition, until the IANA root, Yeti root server 
+   time of writing, there are 18 Yeti root servers distributed around
+   the world(see Yeti Hint file in Appendix A).  It is expected 25 root 
+   servers can be supported in Yeti considering modern network elements 
+   supporting larger DNS response with EDNS0 and IPv6. As one of operational 
+   research goal,  all authoritative servers are required to work in 
+   an IPv6-only environment. In addition, different from the IANA root, Yeti root server 
    only serve the Yeti root zone, other than root-servers.org zone and .arpa zone.</t>
-
-          <figure>
-  <artwork> 
-    <![CDATA[
-.                              3600000    IN   NS       bii.dns-lab.net                         
-bii.dns-lab.net                3600000    IN   AAAA     240c:f:1:22::6                          
-.                              3600000    IN   NS       yeti-ns.tisf.net                        
-yeti-ns.tisf.net               3600000    IN   AAAA     2001:559:8000::6                        
-.                              3600000    IN   NS       yeti-ns.wide.ad.jp                      
-yeti-ns.wide.ad.jp             3600000    IN   AAAA     2001:200:1d9::35                        
-.                              3600000    IN   NS       yeti-ns.as59715.net                     
-yeti-ns.as59715.net            3600000    IN   AAAA     2a02:cdc5:9715:0:185:5:203:53           
-.                              3600000    IN   NS       dahu1.yeti.eu.org                       
-dahu1.yeti.eu.org              3600000    IN   AAAA     2001:4b98:dc2:45:216:3eff:fe4b:8c5b     
-.                              3600000    IN   NS       ns-yeti.bondis.org                      
-ns-yeti.bondis.org             3600000    IN   AAAA     2a02:2810:0:405::250                    
-.                              3600000    IN   NS       yeti-ns.ix.ru                           
-yeti-ns.ix.ru                  3600000    IN   AAAA     2001:6d0:6d06::53                       
-.                              3600000    IN   NS       yeti.bofh.priv.at                       
-yeti.bofh.priv.at              3600000    IN   AAAA     2a01:4f8:161:6106:1::10                 
-.                              3600000    IN   NS       yeti.ipv6.ernet.in                      
-yeti.ipv6.ernet.in             3600000    IN   AAAA     2001:e30:1c1e:1::333                    
-.                              3600000    IN   NS       yeti-dns01.dnsworkshop.org              
-yeti-dns01.dnsworkshop.org     3600000    IN   AAAA     2001:1608:10:167:32e::53                
-.                              3600000    IN   NS       yeti-ns.conit.co                        
-yeti-ns.conit.co               3600000    IN   AAAA     2607:ff28:2:10::47:a010                 
-.                              3600000    IN   NS       dahu2.yeti.eu.org                       
-dahu2.yeti.eu.org              3600000    IN   AAAA     2001:67c:217c:6::2                      
-.                              3600000    IN   NS       yeti.aquaray.com                        
-yeti.aquaray.com               3600000    IN   AAAA     2a02:ec0:200::1                         
-.                              3600000    IN   NS       yeti-ns.switch.ch                       
-yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29    
-.                              3600000    IN   NS       yeti-ns.lab.nic.cl                      
-yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001   
-  ]]>
-  </artwork>
-</figure>
-<t>Figure 2. the Yeti root server in hint file </t>
 
       <t>Since Yeti is a scientific research project, it needs to capture DNS
    traffic sent for later analysis.  Today some servers use dnscap,
    which is a DNS-specific tool to produce pcap files.  There are
    several versions of dnscap floating around; some people use the
-   Verisign one.  Since dnscap loses packets in some cases (tested on a
+   VeriSign one.  Since dnscap loses packets in some cases (tested on a
    Linux kernel), some people use pcapdump.  It requires the patch
    attached to this bug report <xref target="dnscap-bug-report"/></t>
 
@@ -473,7 +442,7 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
       operators use FreeBSD and 1 NetBSD. 2 other servers are unknown.</t>
         <t>DNS software: 8 our of 14 root server use BIND (varying from 9.9.7
       to 9.10.3). 4 of them use NSD (4.10 and 4.15). The other 2 servers
-      use Knot (2.0.1 and 2.1.0).</t>
+      use Knot (2.0.1 and 2.1.0). And one use Bundy (1.2.0)</t>
       </list></t>
     </section>
       
@@ -551,24 +520,22 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
    properties.</t>
 
     <t> <list style="symbols">
-        <t>All information of priming response from Root server should be authenticated 
+        <t>All RRset of priming response from Root server should be authenticated 
           with DNSSEC. Not only the NS RR and DNSEKY, but also AAAA RR in additional 
           section. Currently root-servers.net is not signed.</t>
         <t>Root zone should be authoritative for root name so that AAAA RR will be 
           included in prime response as authoritative results. Currently the IANA root 
           zone is not authoritative for root name</t>
-        <t>To produce larger response packet to try the limit of the system regrading 
-          more root servers added. In IANA root practice the limit of 512B is still 
-          observed</t>
+        <t>Support changes that produce larger response packets, in order to test the 
+          limits of the system as more root servers are added.</t>
       </list></t>
 
       <t>Currently, there are two naming schemes as experiments in Yeti testbed. 
-        One is to use separate and normal domains for root servers (shown in figure 2). 
-        It intentionally produces larger packets for priming responses without 
-        compression. Note that currently, the Yeti root has a priming response which 
-        is almost the same size as the IANA root. Yeti has no compression, and has two 
-        more name server, but it also has no IPv4 addresses. The size of the response 
-        will increase when more servers are added into system. </t>
+        One is to use separate and normal domains for root servers (Appendix A). 
+        It intentionally produces larger packets for priming responses to avoid name
+        compression efficiency. Note that currently, the Yeti root has a priming 
+        response which is 1031 Bytes.The size of the response will increase when 
+        more servers are added into system. </t>
 
       <t>Besides, there is also a glue issue for this naming scheme in which the priming 
         response dose not contain glue for all root severs. It is documented as a technical 
@@ -578,7 +545,7 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
          "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net", and so on.</t>
 
        <t>Another naming scheme under Yeti lab test is to use a special non-delegated TLD, 
-        like bii.yeti-dns for root server operated by BII. The benefit of non-delegated TLD 
+        like .yeti-dns for root server operated by BII. The benefit of non-delegated TLD 
         naming scheme are in two aspects: 1) the response to a priming query is protected by DNSSEC; 2) To meet political reason that the zone authoritative for root server is 
         not delegated and belong to particular companies or organizations except IANA.</t>
 
@@ -587,15 +554,20 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
           result regarding the different size of priming response in Octet : 1) with no additional data, with RRISG in additional section , with DNSKEY+RRSIG in 
           additional section (7 keys in MZSK experiment)</t>
 
-
     <texttable>
     <ttcol>No additional data</ttcol>
     <ttcol>RRSIG </ttcol>
     <ttcol>RRISG +DNSKEY </ttcol>
     <c>753</c><c>3296</c><c>4004</c>
   </texttable>
-      </section>
+
      
+          <t>The authors note: modification of IANA root zone by adding new TLD is 
+            controversial even for scientific purpose. There are non-trivial discussions 
+            on this issue in yeti discuss mailing list. People think this kind of 
+            experiment should based on community consensus from technical bodies like IETF. </t>
+
+      </section>
       <section title="Multiple-Signers with Multi-ZSK">
       <t>According to the Problem statement of Yeti DNS project, more
    independent participants and operators of root system is desirable.
@@ -624,7 +596,7 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
    Current IANA root server operators are inclined to keep the packets
    size as small as possible.  So the number of DM and ZSK will be
    parameter which is decided based on operation experience.  In the
-   current Yeti root testbed, there is 3 DMs, each with a separate
+   current Yeti root testbed, there are 3 DMs, each with a separate
    ZSK.</t>
 
       </section> <!-- title="MZSK lab experiment" -->
@@ -643,18 +615,19 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
           </t>
           <t>Phase 2. In the second phase, we separate the management
           of the ZSK so that each DM will create and publish separate
-          ZSK. For this phase, modified zone generation software was
-          used, which allows the DM to sign without access to the
-          private parts of all ZSK. In this phase we roll all three
-          ZSK separately.
+          ZSK. For this phase, modified zone generation protocol and 
+          software was used <xref target="Yeti-DM-Sync-MZSK"/>, which 
+          allows the DM to sign without access to the private parts of 
+          all ZSK. In this phase we roll all three ZSK separately. 
           </t>
       </list>
-      The MZSK Yeti part of the experiment is still in progress, and is
-      expected to finish by the end of 2016-04. There have been some findings, 
-      including discovering that IPv6 fragmented packets are not forwarded on 
-      an Ethernet bridge with netfilter ip6_tables loaded on one authority server, 
-      and issues with IXFR falling back to AXFR due to multiple signers which 
-      will be detailed in a separate draft describing as a problem statement.
+      The MZSK experiment was finished by the end of 2016-04. Almost 
+      everything appears to be working. But there have been some findings 
+      <xref target="Experiment-MZSK-notes"/>, including discovering that 
+      IPv6 fragmented packets are not forwarded on an Ethernet bridge with
+      netfilter ip6_tables loaded on one authority server, and issue with 
+      IXFR falling back to AXFR due to multiple signers which will be detailed 
+      in a separate draft describing as a problem statement.
       </t>
 
       </section> <!-- title="MZSK Yeti experiment" -->
@@ -673,7 +646,8 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
     <t>This experiment proposal aims to find an automatic way for hint-file
    updating.  The already-completed work is a shell script tool which
    provides the function that update a hint-file in file system
-   automatically with DNSSEC and trust anchor validation.</t>
+   automatically with DNSSEC and trust anchor validation. <xref target="Hintfile-Auto-Update"/>
+    </t>
 
     <t>The methodology is straightforward.  The tool first queries the NS
    list for "." domain and queries A and AAAA record for every domain on
@@ -821,12 +795,14 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
 
       <section title="Acknowledgements">
       <t>
-      The editors fully acknowledge that this memo is based on works and discussions with 
-      Paul Vixie and Akira Kato in Yeti DNS project <xref target="Yeti-DNS-Project"/>. 
-      Thanks to Antonio Prado and Stephane Bortzmeyer who helped to review the document 
-      and give many editing suggestions.</t>
+      The editors fully acknowledge that this memo is based on joint work and 
+      discussions with Paul Vixie and Akira Kato in Yeti DNS project 
+      <xref target="Yeti-DNS-Project"/>. Thanks to Antonio Prado and Stephane 
+      Bortzmeyer who helped to review the document and give many editing 
+      suggestions.</t>
 
-      <t>Acknowledgment to all the Yeti participant and volunteers who make the experimental testbed become functional and workable. </t>
+      <t>Acknowledgment to all the Yeti participants and volunteers who make the 
+        experimental testbed functional and workable. </t>
     
     </section>
   </middle>
@@ -880,7 +856,88 @@ yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
                 <date />
             </front>
      </reference>
+
+      <reference anchor="xml-file" target="https://github.com/songlinjian/song-iet-draft/tree/master/Yeti-experience">
+  <front>
+    <title>XML source file of Yeti experience draft</title>
+    <author>
+      <organization></organization>
+    </author>
+    <date year="2016"></date>
+  </front>
+</reference>
+
+  <reference anchor="Experiment-MZSK-notes" target="https://github.com/shane-kerr/Yeti-Project/blob/experiment-mzsk/doc/Experiment-MZSK-notes.md">
+  <front>
+    <title>MZSK Experiment Notes</title>
+    <author></author>
+    <date year="2016"></date>
+  </front>
+</reference>
+
+    <reference anchor="Yeti-DM-Sync-MZSK" target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Sync-MZSK.md">
+            <front>
+                <title>Yeti DM Synchronization for MZSK</title>
+                <author ></author>
+                <date year="2016" /> 
+            </front>
+     </reference>
+    <reference anchor="Hintfile-Auto-Update" target="https://github.com/BII-Lab/Hintfile-Auto-Update">
+            <front>
+                <title>Hintfile Auto Update</title>
+                <author ></author>
+                <date year="2015" /> 
+            </front>
+     </reference>
     </references>
+
+<section anchor="appendix" title=" The Yeti root server in hint file ">
+
+
+          <figure>
+  <artwork> 
+    <![CDATA[
+.                              3600000    IN   NS       bii.dns-lab.net                         
+bii.dns-lab.net                3600000    IN   AAAA     240c:f:1:22::6                          
+.                              3600000    IN   NS       yeti-ns.tisf.net                        
+yeti-ns.tisf.net               3600000    IN   AAAA     2001:559:8000::6                        
+.                              3600000    IN   NS       yeti-ns.wide.ad.jp                      
+yeti-ns.wide.ad.jp             3600000    IN   AAAA     2001:200:1d9::35                        
+.                              3600000    IN   NS       yeti-ns.as59715.net                     
+yeti-ns.as59715.net            3600000    IN   AAAA     2a02:cdc5:9715:0:185:5:203:53           
+.                              3600000    IN   NS       dahu1.yeti.eu.org                       
+dahu1.yeti.eu.org              3600000    IN   AAAA     2001:4b98:dc2:45:216:3eff:fe4b:8c5b     
+.                              3600000    IN   NS       ns-yeti.bondis.org                      
+ns-yeti.bondis.org             3600000    IN   AAAA     2a02:2810:0:405::250                    
+.                              3600000    IN   NS       yeti-ns.ix.ru                           
+yeti-ns.ix.ru                  3600000    IN   AAAA     2001:6d0:6d06::53                       
+.                              3600000    IN   NS       yeti.bofh.priv.at                       
+yeti.bofh.priv.at              3600000    IN   AAAA     2a01:4f8:161:6106:1::10                 
+.                              3600000    IN   NS       yeti.ipv6.ernet.in                      
+yeti.ipv6.ernet.in             3600000    IN   AAAA     2001:e30:1c1e:1::333                    
+.                              3600000    IN   NS       yeti-dns01.dnsworkshop.org              
+yeti-dns01.dnsworkshop.org     3600000    IN   AAAA     2001:1608:10:167:32e::53                
+.                              3600000    IN   NS       yeti-ns.conit.co                        
+yeti-ns.conit.co               3600000    IN   AAAA     2607:ff28:2:10::47:a010                 
+.                              3600000    IN   NS       dahu2.yeti.eu.org                       
+dahu2.yeti.eu.org              3600000    IN   AAAA     2001:67c:217c:6::2                      
+.                              3600000    IN   NS       yeti.aquaray.com                        
+yeti.aquaray.com               3600000    IN   AAAA     2a02:ec0:200::1                         
+.                              3600000    IN   NS       yeti-ns.switch.ch                       
+yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29    
+.                              3600000    IN   NS       yeti-ns.lab.nic.cl                      
+yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
+.                              3600000    IN   NS       yeti-ns1.dns-lab.net                    
+yeti-ns1.dns-lab.net           3600000    IN   AAAA     2001:da8:a3:a027::6                     
+.                              3600000    IN   NS       yeti-ns2.dns-lab.net                    
+yeti-ns2.dns-lab.net           3600000    IN   AAAA     2001:da8:268:4200::6                    
+.                              3600000    IN   NS       yeti-ns3.dns-lab.net                    
+yeti-ns3.dns-lab.net           3600000    IN   AAAA     2400:a980:30ff::6        
+  ]]>
+  </artwork>
+</figure>
+
+</section>
 
   </back>
 </rfc>
