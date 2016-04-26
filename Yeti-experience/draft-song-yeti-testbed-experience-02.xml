@@ -415,7 +415,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
       <t> In Yeti root system, authoritative servers donated and operated by
    Yeti volunteers are configured as a slave to the Yeti DM.  As the
-   time of writing, there are 18 Yeti root servers distributed around
+   time of writing, there are 23 Yeti root servers distributed around
    the world(see Yeti Hint file in Appendix A).  It is expected 25 root 
    servers can be supported in Yeti considering modern network elements 
    supporting larger DNS response with EDNS0 and IPv6. As one of operational 
@@ -564,7 +564,8 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
       <t>REMOVE BEFORE PUBLICATION: Modification of IANA root zone by adding new TLD is 
         controversial even for scientific purpose. There are non-trivial discussions 
         on this issue in yeti discuss mailing list. People argued that this kind of 
-        experiment should based on community consensus from technical bodies like IETF. </t>
+        experiment should based on community consensus from technical bodies like IETF 
+        and be operated with a limited duration, such as 60 days. </t>
 
       </section>
       <section title="Multiple-Signers with Multi-ZSK">
@@ -892,6 +893,13 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
 <section anchor="appendix" title=" The Yeti root server in hint file ">
 
+<t>REMOVE BEFORE PUBLICATION: Currently in Yeti testbed, there are cases that multiple 
+  servers run by single operator, like VeriSgin runs A and J. It is allowed because we 
+  need more server to satisfy Yeti experiment requirement. The name of those servers 
+  share common top domain name like yeti.eu.org, dns-lab.net, yeti-dns.net. We intentionally 
+  pick five random labels (first 30 characters of SHA256([a-e])) to offset the effect 
+  of name compression. According to the Yeti policy those servers will be 
+  reclaimed if qualified volunteers apply to host a Yeti server.</t>
 
           <figure>
   <artwork> 
@@ -932,10 +940,23 @@ yeti-ns1.dns-lab.net           3600000    IN   AAAA     2001:da8:a3:a027::6
 yeti-ns2.dns-lab.net           3600000    IN   AAAA     2001:da8:268:4200::6                    
 .                              3600000    IN   NS       yeti-ns3.dns-lab.net                    
 yeti-ns3.dns-lab.net           3600000    IN   AAAA     2400:a980:30ff::6        
+.                              3600000    IN   NS       ca978112ca1bbdcafac231b39a23dc.yeti-dns.net
+ca978112ca1bbdcafac231b39a23dc.yeti-dns.net           3600000    IN   AAAA     2c0f:f530::6
+.                              3600000    IN   NS       3e23e8160039594a33894f6564e1b1.yeti-dns.net
+3e23e8160039594a33894f6564e1b1.yeti-dns.net           3600000    IN   AAAA     2803:80:1004:63::1
+.                              3600000    IN   NS       2e7d2c03a9507ae265ecf5b5356885.yeti-dns.net
+2e7d2c03a9507ae265ecf5b5356885.yeti-dns.net           3600000    IN   AAAA     2400:8901:e001:39::6
+.                              3600000    IN   NS       18ac3e7343f016890c510e93f93526.yeti-dns.net
+18ac3e7343f016890c510e93f93526.yeti-dns.net           3600000    IN   AAAA     2a05:78c0:0:2::3:6
+.                              3600000    IN   NS       3f79bb7b435b05321651daefd374cd.yeti-dns.net
+3f79bb7b435b05321651daefd374cd.yeti-dns.net           3600000    IN   AAAA     2a03:f80:ed15:149:154:153:136:6
+
   ]]>
   </artwork>
 </figure>
 
+
+  
 </section>
 
   </back>
