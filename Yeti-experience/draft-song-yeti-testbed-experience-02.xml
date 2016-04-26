@@ -288,7 +288,6 @@
     | pcap       ^             ^                      ^ DNS lookup
     | upload     |             |                      |
     |
-    |
     |                   +--------------------------+
     +-------------------+      Yeti Resolvers      |
                         |     (with Yeti Hint)     |
@@ -439,8 +438,8 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
         <t>Machine: 11 out of 14 root server operator are using a VPS to
       provide service. </t>
         <t>OS: 6 operators use Linux (including Ubuntu, Debian, CentOS). 5
-      operators use FreeBSD and 1 NetBSD. 2 other servers are unknown.</t>
-        <t>DNS software: 8 our of 14 root server use BIND (varying from 9.9.7
+      operators use FreeBSD and 1 NetBSD. 3 other servers are unknown.</t>
+        <t>DNS software: 16 our of 23 root server use BIND (varying from 9.9.7
       to 9.10.3). 4 of them use NSD (4.10 and 4.15). The other 2 servers
       use Knot (2.0.1 and 2.1.0). And one use Bundy (1.2.0)</t>
       </list></t>

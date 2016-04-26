@@ -303,7 +303,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
        | pcap       ^             ^                      ^ DNS lookup
        | upload     |             |                      |
        |
-       |
        |                   +--------------------------+
        +-------------------+      Yeti Resolvers      |
                            |     (with Yeti Hint)     |
@@ -330,6 +329,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
       servers
 
    o  DM signs the new Yeti root zone
+
 
 
 
@@ -479,10 +479,10 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
       provide service.
 
    o  OS: 6 operators use Linux (including Ubuntu, Debian, CentOS). 5
-      operators use FreeBSD and 1 NetBSD. 2 other servers are unknown.
+      operators use FreeBSD and 1 NetBSD. 3 other servers are unknown.
 
-   o  DNS software: 8 our of 14 root server use BIND (varying from 9.9.7
-      to 9.10.3). 4 of them use NSD (4.10 and 4.15).  The other 2
+   o  DNS software: 16 our of 23 root server use BIND (varying from
+      9.9.7 to 9.10.3). 4 of them use NSD (4.10 and 4.15).  The other 2
       servers use Knot (2.0.1 and 2.1.0).  And one use Bundy (1.2.0)
 
 3.3.  Yeti Resolvers and Experimental Traffic
