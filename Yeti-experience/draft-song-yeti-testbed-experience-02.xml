@@ -157,7 +157,7 @@
   </list></t>
     <t>Starting from May 2015, three coordinators began to build this live
    experimental environment and called for participants.  At the time of
-   writing, there are 15 Yeti root servers with 14 operators, and
+   writing, there are 23 Yeti root servers with 14 operators, and
    experimental traffic from volunteers, universities, DNS vendors,
    mirrored traffic non-Yeti traffic, and RIPE Atlas probes.  Some
    experiments have been proposed and have been verified in lab tests.</t>
@@ -207,7 +207,7 @@
   <t>People are often told that the current root system with 13 root
    servers is not able to be extended to alleviate the above concerns,
    because it is limited to 13 by the current DNS protocol<xref target="ROOT-FAQ"/>. 
-   To the best of author's knowledge, there is no scientific evidence to
+   To the best of authors' knowledge, there is no scientific evidence to
    support this assertion. It remains an open question.</t>
 
   <t>There are some technical issues in the areas of IPv6 and DNSSEC,
@@ -549,7 +549,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
         naming scheme are in two aspects: 1) the response to a priming query is protected by DNSSEC; 2) To meet political reason that the zone authoritative for root server is 
         not delegated and belong to particular companies or organizations except IANA.</t>
 
-        <t>The only obvious concern of this naming scheme is the size of the signed response 
+        <t>The obvious concern of this naming scheme is the size of the signed response 
           with RRSIG for each root server and optionally DNSSKEY RR. There is a Lab test 
           result regarding the different size of priming response in Octet : 1) with no additional data, with RRISG in additional section , with DNSKEY+RRSIG in 
           additional section (7 keys in MZSK experiment)</t>
@@ -561,11 +561,10 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
     <c>753</c><c>3296</c><c>4004</c>
   </texttable>
 
-     
-          <t>The authors note: modification of IANA root zone by adding new TLD is 
-            controversial even for scientific purpose. There are non-trivial discussions 
-            on this issue in yeti discuss mailing list. People think this kind of 
-            experiment should based on community consensus from technical bodies like IETF. </t>
+      <t>REMOVE BEFORE PUBLICATION: Modification of IANA root zone by adding new TLD is 
+        controversial even for scientific purpose. There are non-trivial discussions 
+        on this issue in yeti discuss mailing list. People argued that this kind of 
+        experiment should based on community consensus from technical bodies like IETF. </t>
 
       </section>
       <section title="Multiple-Signers with Multi-ZSK">

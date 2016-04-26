@@ -136,7 +136,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pr  April 2016
 
    Starting from May 2015, three coordinators began to build this live
    experimental environment and called for participants.  At the time of
-   writing, there are 15 Yeti root servers with 14 operators, and
+   writing, there are 23 Yeti root servers with 14 operators, and
    experimental traffic from volunteers, universities, DNS vendors,
    mirrored traffic non-Yeti traffic, and RIPE Atlas probes.  Some
    experiments have been proposed and have been verified in lab tests.
