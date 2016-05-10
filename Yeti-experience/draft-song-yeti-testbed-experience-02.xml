@@ -22,6 +22,8 @@
 
 <!ENTITY I-D.bortzmeyer-dname-root SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-bortzmeyer-dname-root-00.xml">
 
+<!ENTITY I-D.ietf-dnsop-resolver-priming SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-dnsop-resolver-priming-07.xml">
+
 
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -121,7 +123,7 @@
    with volunteer root server and resolver operations.</t>
 
    <t>REMOVE BEFORE PUBLICATION: Although this document is submitted as an
-   individual submission, comments are welcome in the IETF DNSOP
+   independent submission, comments are welcome in the IETF DNSOP
    (DNS Operations) working group mailing list.  The source of the document 
    is currently place at GitHub <xref target="xml-file"/>.</t>
 
@@ -220,22 +222,26 @@
   <t><list style="symbols">
   <t>IPv6-only capability.  Currently some DNS servers including root which 
       support both A and AAAA (IPv4 and IPv6) records still do not respond to
-      IPv6 queries.  IPv6 introduces larger IP packet MTU (1280 bytes) 
+      IPv6 queries.  IPv6 introduces larger minimum MTU (1280 bytes) 
       and a different fragmentation model<xref target="RFC2460"/>.  It is not 
       clear whether DNS can survive without IPv4 (in an IPv6-only environment), 
       or what the impact of IPv6-only environment introduces to current DNS
       operations especially in the DNS root server system.</t>
 
   <t>KSK rollover. Currently, IANA rolls the ZSK every six weeks but
-      the KSK has never been rolled as of writing.  Is the 512 bytes DNS
-      packet size limitation still observed?  Is RFC5011 <xref target="RFC5011"/> widely
-      supported by resolvers?  How about longer key with different
-      encryption algorithm?  There are many issues still unknown.</t>
+      the KSK has never been rolled as of writing. Is RFC5011 <xref target="RFC5011"/> widely supported by resolvers?  How about longer key or different
+      encryption algorithm? Is the DNS packet size limitation (512 or 1280 bytes) 
+      should be respected during KSK rollover nowadays? There are many issues 
+      still unknown.</t>
 
   <t>Renumbering issue. It is likely that root operators may change
-      their IP addresses for root servers as well. There is no dynamic
-      update mechanism to inform resolvers and other Internet
-      infrastructure relying on root service of such changes.</t>
+      their IP addresses for root servers as well. Currently resolver 
+      can use priming exchange<xref target="I-D.ietf-dnsop-resolver-priming"/> 
+      to update its memory in real time. Or it may combine out-band way to periodicaly 
+      get the current list of NS server of Root. However it is observed 
+      root renumbering is stil a concern which need coordination and 
+      interference from human labour which deserves exploring for idealer 
+      automation.</t>
   </list></t>
     </section>
   
@@ -329,7 +335,7 @@
 
   <section title="Yeti root zone SOA SERIAL">
 
-   <t>Consistency with IANA root zone except the top level apex record is 
+   <t>Consistency with IANA root zone except the apex record is 
     one of most important point for the project. As part of Yeti DM design, 
     the Yeti SOA SERIAL which reflect the changes of yeti root zone is one 
     factor to be considered. </t>
@@ -439,7 +445,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
     <t> <list style="symbols">
         <t>Machine: 11 out of 14 root server operator are using a VPS to
       provide service. </t>
-        <t>OS: 6 operators use Linux (including Ubuntu, Debian, CentOS). 5
+        <t>OS: 6 operators use Linux (including Ubuntu, Debian, CentOS, ArchLinux). 5
       operators use FreeBSD and 1 NetBSD. 3 other servers are unknown.</t>
         <t>DNS software: 16 our of 23 root server use BIND (varying from 9.9.7
       to 9.10.3). 4 of them use NSD (4.10 and 4.15). The other 2 servers
@@ -451,12 +457,13 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
       <t>In client side of Yeti project,  there are DNS resolvers with IPv6 
       support, updated with Yeti “hints” file to use the Yeti root servers instead 
-      of the IANA root servers and using Yeti KSK as trust anchor. Since the 
-      DNSSEC key of the Yeti root (the KSK) changes often (typically every three 
-      months), it is required that resolver operator to configure your resolver 
-      compliant to RFC 5011 for automatic update. For Yeti resolver, it is also
-      interesting to try some mechanism end-system resolvers to signal to a server 
-      about their DNSSEC key status, like <xref target="I-D.wessels-edns-key-tag"/> 
+      of the IANA root servers and using Yeti KSK as trust anchor. The Yeti 
+      KSK rollover experiment is expected to change key often (typically every 
+      three months), it is required that resolver operator to configure your 
+      resolver compliant to RFC 5011 for automatic update. For Yeti resolver, 
+      it is also interesting to try some mechanism end-system resolvers to 
+      signal to a server about their DNSSEC key status, like 
+      <xref target="I-D.wessels-edns-key-tag"/> 
       and <xref target="I-D.wkumari-dnsop-trust-management"/> mentioned.</t>
 
       <t>Participants and volunteers are expected from individual researchers, 
@@ -638,11 +645,12 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
     <t> With the nearing renumbering of H root Server's IP address, there is
    a discussion of ways that resolvers can update their hint file.
    Traditional ways include using FTP protocol by doing a wget and
-   using dig to get the servers' addresses manually.  Each way would
-   depend on operators manual operation.  As a result, there are many
-   old machines that have not updated their hint files.  As a proof,
-   after done renumbering for thirteen years, there is an observation
-   that the "Old J-Root" can still receive DNS query traffic <xref target="Renumbering-J-Root"/>.</t>
+   using dig to double-check the servers' addresses manually.  
+   Each way would depend on operators manual operation.  As a result, 
+   there are many old machines that have not updated their hint files. 
+   As a proof, after done renumbering for thirteen years, there is an 
+   observation that the "Old J-Root" can still receive DNS query 
+   traffic <xref target="Renumbering-J-Root"/>.</t>
 
     <t>This experiment proposal aims to find an automatic way for hint-file
    updating.  The already-completed work is a shell script tool which
@@ -714,14 +722,18 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
    trial, it make old KSK inactive in one week after new key created,
    and delete it in another week, which is totally unaware of RFC5011.
    Because the hold-down timer is not correctly set in the server
-   side, some clients (Unbound) SERVFAILs (like dig without +cd)
+   side, some clients (like Unbound) SERVFAILs (like dig without +cd)
    because the new key is still in AddPend state when old key is
    inactive. The lesson from the first KSK trial is that both server
-   and client should compliant to RFC5011 to set proper timer. The
-   question is how can authority server know the resolver is ready for
-   RFC5011 some drafts <xref target="I-D.wessels-edns-key-tag"/> and
+   and client should compliant to RFC5011 to set proper timer. </t>
+
+   <t>One of the question is how can authority server know the resolver 
+    is ready for RFC5011. Some drafts <xref target="I-D.wessels-edns-key-tag"/> and
    <xref target="I-D.wkumari-dnsop-trust-management"/> try to address
-   the problem.</t>
+   the problem. In addtion a compliant resolver implementation may fail 
+   without any complain if it is not carefully configured. In the case of 
+   Unbound 1.5.8, the key is only readable for DNS users. <xref target="auto-trust-anchor-file"/>
+    </t>
 
       </section>  
     </section>
@@ -814,7 +826,7 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
       &RFC1034;&RFC1035;&RFC2460;&RFC6781;&RFC4968;&RFC7626;&RFC5011;
       &I-D.muks-dns-message-fragments;&I-D.wkumari-dnsop-trust-management;
       &I-D.andrews-tcp-and-ipv6-use-minmtu;&I-D.wessels-edns-key-tag;
-      &I-D.bortzmeyer-dname-root;
+      &I-D.bortzmeyer-dname-root;&I-D.ietf-dnsop-resolver-priming;
 
     <reference anchor="Renumbering-J-Root" target="https://indico.dns-oarc.net/event/24/session/10/contribution/10/material/slides/0.pdf">
               <front>
@@ -899,7 +911,18 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
                 <date year="2015" /> 
             </front>
      </reference>
+    <reference anchor="auto-trust-anchor-file" target="https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=758">
+            <front>
+                <title> Unbound should test that auto-* files are writable</title>
+                <author ></author>
+                <date year="2016" /> 
+            </front>
+     </reference>
+
+
     </references>
+
+
 
 
 <section anchor="appendix" title=" The Yeti root server in hint file ">
