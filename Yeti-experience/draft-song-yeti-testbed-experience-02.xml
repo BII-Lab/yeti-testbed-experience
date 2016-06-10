@@ -730,7 +730,21 @@ SERIAL will trigger the operation of adding these changes to Yeti root zone.</t>
 
       </section>  
       <section title="Bigger ZSK for Yeti">
-       <t> TBD </t>
+      <t> Currently IANA root system uses 1024-bits ZSK which is no longer 
+      recommended for cryptography. At some point the ZSK needs to be made 
+      longer. Common practice is to adopt 2048 bits keys. VeriSign announced 
+      at DNS-OARC 24th workshop that they will be increasing the root zone 
+      ZSK from 1024 bits to 2048 bits in 2016 in IANA root system. However, 
+      it is not fully tested for real system. </t>
+
+      <t>Longer key will produce larger Packet with IP fragmentation which 
+        is commonly considered harm for DNS system. But in Yeti DNS project, 
+        it is desirable to test larger response in many aspects. The Big ZSK 
+        experiment is designed to test operating the Yeti root with a 2048-bit 
+        ZSK. The traffic is monitored before and after we lengthen the ZSK to 
+        see if there are any changes, such as a drop off of packets or a 
+        increase in retries. The current status of this experiment is under 
+        monitoring data analysis. </t>
       </section>
     </section>
 

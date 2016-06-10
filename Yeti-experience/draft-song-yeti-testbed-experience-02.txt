@@ -5,8 +5,8 @@
 Internet Engineering Task Force                                  L. Song
 Internet-Draft                                                   S. Kerr
 Intended status: Informational                                    D. Liu
-Expires: December 6, 2016                     Beijing Internet Institute
-                                                            June 4, 2016
+Expires: December 12, 2016                    Beijing Internet Institute
+                                                           June 10, 2016
 
 
          Experiences from Root Testbed in the Yeti DNS Project
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 6, 2016.
+   This Internet-Draft will expire on December 12, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 1]
+Song, et al.            Expires December 12, 2016               [Page 1]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -88,10 +88,10 @@ Table of Contents
      4.4.  DNS Fragments . . . . . . . . . . . . . . . . . . . . . .  14
      4.5.  The KSK Rollover Experiment in Yeti . . . . . . . . . . .  14
      4.6.  Bigger ZSK for Yeti . . . . . . . . . . . . . . . . . . .  15
-   5.  Other Technical findings and bugs . . . . . . . . . . . . . .  15
-     5.1.  IPv6 fragments issue  . . . . . . . . . . . . . . . . . .  15
+   5.  Other Technical findings and bugs . . . . . . . . . . . . . .  16
+     5.1.  IPv6 fragments issue  . . . . . . . . . . . . . . . . . .  16
      5.2.  Root compression issue  . . . . . . . . . . . . . . . . .  16
-     5.3.  SOA update delay issue  . . . . . . . . . . . . . . . . .  16
+     5.3.  SOA update delay issue  . . . . . . . . . . . . . . . . .  17
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
    7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  17
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 2]
+Song, et al.            Expires December 12, 2016               [Page 2]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -165,7 +165,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 3]
+Song, et al.            Expires December 12, 2016               [Page 3]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -221,7 +221,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 4]
+Song, et al.            Expires December 12, 2016               [Page 4]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -277,7 +277,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 5]
+Song, et al.            Expires December 12, 2016               [Page 5]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -333,7 +333,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 6]
+Song, et al.            Expires December 12, 2016               [Page 6]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -389,7 +389,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 7]
+Song, et al.            Expires December 12, 2016               [Page 7]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -445,7 +445,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 8]
+Song, et al.            Expires December 12, 2016               [Page 8]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -501,7 +501,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016                [Page 9]
+Song, et al.            Expires December 12, 2016               [Page 9]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -557,7 +557,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016               [Page 10]
+Song, et al.            Expires December 12, 2016              [Page 10]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -613,7 +613,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016               [Page 11]
+Song, et al.            Expires December 12, 2016              [Page 11]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -669,7 +669,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016               [Page 12]
+Song, et al.            Expires December 12, 2016              [Page 12]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -725,7 +725,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016               [Page 13]
+Song, et al.            Expires December 12, 2016              [Page 13]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -781,7 +781,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 6, 2016               [Page 14]
+Song, et al.            Expires December 12, 2016              [Page 14]
 
 Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
@@ -819,7 +819,28 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 4.6.  Bigger ZSK for Yeti
 
-   TBD
+   Currently IANA root system uses 1024-bits ZSK which is no longer
+   recommended for cryptography.  At some point the ZSK needs to be made
+   longer.  Common practice is to adopt 2048 bits keys.  VeriSign
+   announced at DNS-OARC 24th workshop that they will be increasing the
+   root zone ZSK from 1024 bits to 2048 bits in 2016 in IANA root
+   system.  However, it is not fully tested for real system.
+
+   Longer key will produce larger Packet with IP fragmentation which is
+   commonly considered harm for DNS system.  But in Yeti DNS project, it
+   is desirable to test larger response in many aspects.  The Big ZSK
+   experiment is designed to test operating the Yeti root with a
+   2048-bit ZSK.  The traffic is monitored before and after we lengthen
+   the ZSK to see if there are any changes, such as a drop off of
+   packets or a increase in retries.  The current status of this
+   experiment is under monitoring data analysis.
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 15]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
 
 5.  Other Technical findings and bugs
 
@@ -834,13 +855,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    servers on VPS failed to pull the zone from Distribution Master via
    AXFR/IXFR.  Two facts have been revealed in both client side and
    server side after trouble shooting.
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 15]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    One fact in client side is that some operation system on VPS can not
    handle IPv6 fragments correctly which causes failure when they are
@@ -877,6 +891,13 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    labels ending with a pointer.  It is designed to save more room of
    DNS packet.
 
+
+
+Song, et al.            Expires December 12, 2016              [Page 16]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
    However in Yeti testbed, it is found that Knot 2.0 server compresses
    even the root.  It means in a DNS message the name of root (a zero
    octet) is replaced by a pointer of 2 octets.  As well, it is legal
@@ -889,15 +910,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    It is observed one server on Yeti testbed have some bugs on SOA
    update with more than 10 hours delay.  It is running on Bundy 1.2.0
    on FreeBSD 10.2-RELEASE.  It is now fixed by checking DM's SOA status
-
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 16]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
-
    in regular base.  But it still need some work to find the bug in code
    path to improve the software.
 
@@ -933,6 +945,15 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
               2016, <https://www.nlnetlabs.nl/bugs-script/
               show_bug.cgi?id=758>.
 
+
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 17]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
    [Experiment-MZSK-notes]
               "MZSK Experiment Notes", 2016, <https://github.com/shane-
               kerr/Yeti-Project/blob/experiment-mzsk/doc/Experiment-
@@ -946,13 +967,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
               Andrews, M., "TCP Fails To Respect IPV6_USE_MIN_MTU",
               draft-andrews-tcp-and-ipv6-use-minmtu-04 (work in
               progress), October 2015.
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 17]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    [I-D.bortzmeyer-dname-root]
               Bortzmeyer, S., "Using DNAME in the root for the
@@ -984,6 +998,18 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
               <https://www.iana.org/reports/2016/root-ksk-rollover-
               design-20160307.pdf>.
 
+
+
+
+
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 18]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
    [pcapdump-bug-report]
               Bortzmeyer, S., "pcaputils: IWBN to have an option to run
               a program after file rotation in pcapdump", 2009,
@@ -999,16 +1025,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
               <http://www.rfc-editor.org/info/rfc1034>.
-
-
-
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 18]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
@@ -1040,6 +1056,16 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
               Karrenberg, D., "DNS Root Name Server FAQ", 2007,
               <https://www.isoc.org/briefings/020/>.
 
+
+
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 19]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
    [Root-Zone-Database]
               "Root Zone Database",
               <http://www.iana.org/domains/root/db>.
@@ -1056,15 +1082,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
    [Yeti-DNS-Project]
               "Website of Yeti DNS Project", <http://www.yeti-dns.org>.
-
-
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 19]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    [Yeti-glue-issue]
               "Yeti Glue Issue", 2015,
@@ -1097,6 +1114,14 @@ dahu1.yeti.eu.org              3600000    IN   AAAA     2001:4b98:dc2:45:216:3ef
 ns-yeti.bondis.org             3600000    IN   AAAA     2a02:2810:0:405::250
 .                              3600000    IN   NS       yeti-ns.ix.ru
 yeti-ns.ix.ru                  3600000    IN   AAAA     2001:6d0:6d06::53
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 20]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
 .                              3600000    IN   NS       yeti.bofh.priv.at
 yeti.bofh.priv.at              3600000    IN   AAAA     2a01:4f8:161:6106:1::10
 .                              3600000    IN   NS       yeti.ipv6.ernet.in
@@ -1114,14 +1139,6 @@ yeti-ns.switch.ch              3600000    IN   AAAA     2001:620:0:ff::29
 .                              3600000    IN   NS       yeti-ns.lab.nic.cl
 yeti-ns.lab.nic.cl             3600000    IN   AAAA     2001:1398:1:21::8001
 .                              3600000    IN   NS       yeti-ns1.dns-lab.net
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 20]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
-
 yeti-ns1.dns-lab.net           3600000    IN   AAAA     2001:da8:a3:a027::6
 .                              3600000    IN   NS       yeti-ns2.dns-lab.net
 yeti-ns2.dns-lab.net           3600000    IN   AAAA     2001:da8:268:4200::6
@@ -1146,6 +1163,21 @@ yeti1.ipv6.ernet.in            3600000    IN   AAAA     2001:e30:187d::333
 
 Authors' Addresses
 
+
+
+
+
+
+
+
+
+
+
+Song, et al.            Expires December 12, 2016              [Page 21]
+
+Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+
+
    Linjian Song
    Beijing Internet Institute
    2508 Room, 25th Floor, Tower A, Time Fortune
@@ -1164,18 +1196,6 @@ Authors' Addresses
 
    Email: shane@biigroup.cn
    URI:   http://www.biigroup.com/
-
-
-
-
-
-
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 21]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
    Dong Liu
@@ -1209,24 +1229,4 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Song, et al.            Expires December 6, 2016               [Page 22]
+Song, et al.            Expires December 12, 2016              [Page 22]
