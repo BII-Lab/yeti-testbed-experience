@@ -5,12 +5,14 @@
 Internet Engineering Task Force                                  L. Song
 Internet-Draft                                                   S. Kerr
 Intended status: Informational                                    D. Liu
-Expires: December 12, 2016                    Beijing Internet Institute
-                                                           June 10, 2016
+Expires: March 12, 2017                       Beijing Internet Institute
+                                                                P. Vixie
+                                                                    TISF
+                                                       September 8, 2016
 
 
          Experiences from Root Testbed in the Yeti DNS Project
-                 draft-song-yeti-testbed-experience-02
+                 draft-song-yeti-testbed-experience-03
 
 Abstract
 
@@ -42,21 +44,24 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 12, 2016.
+   This Internet-Draft will expire on March 12, 2017.
+
+
+
+
+
+
+
+
+Song, et al.             Expires March 12, 2017                 [Page 1]
+
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
+
 
 Copyright Notice
 
    Copyright (c) 2016 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
-
-
-
-
-
-Song, et al.            Expires December 12, 2016               [Page 1]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
@@ -70,8 +75,8 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Problem Statement . . . . . . . . . . . . . . . . . . . . . .   3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Problem Statement . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Yeti Testbed and Experiment Setup . . . . . . . . . . . . . .   5
      3.1.  Distribution Master . . . . . . . . . . . . . . . . . . .   6
        3.1.1.  Yeti root zone SOA SERIAL . . . . . . . . . . . . . .   7
@@ -98,6 +103,17 @@ Table of Contents
    Appendix A.  The Yeti root server in hint file  . . . . . . . . .  20
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
+
+
+
+
+
+
+Song, et al.             Expires March 12, 2017                 [Page 2]
+
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
+
+
 1.  Introduction
 
    [RFC1034] says the domain name space is a tree structure.  The top
@@ -106,14 +122,6 @@ Table of Contents
    making the current Internet useful.  So it is considered somewhat
    ossified for stability reasons.  It is hard to test and implement new
    ideas evolving to a more advanced level to counter challenges like
-
-
-
-Song, et al.            Expires December 12, 2016               [Page 2]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
-
    IPv6-only operation, DNSSEC key/algorithm rollover[RFC4986], scaling
    issues, and so on.  In order to make the test more practical, it is
    also necessary to involve users' environments which are highly
@@ -137,7 +145,7 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
    Starting from May 2015, three coordinators began to build this live
    experimental environment and called for participants.  At the time of
-   writing, there are 25 Yeti root servers with 14 operators, and
+   writing, there are 25 Yeti root servers with 15 operators, and
    experimental traffic from volunteers, universities, DNS vendors,
    mirrored traffic, non-Yeti traffic, and RIPE Atlas probes.  Some
    experiments have been proposed and have been verified in lab tests.
@@ -155,20 +163,19 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    services, based on experiences so far from the testbed construction
    and experiments in the Yeti DNS project.
 
+
+
+Song, et al.             Expires March 12, 2017                 [Page 3]
+
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
+
+
 2.  Problem Statement
 
    Some problems and policy concerns over the DNS Root Server system
    stem from centralization from the point of view of DNS content
    consumers.  These include external dependencies and surveillance
    threats.
-
-
-
-
-Song, et al.            Expires December 12, 2016               [Page 3]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
 
    o  External Dependency.  Currently, there are 12 DNS Root Server
       operators for the 13 Root Server letters, with more than 500
@@ -210,6 +217,15 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
       the KSK has never been rolled as of writing.  Is RFC5011 [RFC5011]
       widely supported by resolvers?  How about longer key or different
       encryption algorithm?  Is the DNS packet size limitation (512 or
+
+
+
+
+Song, et al.             Expires March 12, 2017                 [Page 4]
+
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
+
+
       1280 bytes) should be respected during KSK rollover nowadays?
       There are many issues still unknown.
 
@@ -218,14 +234,6 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
       can use priming exchange[I-D.ietf-dnsop-resolver-priming] to
       update its memory in real time.  Or it may combine out-band way to
       periodicaly get the current list of NS server of Root.  However it
-
-
-
-Song, et al.            Expires December 12, 2016               [Page 4]
-
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
-
-
       is observed root renumbering is still a concern which need
       coordination and interference from human labour which deserves
       exploring for idealer automation.
@@ -269,17 +277,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-
-
-
-
-
-
-
-
-Song, et al.            Expires December 12, 2016               [Page 5]
+Song, et al.             Expires March 12, 2017                 [Page 5]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
                            +------------------------+
@@ -333,9 +333,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016               [Page 6]
+Song, et al.             Expires March 12, 2017                 [Page 6]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    o  DM publishes the new Yeti root zone to Yeti root servers
@@ -389,9 +389,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016               [Page 7]
+Song, et al.             Expires March 12, 2017                 [Page 7]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
                          +-------------+---------+
@@ -445,9 +445,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016               [Page 8]
+Song, et al.             Expires March 12, 2017                 [Page 8]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
 3.2.  Yeti Root Servers
@@ -470,11 +470,11 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    Linux kernel), some people use pcapdump.  It requires the patch
    attached to this bug report [pcapdump-bug-report]
 
-   System diversity is also a requirement and observed for current 14
+   System diversity is also a requirement and observed for current 15
    Yeti root server.  Here are the results of a survey regarding the
    machine, operation system and DNS software:
 
-   o  Machine: 11 out of 14 root server operator are using a VPS to
+   o  Machine: 11 out of 15 root server operator are using a VPS to
       provide service.
 
    o  OS: 6 operators use Linux (including Ubuntu, Debian, CentOS,
@@ -501,9 +501,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016               [Page 9]
+Song, et al.             Expires March 12, 2017                 [Page 9]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    Participants and volunteers are expected from individual researchers,
@@ -557,9 +557,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 10]
+Song, et al.             Expires March 12, 2017                [Page 10]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    In this section, we are going to introduce some experiments
@@ -613,9 +613,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 11]
+Song, et al.             Expires March 12, 2017                [Page 11]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    delegated and belong to particular companies or organizations except
@@ -669,9 +669,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 12]
+Song, et al.             Expires March 12, 2017                [Page 12]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    Although more DM and ZSK can be added into the test, adding more ZSKs
@@ -725,9 +725,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 13]
+Song, et al.             Expires March 12, 2017                [Page 13]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    This experiment proposal aims to find an automatic way for hint-file
@@ -781,9 +781,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 14]
+Song, et al.             Expires March 12, 2017                [Page 14]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    team put together a plan[ICANN-ROOT-ROLL].  The Yeti project can use
@@ -837,9 +837,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 15]
+Song, et al.             Expires March 12, 2017                [Page 15]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
 5.  Other Technical findings and bugs
@@ -893,9 +893,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 16]
+Song, et al.             Expires March 12, 2017                [Page 16]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    However in Yeti testbed, it is found that Knot 2.0 server compresses
@@ -927,12 +927,11 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    Yeti testbed and contribute to this document, so their effort is
    acknowledged here with a name list:
 
-   Paul Vixie (project coordinator), Akira Kato(project coordinator),
-   Tomohiro Ishihara, Antonio Prado, Stephane Bortzmeyer, Mickael
-   Jouanne, Pierre Beyssac, Joao Damas, Pavel Khramtsov, Ma Yan, Otmar
-   Lendl, Praveen Misra, Carsten Strotmann, Edwin Gomez, Remi Gacogne,
-   Guillaume de Lafond, Yves Bovard, Hugo Salgado-Hernandez, Li Zhen,
-   Daobiao Gong, Runxia Wan.
+   Akira Kato(project coordinator), Tomohiro Ishihara, Antonio Prado,
+   Stephane Bortzmeyer, Mickael Jouanne, Pierre Beyssac, Joao Damas,
+   Pavel Khramtsov, Ma Yan, Otmar Lendl, Praveen Misra, Carsten
+   Strotmann, Edwin Gomez, Remi Gacogne, Guillaume de Lafond, Yves
+   Bovard, Hugo Salgado-Hernandez, Li Zhen, Daobiao Gong, Runxia Wan.
 
    Acknowledgment to all anonymous Yeti participants and volunteers who
    contribute Yeti resolvers to make the experimental testbed functional
@@ -949,9 +948,10 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 17]
+
+Song, et al.             Expires March 12, 2017                [Page 17]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    [Experiment-MZSK-notes]
@@ -1005,9 +1005,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 18]
+Song, et al.             Expires March 12, 2017                [Page 18]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    [pcapdump-bug-report]
@@ -1061,9 +1061,9 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 19]
+Song, et al.             Expires March 12, 2017                [Page 19]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    [Root-Zone-Database]
@@ -1117,9 +1117,9 @@ yeti-ns.ix.ru                  3600000    IN   AAAA     2001:6d0:6d06::53
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 20]
+Song, et al.             Expires March 12, 2017                [Page 20]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
 .                              3600000    IN   NS       yeti.bofh.priv.at
@@ -1173,9 +1173,9 @@ Authors' Addresses
 
 
 
-Song, et al.            Expires December 12, 2016              [Page 21]
+Song, et al.             Expires March 12, 2017                [Page 21]
 
-Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
+Internet-DraftExperiences from Root Testbed in the Yeti DNSeptember 2016
 
 
    Linjian Song
@@ -1208,6 +1208,14 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
    URI:   http://www.biigroup.com/
 
 
+   Paul Vixie
+   TISF
+   11400 La Honda Road
+   Woodside, California  94062
+   US
+
+   Email: vixie@tisf.net
+   URI:   http://www.redbarn.org/
 
 
 
@@ -1221,12 +1229,4 @@ Internet-DraExperiences from Root Testbed in the Yeti DNS Pro  June 2016
 
 
 
-
-
-
-
-
-
-
-
-Song, et al.            Expires December 12, 2016              [Page 22]
+Song, et al.             Expires March 12, 2017                [Page 22]
