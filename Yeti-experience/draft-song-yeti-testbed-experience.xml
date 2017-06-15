@@ -259,6 +259,14 @@
 	here in the form of lists of questions to give context to
 	the experiments that follow.</t>
 
+      <t>The infrastructure on which the experiments have been run
+	has also involved significant effort to build, principally
+	in its operational aspects: the coordination of a large
+	pool of volunteers in the implementation of the testbed is
+	itself an exercise with relevance to the real world, and
+	commentary on the corresponding logistics is also included
+        in this document.</t>
+
       <section title="Yeti-Root Zone Distribution">
         <t>
           <list style="symbols">
@@ -327,31 +335,53 @@
       </section>
     </section>
 
-    <section title="Yeti Testbed and Experiment Setup">
-      <t>To use the Yeti testbed operationally, the information
-        that is required for correct root name service is a matching
-        set of the following:</t>
+    <section title="Yeti DNS Project Infrastructure">
+      <t>The ultimate objective of the testbed is to allow DNS queries
+        from stub resolvers, mediated by recursive resolvers, to be
+        delivered to Yeti-Root servers, and for corresponding responses
+        generated on the Yeti-Root servers to be returned, as
+        illustrated in <xref target="components"/>.</t>
 
-      <t>
-        <list style="symbols">
-          <t>a root "hints file"</t>
-          <t>the root zone apex NS record set</t>
-          <t>the root zone's signing key</t>
-          <t>root zone trust anchor</t>
-        </list>
-      </t>
+      <figure anchor="components" title="High-Level Testbed Components">
+        <artwork>
+          <![CDATA[
+       ,----------.        ,-----------.        ,------------.
+       |   stub   +------> | recursive +------> | Yeti-Root  |
+       | resolver | <------+ resolver  | <------+ nameserver |
+       `----------'        `-----------'        `------------'
+          ^                   ^                    ^
+          |  appropriate      |  Yeti-Root hints;  |  Yeti-Root zone
+          `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet,
+             configured          anchor               signed by Yeti-KSK
+]]>
+        </artwork>
+      </figure>
 
-      <t>Although Yeti DNS Project publishes strictly IANA information
-        for TLD data and meta-data, it is necessary to use a special
-        hint file to replace the apex NS RRset with Yeti authority
-        name servers, which will enable the resolves to find and
-        stick to the Yeti root system.</t>
+      <t>To use the Yeti DNS testbed, a stub resolver must be
+	explicitly configured to use recursive resolvers that have
+	themselves been configured to use the Yeti-Root servers.
+	On the resolvers, that configuration consists of a list of
+	names and addresses for the Yeti-Root servers (often referred
+	to as a "hints file") that replaces the normal Internet DNS
+	hints. Resolvers also need to be configured with a DNSSEC
+	trust anchor that corresponds to a KSK used in the Yeti DNS
+	Project, in place of the normal trust anchor for the root
+	zone.</t>
 
-      <t>Below is a figure to demonstrate the topology of Yeti and
-        the basic data flow, which consists of the Yeti distribution
-        master, Yeti root server, and Yeti resolver: </t>
+      <t>The need for a Yeti-specific trust anchor in the resolver
+        stems from the need to make minimal changes to the root zone,
+	as retrieved from the IANA, in order to transform it into
+	the Yeti-Root that can be used in the testbed, served from
+	Yeti-Root servers; those changes would be properly rejected
+	by any validator using an accurate root zone trust anchor
+	as bogus. Corresponding changes are required in the Yeti-Root
+	hints file.</t>
 
-      <figure>
+      <t>The construction of the Yeti-Root zone from the root zone
+	as published by the IANA is illustrated in <xref
+	target="yeti-root"/>.</t>
+
+      <figure anchor="yeti-root" title="Testbed Data Flow">
         <artwork> 
           <![CDATA[ 
                         +------------------------+
