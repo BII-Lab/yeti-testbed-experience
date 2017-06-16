@@ -12,6 +12,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1034.xml">
   <!ENTITY RFC1035 SYSTEM 
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
+  <!ENTITY RFC1996 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1996.xml">
   <!ENTITY RFC4968 SYSTEM 
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4986.xml">
   <!ENTITY RFC5011 SYSTEM 
@@ -228,7 +230,7 @@
 	a captive, non-production testbed upon which the technical
 	community could propose and run experiments designed to
 	answer these kinds of questions. Coordination for the project
-	was provided by the Dr Paul Vixie, Dr Akira Kato and the
+	was provided by TSIF, the WIDE Project and the
 	Beijing Internet Institute. Many volunteers collaborated
 	to build a distributed testbed that at the time of writing
 	includes 25 Yeti root servers with 15 operators and 
@@ -345,14 +347,14 @@
       <figure anchor="components" title="High-Level Testbed Components">
         <artwork>
           <![CDATA[
-       ,----------.        ,-----------.        ,------------.
-       |   stub   +------> | recursive +------> | Yeti-Root  |
-       | resolver | <------+ resolver  | <------+ nameserver |
-       `----------'        `-----------'        `------------'
-          ^                   ^                    ^
-          |  appropriate      |  Yeti-Root hints;  |  Yeti-Root zone
-          `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet,
-             configured          anchor               signed by Yeti-KSK
+      ,----------.        ,-----------.        ,------------.
+      |   stub   +------> | recursive +------> | Yeti-Root  |
+      | resolver | <------+ resolver  | <------+ nameserver |
+      `----------'        `-----------'        `------------'
+         ^                   ^                    ^
+         |  appropriate      |  Yeti-Root hints;  |  Yeti-Root zone
+         `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet,
+            configured          anchor               signed by Yeti-KSK
 ]]>
         </artwork>
       </figure>
@@ -377,127 +379,99 @@
 	as bogus. Corresponding changes are required in the Yeti-Root
 	hints file.</t>
 
-      <t>The construction of the Yeti-Root zone from the root zone
-	as published by the IANA is illustrated in <xref
-	target="yeti-root"/>.</t>
+      <t>The data flow from IANA to stub resolvers through the Yeti
+        testbed is illustrated in <xref target="yeti-root"/> and are
+        described in more detail in the sections that follow.</t>
 
       <figure anchor="yeti-root" title="Testbed Data Flow">
         <artwork> 
           <![CDATA[ 
-                        +------------------------+
-                      +-+     IANA Root Zone     +--+
-                      | +-----------+------------+  |
-+-----------+         |             |               | IANA root zone
-|    Yeti   |         |             |               |
-|  Traffic  |      +--v---+     +---v--+      +-----v+
-| Collection|      |  BII |     | WIDE |      | TISF |
-|           |      |  DM  |     |  DM  |      |  DM  |
-+---+----+--+      +------+     +-+----+      +---+--+
-    ^    ^         |              |               |
-    |    |         |              |               |   Yeti root zone
-    |    |         v              v               v
-    |    |   +------+      +------+               +------+
-    |    +---+ Yeti |      | Yeti |  . . . . . .  | Yeti |
-    |        | Root |      | Root |               | Root |
-    |        +---+--+      +---+--+               +--+---+
-    |            |             |                      |
-    | pcap       ^             ^                      ^ DNS lookup
-    | upload     |             |                      |
-    |
-    |                   +--------------------------+
-    +-------------------+      Yeti Resolvers      |
-                        |     (with Yeti Hint)     |
-                        +--------------------------+
+                               ,----------------.
+                          ,-- / IANA Root Zone / ---.
+                          |  `----------------'     |
+                          |            |            |
+                          |            |            |          Root Zone
+  ,--------------.    ,---V---.    ,---V---.    ,---V---.
+  | Yeti Traffic |    | BII   |    | WIDE  |    | TISF  |
+  | Collection   |    |  DM   |    |  DM   |    |  DM   |
+  `----+----+----'    `---+---'    `---+---'    `---+---'
+       |    |       ,-----'    ,-------'            `----.
+       |    |       |          |                         |
+       ^    ^       |          |                         |     Yeti-Root
+       |    |   ,---V---.  ,---V---.                 ,---V---.
+       |    `---+ Yeti  |  | Yeti  |  . . . . . . .  | Yeti  |
+       |        | Root  |  | Root  |                 | Root  |
+       |        `---+---'  `---+---'                 `---+---'
+       |            |          |                         |
+       |            |          |                         |     DNS Response
+       |          ,--V----------V-------------------------V--.
+       `----------+                Yeti Resolvers            |
+                  `-----------------------+------------------'
+                                          |
+                                          |                    DNS Response
+                  ,-----------------------V------------------.
+                  |              Yeti Stub Resolvers         |
+                  `------------------------------------------'
 ]]>
         </artwork>
       </figure>
-      <t>Figure 1. The topology of Yeti testbed</t>
 
-      <section title="Distribution Master">
-      <t>As shown in figure 1, the Yeti Root system takes the IANA
-        root zone and performs minimal changes needed to serve the
-        zone from the Yeti root servers instead of the IANA root
-        servers. In Yeti, this modified root zone is generated by
-        the Yeti Distribution Masters (DM), which provide it to the
-        Yeti root servers.</t>
+      <section title="Root Zone Retrieval">
+        <t>Since Yeti DNS servers cannot receive DNS NOTIFY
+	  <xref target="RFC1996"/> messages from the Root Server
+	  System, a polling approach is used. Each Yeti Distribution
+	  Master (DM) requests the root zone SOA record from XXX(which
+	  servers?)XXX and performs a zone transfer if the SOA.SERIAL
+	  value is greater than that of the last retrieved zone.</t>
 
-      <t>The zone generation process is:</t>
-
-      <t>
-        <list style="symbols">
-          <t>DM downloads the latest IANA root zone at a certain time</t>
-          <t>DM makes modifications to change from the IANA to Yeti
-            root servers</t>
-          <t>DM signs the new Yeti root zone with Yeti key</t>
-          <t>DM publishes the new Yeti root zone to Yeti root servers</t>
-        </list>
-      </t>
-
-      <t>While in principle this could be done by a single DM, Yeti
-        uses a set of three DMs to avoid any sense that the Yeti
-        DNS Project is run by a single organization.  Each of three
-        DMs independently fetches the root zone from IANA, signs
-        it and publishes the latest zone data to Yeti root servers.</t>
-
-      <t>In the same while, these DMs coordinate their work so that
-        the resulting Yeti root zone is always consistent.  There
-        are two aspects of coordination between three DMs: timing
-        and information synchronization.</t>
-
-      <section title="Yeti root zone SOA SERIAL">
-
-        <t>Consistency with IANA root zone except the apex record
-          is one of most important point for the project. As part
-          of Yeti DM design, the Yeti SOA SERIAL which reflects the
-          changes of yeti root zone is one factor to be considered.</t>
-
-        <t>Currently IANA SOA SERIAL number for root zone is in the
-          form of YYYYMMDDNN, like 2015111801. In Yeti root system,
-          IANA SOA SERIAL is directly copied in to Yeti SOA SERIAL.
-          So once the IANA root zone has changed with a new SOA
-          SERIAL, a new version of the Yeti root zone is generated
-          with the same SOA SERIAL.</t>
-
-        <t>There is a case of Yeti DM operation that when a new
-          Yeti root server added, DM operators change the Yeti root
-          zone without change the SOA SERIAL which introduces
-          inconsistency of Yeti root system. To avoid inconsistency,
-          the DMs publish changes only when new IANA SOA SERIAL is
-          observed.</t>
-
-        <t>An analysis of IANA convention shows IANA SOA SERIAL
-          change twice a day (NN=00, 01). Since October 2007 the
-          maximum of NN was 03 while NN=2 was observed in 13
-          times.</t>
-      </section>
-
-      <section title="Timing of Root Zone Fetch">
-        <t>Yeti root system operators do not receive notify messages
-          when IANA root zone is updated.  So each Yeti DM checks
-          the root zone serial periodically. At the time of writing,
-          each Yeti DM checks to see if the IANA root zone has
-          changed hourly, on the following schedule:</t>
+        <t>The schedule on which the Root Server System is polled by
+          each Yeti DM is as follows:</t>
 
         <texttable>
           <ttcol>DM Operator</ttcol><ttcol>Time</ttcol>
-          <c>BII</c><c>hour+00</c>
-          <c>WIDE</c><c>hour+20</c> 
-          <c>TISF</c><c>hour+40</c> 
+          <c>BII</c><c>UTC hour + 00 minutes</c>
+          <c>WIDE</c><c>UTC hour + 20 minutes</c>
+          <c>TISF</c><c>UTC hour + 40 minutes</c>
         </texttable>
 
-        <t>Note that Yeti DMs can check IANA root zone more frequently
-          (every minute for example). A test done by Yeti participant
-          shows that the delay of IANA root zone update from the
-          first IANA root server to last one is around 20 minute.
-          Once a Yeti DM fetch the new root zone, it will notify
-          all the Yeti root servers with a new SOA serial number.
-          So normally Yeti root server will be notified in less
-          than 20 minute after new IANA root zone generated. Ideally,
-          if an IANA DM notifies the Yeti DMs, Yeti root zone will
-          be updated in more timely manner.</t>
+        <t>Zone transfers by Yeti DMs are carried out using AXFR from
+          XXX(which servers?)XXX with no authentication.</t>
+      </section>
+
+      <section title="Transformation of Root Zone to Yeti-Root Zone">
+        <t>XXX(need description of the precise process followed here)XXX</t>
+
+        <t>XXX(remove RRSIG)XXX</t>
+
+        <t>XXX(remove apex NS RRSet)XXX</t>
+
+        <t>XXX(add apex Yeti NS RRSet)XXX</t>
+
+        <t>XXX(remove apex DNSKEY RRSet)XXX</t>
+
+        <t>XXX(add apex Yeti DNSKEY RRSet)XXX</t>
+
+        <t>XXX(sign zone using specified keys)XXX</t>
+
+	<t>The transformation of Root Zone to Yeti-Root zone takes
+	  place independently on each of the Yeti DMs.</t>
+
+        <t>Note SOA.SERIAL preservation during transformation process.</t>
+      </section>
+
+      <section title="Yeti-Root Zone Distribution">
+        <t>XXX(need details about NOTIFY configuration on Yeti-DMs)XXX</t>
+
+        <t>XXX(need details about TSIG authentication on Yeti-DMs)XXX</t>
+
+        <t>XXX(examples of configuration from DMs and Yeti-Root servers
+          might be handy)XXX</t>
       </section>
 
       <section title="Information Synchronization">
+        <t>XXX(Joe needs more information about the content of this section
+          before he can suggest changes)XXX</t>
+
         <t>Given three DMs operational in Yeti root system, it is
           necessary to prevent any inconsistency caused by human
           mistakes in operation.  The straight method is to share
@@ -518,26 +492,31 @@
           </list>
         </t>
 
+        <t>XXX(that list describes the contents of files, not the files
+          themselves. Can I see examples of the actual files that are
+          used?)XXX</t>
+
         <t>The operation is simple that each DM operator synchronize
-          the files with the information needed to produce the Yeti
-          root zone.  When a change is desired (such as adding a
-          new server or rolling the ZSK), a DM operator updates the
-          local file and push to other DM.  A SOA SERIAL in the
-          future is chosen for when the changes become active. </t>
+	  the files with the information needed to produce the Yeti
+	  root zone. XXX(how?)XXX  When a change is desired XX(by
+	  whom?)XX (such as adding a new server or rolling the ZSK),
+	  a DM operator updates the local file and push to other
+	  DM XX(how?)XX.  A SOA SERIAL in the future is chosen for
+	  when the changes become active. </t>
       </section>
     </section>
-      
+
     <section title="Yeti Root Servers">
       <t>In Yeti root system, authoritative servers donated and
-        operated by Yeti volunteers are configured as a slave to
-        the Yeti DM.  As the time of writing, there are 25 Yeti
-        root servers distributed around the world, one of which use
-        IDN as its name (see Yeti hint file in Appendix A). As one
-        of operational research goal, all authoritative servers are
-        required to work in an IPv6-only environment. In addition,
-        different from the IANA root, Yeti root server only serve
-        the Yeti root zone. No root-servers.org zone and .arpa zone
-        are served.</t>
+	operated by Yeti volunteers are configured as a slave to
+	the Yeti DM.  As the time of writing, there are 25 Yeti
+	root servers distributed around the world, one of which use
+	IDN as its name (see Yeti hint file in Appendix A). As one
+	of operational research goal, all authoritative servers are
+	required to work in an IPv6-only environment. In addition,
+	different from the IANA root, Yeti root server only serve
+	the Yeti root zone. No root-servers.org zone and .arpa zone
+	are served.</t>
 
       <t>Since Yeti is a scientific research project, it needs to
         capture DNS traffic sent to one of the Yeti root servers
@@ -609,7 +588,6 @@
         RIPE Atlas probes to generate specific queries against Yeti
         servers.</t>
     </section>
-  </section>
 
   <section title="Experiments in Yeti Testbed">
       
@@ -1049,6 +1027,7 @@
     <references title="References">
       &RFC1034;
       &RFC1035;
+      &RFC1996;
       &RFC4968;
       &RFC7626;
       &RFC5011;
