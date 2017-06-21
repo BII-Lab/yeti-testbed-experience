@@ -2,7 +2,7 @@
 
 
 <Note it is Davey's edit after the review of ISE. For latest version 
-going to be submited please refer to the xml and txt version in this 
+to be submited please refer to the xml and txt version in this 
 repo.>
 
 ### **Abstract**
