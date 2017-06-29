@@ -377,7 +377,12 @@
       </section>
     </section>
 
-    <section title="Yeti DNS Project Infrastructure">
+    <section title="Yeti DNS Infrastructure">
+
+    <t> Davey's NOte: I found a subsection is missing in the 03 
+      version : "3.3. Yeti Resolvers and Experimental Traffic". 
+      Isn't it useful to introduce how we introduce and mirror traffic ? </t>
+
       <t>The purpose of the testbed is to allow DNS queries from
 	stub resolvers, mediated by recursive resolvers, to be
 	delivered to Yeti-Root servers, and for corresponding
@@ -398,6 +403,8 @@
 ]]>
         </artwork>
       </figure>
+
+      <t>Davey's note: why DM's role are missing in the figure.</t>
 
       <t>To use the Yeti DNS testbed, a stub resolver must be
         explicitly configured to use recursive resolvers that
@@ -456,6 +463,14 @@
 ]]>
         </artwork>
       </figure>
+
+    <t>Davey's note: Multiple-DM setting is default and feature of Yeti DNS. So I think we should highlight it somewhere. So I add the following paragraph: </t>
+
+    <t>While in principle this could be done by a single DM, Yeti uses a set
+   of three DMs to introduce a important model to implement the concept of 
+   "shared zone control" proposed in ICANN ITI report [reference!].In this 
+   model each of three DMs independently fetches the root zone from IANA, 
+   signs it and publishes the latest zone data to Yeti root servers.</t>
 
     <section title="Yeti-Root Server Naming Scheme">
     
@@ -728,7 +743,23 @@
       </section>
     </section>
 
-    <section title="Completed Experiments">
+
+    <section title="Experience with Yeti DNS">
+
+      <t>Davey's note: There are two documents in repo which will helpfull for you: 1) https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md 2)https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md </t>
+
+      <t>As introduced, Yeti DNS is a root testbed designed for 
+        trying new ideas. For each proposed idea, it is firstly 
+        tested in Lab environment as a proof of concept before it 
+        is implemented in the testbed. The approach is straightforward that 
+        we set the system up according to the experiment proposal
+        with monitoring on the data flow and resolution path. 
+        Operational issues, impacts and complexities are observed 
+        and discussed mainly in the mailing list. Some experiments 
+        and findings are summarized in the blog of Yeti DNS Project. 
+        This section introduces the experience with Yeti DNS. 
+
+      </t>
 
       <section title="Multiple-ZSK Operations">
         <t>The Root Server System incorporates a root zone signed
@@ -748,6 +779,48 @@
 	  such an approach on the stability of the Yeti DNS Testbed
 	  as a whole.</t>
 
+    <t>The Multi-ZSK experiment is designed to test operating 
+      the Yeti root using more than a single ZSK. The goal is 
+      to have each distribution master (DM) have a separate ZSK, 
+      signed by a single KSK. This will allow DM to operate 
+      independently, each maintaining their own key secret material. </t>
+
+    <figure anchor="mulit-zsk" title="Multiple ZSK Experiment">
+        <artwork>
+          <![CDATA[
+                       +--------------+         +-----------+
+              +------->| BII ZSK      |-------->| Yeti root |
+              | signs  +--------------+  signs  +-----------+
+              |
++-----------+ |        +--------------+         +-----------+
+| Yeti KSK  |-+------->| TISF ZSK     |-------->| Yeti root |
++-----------+ | signs  +--------------+  signs  +-----------+
+              |
+              |        +--------------+         +-----------+
+              +------->| WIDE ZSK     |-------->| Yeti root |
+                signs  +--------------+  signs  +-----------+
+]]>
+        </artwork>
+      </figure>
+
+      <t>In the MZSK setup, each DM maintains a separate ZSK and 
+        produces a version of the root zone with different signatures. 
+        Aside from the signatures, the contents of the Yeti root zone 
+        is identical, as shown in  <xref target="mulit-zsk"/>. </t>
+
+      <t>In DNSSEC, the KSK and ZSK are all returned in a single value, 
+        the DNSKEY Resource Record Set (RRset). Because of this, DNSSEC 
+        resolvers are able to validate answers as long as they are signed 
+        by any of the ZSK.</t>
+
+    <t> This experiment will test the behavior of the Yeti root servers 
+      and resolvers as we have multiple ZSK, both during normal 
+      operation and during rollover. We did not change the algorithm 
+      used, the key lengths, or the timings. ***Davey: algorithm, 
+      key lengths and timing is ought to be introduce in section 3, 
+      architecture part****</t>
+
+
         <section title="Proof of Concept">
           <t>XXX There is some detail missing from this description of
 	    the environment tested in the lab. Presuably "A and B"
@@ -762,27 +835,22 @@
 	    on response size is suggestive of experimentation, but
 	    no experiment is described. We need more detail of what
 	    happened here for its inclusion in this document to be
-	    useful. XXX</t>
+	    useful. XXX </t>
 
-	  <t>In the lab test phase, we simply setup two root servers
-	    (A and B) and a resolver switch between them (BIND
-	    only).  Root A and Root B use their own ZSK to sign the
-	    zone. It is proved that Multi-ZSK works by adding
-	    multiple ZSK to the root zone. As a result, the resolver
-	    will cache the key sets instead of a single ZSK to
-	    validate the data no matter it is signed by Root A or
-	    Root B. We also tested Unbound and the test concluded
-	    in success with more than 10 DMs and 10 ZSKs.</t>
+      <t>Davey's notes: a full report on this lab test:
+      http://lists.yeti-dns.org/pipermail/discuss/attachments/20151021/01fd3827/attachment.txt. 
+      Right now I just use a brief description below on this lab test to show the result.</t>
 
-	  <t>Although more DMs and ZSKs can be added into the test,
-	    adding more ZSKs to the root zone enlarges the DNS
-	    response size for DNSKEY queries which may be a concern
-	    given the limitation of DNS packet size.  Current IANA
-  	    root server operators are inclined to keep the packets
-	    size as small as possible.  So the number of DM and ZSK
-	    will be parameter which is decided based on operation
-            experience.  In the current Yeti root testbed, there
-            are 3 DMs, each with a separate ZSK.</t>
+	  <t>In preparation for the experiment, a lab test was done 
+      to verify the behavior of DNS resolvers under controlled 
+      conditions. A DNS resolver was configured using two 
+      experimental root servers. Traffic was sent insuring that 
+      the resolver had the ZSK from one or both of the servers, 
+      and then the validation results checked. The lab test confirmed 
+      that if a root server tried to use a ZSK that was not present 
+      in the DNSKEY RRset that it would fail, but that even if 
+      two servers used separate ZSK this resolves properly as 
+      long as they are both present in the DNSKEY RRset.</t>
         </section>
         
         <section title="Experiment">
@@ -793,6 +861,8 @@
             correspond to the lab experiment described above in "Proof
             of Concept". Is it different? Is there a more detailed
             description of what was done, here? XXX</t>
+
+          <t>Davey's note:Phase 1 is different from proof of concept because it is done in the Yeti root testbed not lab test. You can refer to the link: https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md#phase-1 </t>
 
           <t>
             <list style="symbols">
@@ -827,6 +897,8 @@
 	    "we got it running after some difficulties" but say
 	    nothing about the other stuff. XXX</t>
 
+      <t>Davey's note: The two documents about MZSK experiment may give you some clue. In general in my understand, we are not sure 1) DNSSEC resolvers continue to function properly with a MZSK setup (may fail?) 2)Yeti system would continue to function properly with an MZSK setup(do we need any specially setup ?) 3)the impact for large response (we report one error due to the failure)</t>
+
 	  <t>The MZSK experiment was finished by the end of 2016-04.
 	    Almost everything appears to be working. But there have
 	    been some findings <xref target="Experiment-MZSK-notes"/>,
@@ -851,6 +923,8 @@
 	  zone apex NS set is signed, whereas in the root zone it
 	  is not. But that is demonstrably incorrect; the root zone
 	  apex NS set *is* signed. XXX</t>
+
+    <t>Davey's note: I think we could put it into another section or subsection : Yeti tools. Right now we did not document them. Actually we have some tools developed for Yeti. Let's me give you some links: 1)http://yeti-dns.org/yeti/blog/2016/06/15/Mirroring-traffic-using-dnsdist.html 2) http://dnsv6lab.net/2016/09/06/DNS-pcap-fragments/ 3) http://dnsv6lab.net/2016/10/13/ymmv/ </t>
 
 	<t>With the recent renumbering of H root Server's IP address,
 	  there is a discussion of ways that resolvers can update
@@ -892,6 +966,13 @@
         <t>XXX This section starts to identify a problem, but does not
           actually describe an experiment, any results or a conclusion.
           Was an experiment carried out? Where is it described? XXX</t>
+
+          <t>Davey's note: Actually we just observe bugs or weird issues 
+            during the IPv6-only root operation. One possible way is to 
+            put it as an collection of fingds or report on issues we observed. 
+            Right now I have a dataset from Atlas probes which give me some 
+            hint that IPv6 fragmentation caused by large response do increase 
+            the failure rate using UDP. I may introduce it later when we meet in Prague.</t>
 
         <t>In consideration of new DNS protocol and operation, there
           is always a hard limit on the DNS packet size.  Take Yeti
@@ -1005,6 +1086,9 @@
         to record them as technical findings from Yeti DNS Project.</t>
 
       <section title="IPv6 fragments issue">
+
+        <t>Davey's note: Maybe we can move and extend it to section 4.3</t>
+
         <t>There are two cases in Yeti testbed reported that some
           Yeti root servers failed to pull the zone from a Distribution
           Master via AXFR/IXFR. Two facts have been revealed in
