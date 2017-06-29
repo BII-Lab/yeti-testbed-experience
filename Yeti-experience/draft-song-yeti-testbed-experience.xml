@@ -472,6 +472,110 @@
    model each of three DMs independently fetches the root zone from IANA, 
    signs it and publishes the latest zone data to Yeti root servers.</t>
 
+      <section title="Root Zone Retrieval">
+        <t>Since Yeti DNS servers cannot receive DNS NOTIFY
+          <xref target="RFC1996"/> messages from the Root Server
+	  System, a polling approach is used. Each Yeti Distribution
+	  Master (DM) requests the root zone SOA record from F-Root
+	  and performs a zone transfer from the same server if the
+	  retrieved value of SOA.SERIAL is greater than that of the
+	  last retrieved zone.</t>
+
+	 <t>At the time of writing, unauthenticated zone transfers
+	  of the root zone are available directly from B-Root,
+	  C-Root, F-Root, G-Root and K-Root, and from L-Root via
+	  the two servers XFR.CJR.DNS.ICANN.ORG and XFR.LAX.DNS.ICANN.ORG,
+	  as well as via FTP from sites maintained by the Root Zone
+	  Maintainer and the IANA Functions Operator. The Yeti DNS
+	  Testbed retrieves the root zone from using zone transfers
+	  from F-Root. The schedule on which F-Root is polled by
+	  each Yeti DM is as follows:</t>
+
+        <texttable>
+          <ttcol>DM Operator</ttcol><ttcol>Time</ttcol>
+          <c>BII</c><c>UTC hour + 00 minutes</c>
+          <c>WIDE</c><c>UTC hour + 20 minutes</c>
+          <c>TISF</c><c>UTC hour + 40 minutes</c>
+        </texttable>
+      </section>
+
+      <section title="Transformation of Root Zone to Yeti-Root Zone">
+
+        <t>Davey's note: The routine of DM are documented in : https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Setup.md. Regarding the SOA record, it is said "The MNAME and RNAME are set to Yeti values". Currently we implement like this: MNAME: www.yeti-dns.org. RNAME: DM-operator.yeti-dns.org. Such as wide.yeti-dns.org for WIDE and bii.yeti-dns.org for BII.</t>
+
+        <t>XXX(need description of the precise process followed here)XXX</t>
+
+        <t>XXX(remove RRSIG)XXX</t>
+
+        <t>XXX(remove apex NS RRSet)XXX</t>
+
+        <t>XXX(add apex Yeti NS RRSet)XXX</t>
+
+        <t>XXX(remove apex DNSKEY RRSet)XXX</t>
+
+        <t>XXX(add apex Yeti DNSKEY RRSet)XXX</t>
+
+        <t>XXX(sign zone using specified keys)XXX</t>
+
+        <t>The transformation of Root Zone to Yeti-Root zone takes
+          place independently on each of the Yeti DMs.</t>
+
+        <t>Note SOA.SERIAL preservation during transformation process.</t>
+      </section>
+
+      <section title="Yeti-Root Zone Distribution">
+        <t>Davey's note: I re-sent mail with title : DM configuration</t>
+
+        <t>XXX(need details about NOTIFY configuration on Yeti-DMs)XXX</t>
+
+        <t>XXX(need details about TSIG authentication on Yeti-DMs)XXX</t>
+
+        <t>XXX(examples of configuration from DMs and Yeti-Root servers
+          might be handy)XXX</t>
+      </section>
+
+      <section title="Information Synchronization">
+
+
+        <t>XXX(Joe needs more information about the content of this section
+          before he can suggest changes)XXX</t>
+
+        <t>Given three DMs operational in Yeti root system, it is
+          necessary to prevent any inconsistency caused by human
+          mistakes in operation.  The straight method is to share
+          the same parameters to produce the Yeti root zone.  There
+          parameters includes following set of files:</t>
+
+        <t>
+          <list style="symbols">
+            <t>the list of Yeti root servers, including:
+              <list style="symbols">
+                <t>public IPv6 address and host name </t>
+                <t>IPv6 addresses originating zone transfer</t>
+                <t>IPv6 addresses to send DNS notify to</t>
+              </list>
+            </t>
+            <t>the ZSKs used to sign the root</t>
+            <t>the KSK used to sign the root</t>
+            <t>the SERIAL when this information is active</t>
+          </list>
+        </t>
+
+        <t>XXX(that list describes the contents of files, not the files
+          themselves. Can I see examples of the actual files that are
+          used?)XXX</t>
+
+          <t>Davey's Note: I sent you a mailing with the title: directories and files in DM's repo.</t>
+
+        <t>The operation is simple that each DM operator synchronize
+          the files with the information needed to produce the Yeti
+          root zone. XXX(how?)XXX  When a change is desired XX(by
+          whom?)XX (such as adding a new server or rolling the ZSK),
+          a DM operator updates the local file and push to other
+          DM XX(how?)XX.  A SOA SERIAL in the future is chosen for
+          when the changes become active. </t>
+      </section>
+
     <section title="Yeti-Root Server Naming Scheme">
     
     <t>The current naming scheme was normalized to use single-character 
@@ -495,7 +599,6 @@
               avoid central administration on naming as much as possible.</t>
 
             <t>Encourage DNSSEC deployment on individual Root names</t>
-            <t></t>
           </list>
         </t>
 
@@ -536,102 +639,6 @@
     aims to analyze alternative naming schemes.</t>
 
   </section>
-
-      <section title="Root Zone Retrieval">
-        <t>Since Yeti DNS servers cannot receive DNS NOTIFY
-          <xref target="RFC1996"/> messages from the Root Server
-	  System, a polling approach is used. Each Yeti Distribution
-	  Master (DM) requests the root zone SOA record from F-Root
-	  and performs a zone transfer from the same server if the
-	  retrieved value of SOA.SERIAL is greater than that of the
-	  last retrieved zone.</t>
-
-	 <t>At the time of writing, unauthenticated zone transfers
-	  of the root zone are available directly from B-Root,
-	  C-Root, F-Root, G-Root and K-Root, and from L-Root via
-	  the two servers XFR.CJR.DNS.ICANN.ORG and XFR.LAX.DNS.ICANN.ORG,
-	  as well as via FTP from sites maintained by the Root Zone
-	  Maintainer and the IANA Functions Operator. The Yeti DNS
-	  Testbed retrieves the root zone from using zone transfers
-	  from F-Root. The schedule on which F-Root is polled by
-	  each Yeti DM is as follows:</t>
-
-        <texttable>
-          <ttcol>DM Operator</ttcol><ttcol>Time</ttcol>
-          <c>BII</c><c>UTC hour + 00 minutes</c>
-          <c>WIDE</c><c>UTC hour + 20 minutes</c>
-          <c>TISF</c><c>UTC hour + 40 minutes</c>
-        </texttable>
-      </section>
-
-      <section title="Transformation of Root Zone to Yeti-Root Zone">
-        <t>XXX(need description of the precise process followed here)XXX</t>
-
-        <t>XXX(remove RRSIG)XXX</t>
-
-        <t>XXX(remove apex NS RRSet)XXX</t>
-
-        <t>XXX(add apex Yeti NS RRSet)XXX</t>
-
-        <t>XXX(remove apex DNSKEY RRSet)XXX</t>
-
-        <t>XXX(add apex Yeti DNSKEY RRSet)XXX</t>
-
-        <t>XXX(sign zone using specified keys)XXX</t>
-
-        <t>The transformation of Root Zone to Yeti-Root zone takes
-          place independently on each of the Yeti DMs.</t>
-
-        <t>Note SOA.SERIAL preservation during transformation process.</t>
-      </section>
-
-      <section title="Yeti-Root Zone Distribution">
-        <t>XXX(need details about NOTIFY configuration on Yeti-DMs)XXX</t>
-
-        <t>XXX(need details about TSIG authentication on Yeti-DMs)XXX</t>
-
-        <t>XXX(examples of configuration from DMs and Yeti-Root servers
-          might be handy)XXX</t>
-      </section>
-
-      <section title="Information Synchronization">
-        <t>XXX(Joe needs more information about the content of this section
-          before he can suggest changes)XXX</t>
-
-        <t>Given three DMs operational in Yeti root system, it is
-          necessary to prevent any inconsistency caused by human
-          mistakes in operation.  The straight method is to share
-          the same parameters to produce the Yeti root zone.  There
-          parameters includes following set of files:</t>
-
-        <t>
-          <list style="symbols">
-            <t>the list of Yeti root servers, including:
-              <list style="symbols">
-                <t>public IPv6 address and host name </t>
-                <t>IPv6 addresses originating zone transfer</t>
-                <t>IPv6 addresses to send DNS notify to</t>
-              </list>
-            </t>
-            <t>the ZSKs used to sign the root</t>
-            <t>the KSK used to sign the root</t>
-            <t>the SERIAL when this information is active</t>
-          </list>
-        </t>
-
-        <t>XXX(that list describes the contents of files, not the files
-          themselves. Can I see examples of the actual files that are
-          used?)XXX</t>
-
-        <t>The operation is simple that each DM operator synchronize
-          the files with the information needed to produce the Yeti
-          root zone. XXX(how?)XXX  When a change is desired XX(by
-          whom?)XX (such as adding a new server or rolling the ZSK),
-          a DM operator updates the local file and push to other
-          DM XX(how?)XX.  A SOA SERIAL in the future is chosen for
-          when the changes become active. </t>
-      </section>
-
       <section title="Yeti Root Servers">
         <t>Various volunteers have donated authoritative servers
           to act as Yeti-Root servers. At the time of writing there
@@ -642,53 +649,55 @@
         <texttable>
           <ttcol>Name</ttcol><ttcol>Operator</ttcol><ttcol>Location</ttcol>
 
-          <c>bii.dns-lab.net</c><c>XXX</c><c>XXX</c>
+          <c>bii.dns-lab.net</c><c>BII</c><c>CHINA</c>
 
-          <c>yet-ns.tsif.net</c><c>TSIF</c><c>XXX</c>
+          <c>yet-ns.tsif.net</c><c>TSIF</c><c>U.S.A</c>
 
-          <c>yeti-ns.wide.ad.jp</c><c>WIDE Project</c><c>XXX</c>
+          <c>yeti-ns.wide.ad.jp</c><c>WIDE Project</c><c>Japan</c>
 
-          <c>yeti-ns.as59715.net</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns.as59715.net</c><c>as59715</c><c>Italy</c>
 
-          <c>dahu1.yeti.eu.org</c><c>XXX</c><c>XXX</c>
+          <c>dahu1.yeti.eu.org</c><c>Dahu Group</c><c>France</c>
 
-          <c>ns-yeti.bondis.org</c><c>XXX</c><c>XXX</c>
+          <c>ns-yeti.bondis.org</c><c>Bond Internet Systems</c><c>Spain</c>
 
-          <c>yeti-ns.ix.ru</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns.ix.ru</c><c>Russia</c><c>MSK-IX</c>
 
-          <c>yeti.bofh.priv.at</c><c>XXX</c><c>XXX</c>
+          <c>yeti.bofh.priv.at</c><c>CERT Austria</c><c>Austria</c>
 
-          <c>yeti.ipv6.ernet.in</c><c>XXX</c><c>XXX</c>
+          <c>yeti.ipv6.ernet.in</c><c>ERNET India</c><c>India</c>
 
-          <c>yeti-dns01.dnsworkshop.org</c><c>XXX</c><c>XXX</c>
+          <c>yeti-dns01.dnsworkshop.org</c><c>dnsworkshop /informnis</c><c>Germany</c>
 
-          <c>yeti-ns.conit.co</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns.conit.co</c><c>CONIT S.A.S </c><c>Colombia</c>
 
-          <c>dahu2.yeti.eu.org</c><c>XXX</c><c>XXX</c>
+          <c>dahu2.yeti.eu.org</c><c>Dahu Group</c><c>France</c>
 
-          <c>yeti.aquaray.com</c><c>XXX</c><c>XXX</c>
+          <c>yeti.aquaray.com</c><c>Aqua Ray SAS</c><c>France</c>
 
-          <c>yeti-ns.switch.ch</c><c>SWITCH</c><c>XXX</c>
+          <c>yeti-ns.switch.ch</c><c>SWITCH</c><c>Switzerland</c>
 
-          <c>yeti-ns.lab.nic.cl</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns.lab.nic.cl</c><c>CHILE NIC</c><c>Chile</c>
 
-          <c>yeti-ns1.dns-lab.net</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns1.dns-lab.net</c><c>BII</c><c>China</c>
 
-          <c>yeti-ns2.dns-lab.net</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns2.dns-lab.net</c><c>BII</c><c>China</c>
 
-          <c>yeti-ns3.dns-lab.net</c><c>XXX</c><c>XXX</c>
+          <c>yeti-ns3.dns-lab.net</c><c>BII</c><c>China</c>
 
-          <c>ca978112ca1bbdcafac231b39a23dc.yeti-dns.net</c>
-            <c>XXX</c><c>XXX</c>
+          <c>ca...a23dc.yeti-dns.net</c><c>Yeti-ZA</c><c>South Africa</c>
 
-          <c>3e23e8160039594a33894f6564e1b1.yet-dns.net</c>
-            <c>XXX</c><c>XXX</c>
+          <c>3f...374cd.yeti-dns.net</c><c>Yeti-AU</c><c>Australia</c>
 
-          <c>3f79bb7b435b05321651daefd374cd.yeti-dns.net</c>
-            <c>XXX</c><c>XXX</c>
+          <c>yeti1.ipv6.ernet.in</c><c>ERNET India</c><c>India</c>
 
-          <c>xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c</c>
-            <c>XXX</c><c>XXX</c>
+          <c>xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c</c><c>ERNET India</c><c>India</c>
+
+          <c>yeti-dns02.dnsworkshop.org</c><c>dnsworkshop /informnis</c><c>U.S.A</c>
+
+          <c>yeti.mind-dns.nl</c><c>Monshouwer Internet Diensten</c><c>Netherlands</c>
+
+          <c>yeti-ns.datev.net</c><c>DATEV</c><c>Germany</c>
         </texttable>
 
         <t>The current list of Yeti-Root server is made available
@@ -716,7 +725,7 @@
 	    <t>Operating System: 6 Yeti-Root servers run on
 	      on Linux (Ubuntu, Debian, CentOS, and ArchLinux); 5
 	      run on FreeBSD and 1 on NetBSD. The remainder were not
-              disclosed (XXX really? surely we can find this out.)</t>
+              disclosed (XXX really? surely we can find this out. Davey's Note I have update information. I will send to you later)</t>
 	    <t>DNS software: 18 of 25 Yeti-Root servers use BIND9
 	      (versions varying between 9.9.7 and 9.10.3); four use
 	      NSD (4.10 and 4.15); two use Knot (2.0.1 and 2.1.0)
@@ -746,8 +755,6 @@
 
     <section title="Experience with Yeti DNS">
 
-      <t>Davey's note: There are two documents in repo which will helpfull for you: 1) https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md 2)https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md </t>
-
       <t>As introduced, Yeti DNS is a root testbed designed for 
         trying new ideas. For each proposed idea, it is firstly 
         tested in Lab environment as a proof of concept before it 
@@ -761,7 +768,19 @@
 
       </t>
 
+      <t>Davey's note: we have done other experiments and document them in yeti blog. 
+        If you find them useful we can add to experiment section: 
+1) http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-Root-Zone-Update.html
+2) http://yeti-dns.org/yeti/blog/2017/03/03/bind-edns-fallback-and-dn.ssec-issue.html
+3) http://yeti-dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-Root-Server-System.html
+4) http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html
+</t>
+
       <section title="Multiple-ZSK Operations">
+
+      <t>Davey's note: There are two documents in repo which will helpfull for you: 1) https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md 2)https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md </t>
+
+
         <t>The Root Server System incorporates a root zone signed
 	  using DNSSEC. Responsibility for cryptographic operations
 	  is split between the IANA Functions Operator (PTI), who
