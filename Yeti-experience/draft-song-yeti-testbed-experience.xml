@@ -83,7 +83,7 @@
     ipr="trust200902">
 
   <front>
-    <title>Yeti DNS Testbed: Interim Results</title>
+    <title>Yeti DNS Testbed</title>
 
     <author fullname="Linjian Song" initials="L." surname="Song" role="editor">
       <organization>Beijing Internet Institute</organization>
@@ -170,9 +170,9 @@
     <!-- <keyword>dns</keyword> -->
 
     <abstract>
-      <t>The Internet's Domain Name System is built upon the
-        foundation provided by the Root Server System -- that is,
-        the critical infrastructure that serves the DNS root zone.</t>
+      <t>The Internet's Domain Name System (DNS) is built upon the
+	foundation provided by the Root Server System -- that is,
+	the critical infrastructure that serves the DNS root zone.</t>
 
       <t>Yeti DNS is an experimental, non-production testbed that
         aims to provide an environment where technical and operational
@@ -184,18 +184,25 @@
         is not affiliated with ICANN, IANA or any Root Server
         Operator.</t>
 
-        <t>This document presents a detailed description of how
-        the Yeti DNS testbed was constructed, as an aid to future
-        research that might benefit from the construction of similar
-        infrastructure.</t>
+      <t>The Yeti DNS testbed implementation includes various novel
+	and experimental components including IPv6-only transport,
+	independent, autonomous Zone Signing Key management, large
+	cryptographic keys and a large number of component Yeti-Root
+	Servers. These differences from the Root Server System have
+	operational consequences such as large responses to priming
+	queries and the coordination of a large pool of independent
+	operators; by deploying such a system globally but outside
+	the production DNS system, the Yeti DNS project provides
+	an opportunity to gain insight into those consequences
+	without threatening the stability of the DNS.</t>
 
-      <t>This document also includes a summary of experiments performed
-        during the first two years of the Yeti DNS project with
-        their findings, and is intended to be a stable reference
-        that supports ongoing DNS protocol and operations work in
-        the IETF.</t>
-
-
+      <t>This document neither addresses the relevant policies under
+	which the Root Server System is operated nor makes any
+	proposal for changing any aspect of its implementation or
+	operation. This document aims solely to document technical
+        and operational findings following the deployment of a
+        system which is similar but different from the Root Server
+        System.</t>
     </abstract>
   </front>
 
@@ -248,36 +255,30 @@
         networks.</t>
 
       <t>By design, the Yeti testbed system serves the root zone
-        published by the IANA with only those structural modifications
-        necessary to ensure that it is able to function usefully
-        in the Yeti testbed system instead of the production Root
-        Server system.  In particular, no delegation for any top-level
-        zone is changed, added or removed from the IANA-published
-        root zone to construct the root zone served by the Yeti
-        testbed system. In this document, for clarity, we refer to
-        the zone derived from the IANA-published root zone as the
-        Yeti-Root zone.</t>
+	published by the IANA with only those structural modifications
+	necessary to ensure that it is able to function usefully
+	in the Yeti testbed system instead of the production Root
+	Server system.  In particular, no delegation for any top-level
+	zone is changed, added or removed from the IANA-published
+	root zone to construct the root zone served by the Yeti
+	testbed system. In this document, for clarity, we refer to
+	the zone derived from the IANA-published root zone as the
+	Yeti-Root zone.</t>
 
-      <t>As an a informative memo,this document presents a detailed 
-        description of how the Yeti DNS testbed was constructed as 
-        well as a summary of the experiments carried out as part of 
-        the Yeti DNS Project during its first two years of operation.</t>
-
-      <t>The targeted audiences of this memo can be the experienced people 
-        who are interested in Yeti Testbed and experiments. The audiences 
-        without special background on DNS root can follow our introduction 
-        to better understand the root system and captures the issues in 
-        this field.</t>
-
-      <t>The rest of this document is organized as follows. Sections 2 
-        introduces the areas of study in Yeti DNS Project. Section 3 
-        describes the infrastructure of Yeti DNS Root testbed. Section 4 
-        presents the experience and findings in some experiments. Section 
-        5 presents some of our ideas for future work.</t>
+      <t>The Yeti DNS testbed serves a similar function to the Root
+	Server System in the sense that they both serve similar
+	zones (the Yeti-Root zone and the Root zone, respectively).
+	However, the Yeti DNS testbed only serves clients that are
+	explicitly configured to participate in the experiment,
+	whereas the Root Server System serves the whole Internet.
+	The known set of clients has allowed structural changes to
+	be deployed in the Yeti DNS testbed whose impact on clients
+	can be measured and analysed.</t>
     </section>
 
+<!-- I don't think we need this section at all.
+
     <section title="Areas of Study">
-      
      <t>In the beginning of Yeti DNS project, there are also 
       some questions and preliminary ideas in the mind of project 
       founders. Later the testbed and experiments were designed 
@@ -377,12 +378,9 @@
       </section>
     </section>
 
+-->
+
     <section title="Yeti DNS Infrastructure">
-
-    <t> Davey's NOte: I found a subsection is missing in the 03 
-      version : "3.3. Yeti Resolvers and Experimental Traffic". 
-      Isn't it useful to introduce how we introduce and mirror traffic ? </t>
-
       <t>The purpose of the testbed is to allow DNS queries from
 	stub resolvers, mediated by recursive resolvers, to be
 	delivered to Yeti-Root servers, and for corresponding
@@ -403,8 +401,6 @@
 ]]>
         </artwork>
       </figure>
-
-      <t>Davey's note: why DM's role are missing in the figure.</t>
 
       <t>To use the Yeti DNS testbed, a stub resolver must be
         explicitly configured to use recursive resolvers that
@@ -450,12 +446,12 @@
        |    `---+ Yeti  |  | Yeti  |  . . . . . . .  | Yeti  |
        |        | Root  |  | Root  |                 | Root  |
        |        `---+---'  `---+---'                 `---+---'
-       |            |          |                         |  DNS
+       |            |          |                         |    DNS
        |            |          |                         |  Response
        |         ,--V----------V-------------------------V--.
        `---------+              Yeti Resolvers              |
                  `--------------------+---------------------'
-                                      |                     DNS
+                                      |                       DNS
                                       |                     Response
                  ,--------------------V---------------------.
                  |            Yeti Stub Resolvers           |
@@ -463,14 +459,6 @@
 ]]>
         </artwork>
       </figure>
-
-    <t>Davey's note: Multiple-DM setting is default and feature of Yeti DNS. So I think we should highlight it somewhere. So I add the following paragraph: </t>
-
-    <t>While in principle this could be done by a single DM, Yeti uses a set
-   of three DMs to introduce a important model to implement the concept of 
-   "shared zone control" proposed in ICANN ITI report [reference!].In this 
-   model each of three DMs independently fetches the root zone from IANA, 
-   signs it and publishes the latest zone data to Yeti root servers.</t>
 
       <section title="Root Zone Retrieval">
         <t>Since Yeti DNS servers cannot receive DNS NOTIFY
@@ -497,9 +485,21 @@
           <c>WIDE</c><c>UTC hour + 20 minutes</c>
           <c>TISF</c><c>UTC hour + 40 minutes</c>
         </texttable>
+
+        <t>The Yeti DNS testbed uses multiple DMs, each of which acts
+	  autonomously and equivalently to its siblings. Any single
+	  DM can act to distribute new revisions of the Yeti-Root
+	  zone, and is also responsible for signing the RRSets that
+	  are changed as part of the transformation of the Root
+	  Zone into the Yeti-Root zone described in <xref
+	  target="transformation"/>. This shared control over the
+	  processing and distribution of the Yeti-Root zone
+	  approximates some of the ideas around shared zone control
+	  explored in <xref target="ITI2014"/>.</t>
       </section>
 
-      <section title="Transformation of Root Zone to Yeti-Root Zone">
+      <section title="Transformation of Root Zone to Yeti-Root Zone"
+        anchor="transformation">
 
         <t>Davey's note: The routine of DM are documented in : https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Setup.md. Regarding the SOA record, it is said "The MNAME and RNAME are set to Yeti values". Currently we implement like this: MNAME: www.yeti-dns.org. RNAME: DM-operator.yeti-dns.org. Such as wide.yeti-dns.org for WIDE and bii.yeti-dns.org for BII.</t>
 
@@ -1213,6 +1213,15 @@
       &I-D.wessels-edns-key-tag;
       &I-D.bortzmeyer-dname-root;
       &I-D.ietf-dnsop-resolver-priming;
+
+      <reference anchor="ITI2014"
+        target="https://www.icann.org/en/system/files/files/iti-report-15may14-en.pdf">
+        <front>
+          <title>Identifier Technology Innovation Report</title>
+          <author/>
+          <date day="15" month="May" year="2014"/>
+        </front>
+      </reference>
 
       <reference anchor="Fragmenting-IPv6"
         target="http://blog.apnic.net/2016/05/19/fragmenting-ipv6/">
