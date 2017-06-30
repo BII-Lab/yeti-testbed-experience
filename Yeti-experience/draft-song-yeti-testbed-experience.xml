@@ -276,9 +276,10 @@
 	can be measured and analysed.</t>
     </section>
 
-<!-- I don't think we need this section at all.
-
     <section title="Areas of Study">
+     <t>The following sections contain lists of questions categorised
+       into general subject areas ... (incomplete)</t>
+
      <t>In the beginning of Yeti DNS project, there are also 
       some questions and preliminary ideas in the mind of project 
       founders. Later the testbed and experiments were designed 
@@ -378,9 +379,7 @@
       </section>
     </section>
 
--->
-
-    <section title="Yeti DNS Infrastructure">
+    <section title="Yeti DNS Testbed Infrastructure">
       <t>The purpose of the testbed is to allow DNS queries from
 	stub resolvers, mediated by recursive resolvers, to be
 	delivered to Yeti-Root servers, and for corresponding
@@ -651,7 +650,7 @@
 
           <c>bii.dns-lab.net</c><c>BII</c><c>CHINA</c>
 
-          <c>yet-ns.tsif.net</c><c>TSIF</c><c>U.S.A</c>
+          <c>yet-ns.tsif.net</c><c>TSIF</c><c>USA</c>
 
           <c>yeti-ns.wide.ad.jp</c><c>WIDE Project</c><c>Japan</c>
 
@@ -659,7 +658,7 @@
 
           <c>dahu1.yeti.eu.org</c><c>Dahu Group</c><c>France</c>
 
-          <c>ns-yeti.bondis.org</c><c>Bond Internet Systems</c><c>Spain</c>
+	  <c>ns-yeti.bondis.org</c><c>Bond Internet Systems</c><c>Spain</c>
 
           <c>yeti-ns.ix.ru</c><c>Russia</c><c>MSK-IX</c>
 
@@ -667,7 +666,8 @@
 
           <c>yeti.ipv6.ernet.in</c><c>ERNET India</c><c>India</c>
 
-          <c>yeti-dns01.dnsworkshop.org</c><c>dnsworkshop /informnis</c><c>Germany</c>
+	  <c>yeti-dns01.dnsworkshop.org</c><c>dnsworkshop
+	    /informnis</c><c>Germany</c>
 
           <c>yeti-ns.conit.co</c><c>CONIT S.A.S </c><c>Colombia</c>
 
@@ -691,11 +691,14 @@
 
           <c>yeti1.ipv6.ernet.in</c><c>ERNET India</c><c>India</c>
 
-          <c>xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c</c><c>ERNET India</c><c>India</c>
+	  <c>xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c</c><c>ERNET
+	    India</c><c>India</c>
 
-          <c>yeti-dns02.dnsworkshop.org</c><c>dnsworkshop /informnis</c><c>U.S.A</c>
+	  <c>yeti-dns02.dnsworkshop.org</c><c>dnsworkshop
+	    /informnis</c><c>USA</c>
 
-          <c>yeti.mind-dns.nl</c><c>Monshouwer Internet Diensten</c><c>Netherlands</c>
+	  <c>yeti.mind-dns.nl</c><c>Monshouwer Internet
+	    Diensten</c><c>Netherlands</c>
 
           <c>yeti-ns.datev.net</c><c>DATEV</c><c>Germany</c>
         </texttable>
