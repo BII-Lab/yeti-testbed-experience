@@ -247,12 +247,11 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    the wider technical community.
 
    Finally, some concern has been expressed about the possible
-   motivations of the Yeti DNS Project given that its primary sponsor
-   and co-coordinator is an organisation based in the People's Republic
-   of China where access to the Internet is subject to substantial
-   centralised control, in contrast to most other jurisdictions where
-   such controls are either lighter or not present.  The coordinators of
-   the Yeti DNS Project have taken care to steer discussions and related
+   applications of the Yeti DNS Project to the governments of countries
+   where access to the Internet is subject to substantial centralised
+   control, in contrast to most other jurisdictions where such controls
+   are either lighter or not present.  The coordinators of the Yeti DNS
+   Project have taken care to steer all discussions and related
    decisions about the technical work of the project to public venues in
    the interests of full transparency, and encourage anybody concerned
    about the decision-making process to participate in those venues and
@@ -272,6 +271,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    o  How can representative traffic be introduced into such a captive
       testbed such that insights into the impact of specific differences
       between the testbed and the Root Server System can be observed?
+
 
 
 
