@@ -1035,6 +1035,8 @@
 	  subsequent releases.</t>
       </section>
 
+<!-- deferred for 04
+
       <section title="The KSK Rollover Experiment in Yeti">
         <t>The Yeti DNS Project provides a good basis to conduct a
           real-world experiment of a KSK rollover in the root zone.
@@ -1116,6 +1118,9 @@
           packets or a increase in retries. The current status of
           this experiment is under monitoring data analysis. </t>
       </section>
+
+--> 
+
     </section>
 
     <section title="IANA Considerations">
