@@ -909,7 +909,7 @@
         More detailed descriptions of observed phenomena are available
         in Yeti DNS mailing list archives and on the Yeti DNS blog.</t>
 
-        <section title="Root Renumbering Issue and Hint File Update">
+	<section title="Automated Hints File Maintenance">
 	  <t>Renumbering events in the Root Server System are
 	    relatively rare. Although each such event is accompanied
 	    by the publication of an updated hints file in standard
@@ -959,39 +959,81 @@
 	    this tool functions as expected in that environment.</t>
         </section>
 
-      <section title="Fragmentation of DNS Responses">
-        <t>XXX This section starts to identify a problem, but does not
-          actually describe an experiment, any results or a conclusion.
-          Was an experiment carried out? Where is it described? XXX</t>
+        <section title="Fragmentation of DNS Responses">
+	  <t>In consideration of new DNS protocol and operation,
+	    there is always a hard limit on the DNS packet size.
+	    Take Yeti for example: adding more root servers, using
+	    the Yeti naming scheme, rolling the KSK, and Multi-ZSK
+	    all increase the packet size.  The fear of large DNS
+	    packets mainly stem from two aspects: one is IP-fragments
+	    and the other is frequently falling back to TCP.</t>
 
-          <t>Davey's note: Actually we just observe bugs or weird issues 
-            during the IPv6-only root operation. One possible way is to 
-            put it as an collection of fingds or report on issues we observed. 
-            Right now I have a dataset from Atlas probes which give me some 
-            hint that IPv6 fragmentation caused by large response do increase 
-            the failure rate using UDP. I may introduce it later when we meet in Prague.</t>
+	  <t>Fragmentation may cause serious issues; if one of the
+	    fragment is lost at random, it results in the loss of
+	    entire packet and involve timeout.  If the fragment is
+	    dropped by a middle-box, the query always results in
+	    failure, and result in name resolution failure unless
+	    the resolver falls back to TCP. It is known at this
+	    moment that limited number of security middle-box
+	    implementations support IPv6 fragments.</t>
 
-        <t>In consideration of new DNS protocol and operation, there
-          is always a hard limit on the DNS packet size.  Take Yeti
-          for example: adding more root servers, using the Yeti
-          naming scheme, rolling the KSK, and Multi-ZSK all increase
-          the packet size.  The fear of large DNS packets mainly
-          stem from two aspects: one is IP-fragments and the other
-          is frequently falling back to TCP.</t>
+          <t>A possible solution is to split a single DNS message
+            across multiple UDP datagrams.  This DNS fragments mechanism
+            is documented in <xref target="I-D.muks-dns-message-fragments"/>
+            as an experimental IETF draft.</t>
 
-        <t>Fragmentation may cause serious issues; if one of the
-          fragment is lost at random, it results in the loss of
-          entire packet and involve timeout.  If the fragment is
-          dropped by a middle-box, the query always results in
-          failure, and result in name resolution failure unless the
-          resolver falls back to TCP. It is known at this moment
-          that limited number of security middle-box implementations
-          support IPv6 fragments.</t>
+        <t>Davey's note: Maybe we can move and extend it to section 4.3</t>
 
-        <t>A possible solution is to split a single DNS message
-          across multiple UDP datagrams.  This DNS fragments mechanism
-          is documented in <xref target="I-D.muks-dns-message-fragments"/>
-          as an experimental IETF draft.</t>
+        <t>There are two cases in Yeti testbed reported that some
+          Yeti root servers failed to pull the zone from a Distribution
+          Master via AXFR/IXFR. Two facts have been revealed in
+          both client side and server side after trouble shooting.</t>
+
+        <t>One fact in client side is that some operation system
+          can not handle IPv6 fragments correctly and AXRF/IXFR in
+          TCP fails.  The bug covers several OSs and one VM platform
+          (listed below).</t>
+
+        <texttable>
+          <ttcol>OS</ttcol>
+          <ttcol>VM</ttcol>
+
+          <c>NetBSD 6.1 and 7.0RC1</c><c>VMware ESXI 5.5</c>
+          <c>FreeBSD10.0 </c><c></c>
+          <c>Debian 3.2</c><c></c>
+        </texttable>
+
+        <t>Another fact is from server side in which one TCP segment
+          of AXRF/ IXFR is fragmented in IP layer resulting in two
+          fragmented packets.  This weird behavior has been documented
+          IETF draft<xref target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>.
+          It reports a situation that some implementations of TCP
+          running over IPv6 neglect to check the IPV6_USE_MIN_MTU
+          value when performing MSS negotiation and when constructing
+          a TCP segment.  It will cause TCP MSS option set to 1440
+          bytes, but IP layer will limit the packet less than 1280
+          bytes and fragment the packet to two fragmented packets.</t>
+
+        <t>While the latter is not a technical error, but it will
+          cause the error in the former fact which deserves much
+          attention in IPv6 operation.</t>
+      </section>
+
+      <section title="Root name compression issue">
+        <t><xref target="RFC1035"/>specifies DNS massage compression
+          scheme which allows a domain name in a message to be
+          represented as either: 1) a sequence of labels ending in
+          a zero octet, 2) a pointer, 3) or a sequence of labels
+          ending with a pointer.  It is designed to save more room
+          of DNS packet.</t>
+
+        <t>However in Yeti testbed, it is found that Knot 2.0 server
+          compresses even the root.  It means in a DNS message the
+          name of root (a zero octet) is replaced by a pointer of
+          2 octets.  As well, it is legal but breaks some tools (Go
+          DNS lib in this bug report) which does not expect such
+          name compression for root.  Both Knot and Go DNS lib have
+          fixed that bug by now.</t>
       </section>
 
       <section title="The KSK Rollover Experiment in Yeti">
@@ -1074,77 +1116,6 @@
           to see if there are any changes, such as a drop off of
           packets or a increase in retries. The current status of
           this experiment is under monitoring data analysis. </t>
-      </section>
-    </section>
-
-    <section title="Other Technical findings and bugs">
-      <t>Besides the experiments with specific goals and procedures,
-        some unexpected bugs have been reported.  It is worthwhile
-        to record them as technical findings from Yeti DNS Project.</t>
-
-      <section title="IPv6 fragments issue">
-
-        <t>Davey's note: Maybe we can move and extend it to section 4.3</t>
-
-        <t>There are two cases in Yeti testbed reported that some
-          Yeti root servers failed to pull the zone from a Distribution
-          Master via AXFR/IXFR. Two facts have been revealed in
-          both client side and server side after trouble shooting.</t>
-
-        <t>One fact in client side is that some operation system
-          can not handle IPv6 fragments correctly and AXRF/IXFR in
-          TCP fails.  The bug covers several OSs and one VM platform
-          (listed below).</t>
-
-        <texttable>
-          <ttcol>OS</ttcol>
-          <ttcol>VM</ttcol>
-
-          <c>NetBSD 6.1 and 7.0RC1</c><c>VMware ESXI 5.5</c>
-          <c>FreeBSD10.0 </c><c></c>
-          <c>Debian 3.2</c><c></c>
-        </texttable>
-
-        <t>Another fact is from server side in which one TCP segment
-          of AXRF/ IXFR is fragmented in IP layer resulting in two
-          fragmented packets.  This weird behavior has been documented
-          IETF draft<xref target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>.
-          It reports a situation that some implementations of TCP
-          running over IPv6 neglect to check the IPV6_USE_MIN_MTU
-          value when performing MSS negotiation and when constructing
-          a TCP segment.  It will cause TCP MSS option set to 1440
-          bytes, but IP layer will limit the packet less than 1280
-          bytes and fragment the packet to two fragmented packets.</t>
-
-        <t>While the latter is not a technical error, but it will
-          cause the error in the former fact which deserves much
-          attention in IPv6 operation.</t>
-      </section>
-
-      <section title="Root name compression issue">
-        <t><xref target="RFC1035"/>specifies DNS massage compression
-          scheme which allows a domain name in a message to be
-          represented as either: 1) a sequence of labels ending in
-          a zero octet, 2) a pointer, 3) or a sequence of labels
-          ending with a pointer.  It is designed to save more room
-          of DNS packet.</t>
-
-        <t>However in Yeti testbed, it is found that Knot 2.0 server
-          compresses even the root.  It means in a DNS message the
-          name of root (a zero octet) is replaced by a pointer of
-          2 octets.  As well, it is legal but breaks some tools (Go
-          DNS lib in this bug report) which does not expect such
-          name compression for root.  Both Knot and Go DNS lib have
-          fixed that bug by now.</t>
-      </section>
-
-      <section title= "SOA update delay issue">
-        <t>It is observed one server on Yeti testbed have some
-          bugs on SOA update with more than 10 hours delay. It
-          is running on Bundy 1.2.0 on FreeBSD 10.2-RELEASE. A
-          workaround is to check DM's SOA status in regular base.
-          But it still need some work to find the bug in code
-          path to improve the software.</t>
       </section>
     </section>
 
