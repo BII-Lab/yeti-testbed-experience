@@ -14,6 +14,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
   <!ENTITY RFC1996 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1996.xml">
+  <!ENTITY RFC2826 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2826.xml">
   <!ENTITY RFC4968 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4986.xml">
   <!ENTITY RFC5011 SYSTEM
@@ -150,7 +152,7 @@
     <!-- Meta-data Declarations -->
 
     <area>Internet Area</area>
-    <workgroup>Internet Engineering Task Force</workgroup>
+    <workgroup>Internet Engineering Task Force (IETF)</workgroup>
 
     <!-- <keyword>dns</keyword> -->
 
@@ -219,7 +221,7 @@
 
       <t>Aspects of the operational structure of the Root Server
         System have been described in such documents as <xref
-        target="TNO"/>, <xref target="ISC-TN-2003-1"/>, <xref
+        target="TNO2009"/>, <xref target="ISC-TN-2003-1"/>, <xref
         target="RSSAC001"/> and <xref target="RFC7720"/>. Such
         references, considered together, provide sufficient insight
         into the operations of the system as a whole that it is
@@ -259,6 +261,57 @@
 	The known set of clients has allowed structural changes to
 	be deployed in the Yeti DNS testbed whose impact on clients
 	can be measured and analysed.</t>
+    </section>
+
+    <section title="Controversy">
+      <t>The Yeti DNS Project, its infrastructure and the various
+	experiments that have been carried out using that infrastructure,
+	have been described by people involved in the project in
+	many public meetings at technical venues since its inception.
+	The mailing lists using which the operation of the
+	infrastructure has been coordinated are open to join, and
+	their archives are public. The project as a whole has been
+	the subject of robust public discussion.</t>
+
+      <t>Some commentators have expressed concern that the Yeti DNS
+	Project is, in effect, operating an "alternate root,"
+	challenging the IAB's comments published in <xref
+	target="RFC2826"/>. Other such alternate roots are considered
+	to have caused end-user confusion and instability in the
+	namespace of the DNS by the introduction of new top-level
+	labels or the different use of top-level labels present in
+	the Root Server System. The coordinators of the Yeti DNS
+	Project do not consider the Yeti DNS Project to be an
+	alternate root in this sense, since by design the namespace
+	enabled by the Yeti-Root Zone is identical to that of the
+	Root Zone.</t>
+
+      <t>Some commentators have expressed concern that the Yeti DNS
+	Project seeks to influence or subvert administrative policy
+	relating to the Root Server System, in particular in the
+	use of DNSSEC trust anchors not published by the IANA and
+	the use of Yeti-Root Servers in regions where governments
+	or other organisations have expressed interest in operating
+	a Root Server. The coordinators of the Yeti-Root project
+	observe that their mandate is entirely technical and has
+	no ambition to influence policy directly; they do hope,
+	however, that technical findings from the Yeti DNS Project
+	might act as a useful resource for the wider technical
+	community.</t>
+
+      <t>Finally, some concern has been expressed about the possible
+	motivations of the Yeti DNS Project given that its primary
+	sponsor and co-coordinator is an organisation based in the
+	People's Republic of China where access to the Internet is
+	subject to substantial centralised control, in contrast to
+	most other jurisdictions where such controls are either
+	lighter or not present. The coordinators of the Yeti DNS
+	Project have taken care to steer discussions and related
+	decisions about the technical work of the project to public
+	venues in the interests of full transparency, and encourage
+	anybody concerned about the decision-making process to
+	participate in those venues and review their archives
+	directly.</t>
     </section>
 
     <section title="Areas of Study">
@@ -1198,6 +1251,7 @@
       &RFC1034;
       &RFC1035;
       &RFC1996;
+      &RFC2826;
       &RFC4968;
       &RFC7626;
       &RFC5011;
@@ -1338,7 +1392,7 @@
         </front>
       </reference>
 
-      <reference anchor="TNO"
+      <reference anchor="TNO2009"
         target="https://www.icann.org/en/system/files/files/root-scaling-model-description-29sep09-en.pdf">
         <front>
           <title>Root Scaling Study: Description of the DNS Root Scaling
