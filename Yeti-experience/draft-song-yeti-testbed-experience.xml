@@ -18,16 +18,12 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2826.xml">
   <!ENTITY RFC2845 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2845.xml">
-  <!ENTITY RFC4968 SYSTEM
-    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4986.xml">
   <!ENTITY RFC5011 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5011.xml">
   <!ENTITY RFC5890 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
   <!ENTITY RFC6891 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6891.xml">
-  <!ENTITY RFC7626 SYSTEM
-    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7626.xml">
   <!ENTITY RFC7720 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7720.xml">
 
@@ -1005,6 +1001,20 @@
           <xref target="Verisign2016"/>.</t>
       </section>
 
+      <section title="KSK Rollover">
+	<t>The Root Zone KSK is expected to undergo a
+	  carefully-orchestrated rollover as described in <xref
+	  target="ICANN2016"/>. ICANN has commissioned various tests
+	  and has published an external test plan <xref
+	  target="ICANN2017"/>.</t>
+
+	<t>The planned approach was also modelled in the Yeti-DNS
+	  Testbed.</t>
+
+        <t>XXX Note to reviewers: observations about the KSK rollover
+          in the Yeti-Root zone to be inserted here. XXX</t>
+      </section>
+
 <!-- deferred for 04
 
       <section title="The KSK Rollover Experiment in Yeti">
@@ -1135,17 +1145,15 @@
       &RFC1996;
       &RFC2826;
       &RFC2845;
-      &RFC4968;
-      &RFC7626;
       &RFC5011;
       &RFC5890;
       &RFC6891;
       &RFC7720;
-      &I-D.muks-dns-message-fragments;
-      &I-D.wkumari-dnsop-trust-management;
+      <!-- &I-D.muks-dns-message-fragments; -->
+      <!-- &I-D.wkumari-dnsop-trust-management; -->
       &I-D.andrews-tcp-and-ipv6-use-minmtu;
-      &I-D.wessels-edns-key-tag;
-      &I-D.bortzmeyer-dname-root;
+      <!-- &I-D.wessels-edns-key-tag; -->
+      <!-- &I-D.bortzmeyer-dname-root; -->
       &I-D.ietf-dnsop-resolver-priming;
 
       <reference anchor="ITI2014"
@@ -1157,6 +1165,7 @@
         </front>
       </reference>
 
+<!--
       <reference anchor="Fragmenting-IPv6"
         target="http://blog.apnic.net/2016/05/19/fragmenting-ipv6/">
         <front>
@@ -1165,6 +1174,7 @@
           <date month="May" year="2016" />
         </front>
       </reference>
+-->
 
       <reference anchor="Wessels2015"
         target="https://indico.dns-oarc.net/event/24/session/10/contribution/10/material/slides/0.pdf">
@@ -1185,6 +1195,7 @@
         </front>
       </reference>
 
+<!--
       <reference anchor="Root-Zone-Database"
         target="http://www.iana.org/domains/root/db">
         <front>
@@ -1193,8 +1204,9 @@
           <date/>
         </front>
       </reference>
+-->
 
-      <reference anchor="ICANN-ROOT-ROLL"
+      <reference anchor="ICANN2016"
         target="https://www.iana.org/reports/2016/root-ksk-rollover-design-20160307.pdf">
         <front>
           <title>Root Zone KSK Rollover Plan</title>
@@ -1203,6 +1215,16 @@
         </front>
       </reference>
 
+      <reference anchor="ICANN2017"
+        target="https://www.icann.org/en/system/files/files/ksk-rollover-external-test-plan-22jul16-en.pdf">
+        <front>
+          <title>2017 KSK Rollover External Test Plan</title>
+          <author/>
+          <date day="22" month="July" year="2016"/>
+        </front>
+      </reference>
+
+<!--
       <reference anchor="ROOT-FAQ"
         target="https://www.isoc.org/briefings/020/">
         <front>
@@ -1211,7 +1233,9 @@
           <date year="2007" />
         </front>
       </reference>
+-->
 
+<!--
       <reference anchor="pcapdump-bug-report"
         target="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=545985">
         <front>
@@ -1222,7 +1246,9 @@
           <date year="2009"/>
         </front>
       </reference>
+-->
 
+<!--
       <reference anchor="Yeti-DNS-Project"
         target="http://www.yeti-dns.org">
         <front>
@@ -1231,7 +1257,9 @@
           <date />
         </front>
       </reference>
+-->
 
+<!--
       <reference anchor="Experiment-MZSK-notes"
         target="https://github.com/shane-kerr/Yeti-Project/blob/experiment-mzsk/doc/Experiment-MZSK-notes.md">
         <front>
@@ -1240,7 +1268,9 @@
           <date year="2016"/>
         </front>
       </reference>
+-->
 
+<!--
       <reference anchor="Yeti-DM-Sync-MZSK"
         target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Sync-MZSK.md">
         <front>
@@ -1249,6 +1279,7 @@
           <date year="2016"/>
         </front>
       </reference>
+-->
 
       <reference anchor="hintUpdate"
         target="https://github.com/BII-Lab/Hintfile-Auto-Update">
@@ -1259,6 +1290,7 @@
         </front>
       </reference>
 
+<!--
       <reference anchor="auto-trust-anchor-file"
         target="https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=758">
         <front>
@@ -1267,7 +1299,9 @@
           <date year="2016"/>
         </front>
       </reference>
+-->
 
+<!--
       <reference anchor="KROLL-ISSUE"
         target="http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html">
         <front>
@@ -1276,6 +1310,7 @@
           <date year="2016" />
         </front>
       </reference>
+-->
 
       <reference anchor="TNO2009"
         target="https://www.icann.org/en/system/files/files/root-scaling-model-description-29sep09-en.pdf">
