@@ -1008,21 +1008,31 @@
 	    size than 1280 octets to be dropped before sending.</t>
       </section>
 
-      <section title="Root name compression issue">
-        <t><xref target="RFC1035"/>specifies DNS massage compression
-          scheme which allows a domain name in a message to be
-          represented as either: 1) a sequence of labels ending in
-          a zero octet, 2) a pointer, 3) or a sequence of labels
-          ending with a pointer.  It is designed to save more room
-          of DNS packet.</t>
+      <section title="Root Label Compression in Knot">
+	<t><xref target="RFC1035"/> specifies that domain names can
+	  be compressed when encoded in DNS messages, being represented
+	  as one of
 
-        <t>However in Yeti testbed, it is found that Knot 2.0 server
-          compresses even the root.  It means in a DNS message the
-          name of root (a zero octet) is replaced by a pointer of
-          2 octets.  As well, it is legal but breaks some tools (Go
-          DNS lib in this bug report) which does not expect such
-          name compression for root.  Both Knot and Go DNS lib have
-          fixed that bug by now.</t>
+          <list style="numbers">
+            <t>a sequence of labels ending in a zero octet;</t>
+
+            <t>a pointer; or</t>
+
+            <t>a sequence of labels ending with a pointer.</t>
+          </list>
+
+          The purpose of this flexibility is to reduce the size of
+          domain names encoded in DNS messages.</t>
+
+        <t>It was observed that Yeti-Root Servers running knot 2.0
+	  would compress the zero-length label (the root domain,
+	  often represented as ".") using a pointer to an earlier
+	  example. Although legal, this encoding increases the
+	  encoded size of the root label from one octet to two; it
+	  was also found to break some client software, in particular
+	  the Go DNS library. Bug reports were filed against both
+	  knot and the Go DNS library, and both were resolved in
+	  subsequent releases.</t>
       </section>
 
       <section title="The KSK Rollover Experiment in Yeti">
