@@ -315,39 +315,24 @@
     </section>
 
     <section title="Areas of Study">
-     <t>The following sections contain lists of questions categorised
-       into general subject areas ... (incomplete)</t>
+     <t>Examples of topics that the Yeti DNS Testbed was built to
+       address are included below, each illustrated with indicative
+       questions.</t>
 
-     <t>In the beginning of Yeti DNS project, there are also 
-      some questions and preliminary ideas in the mind of project 
-      founders. Later the testbed and experiments were designed 
-      and implemented which can be grouped loosely into multiple 
-      set,each representing a somewhat distinct set of problem 
-      statements. These areas of study are summarized here in 
-      the form of lists of questions to give context to the Yeti 
-      testbed infrastructure and experiments that follow.</t>
+     <section title="Implementation of a Root Server System-like Testbed">
+       <t>
+         <list style="symbols">
+           <t>How can a captive testbed be constructed and deployed
+             on the Internet, allowing useful public participation
+             without any risk of disruption of the Root Server System?</t>
 
-      <t>The infrastructure on which the experiments have been run
-        has also involved significant effort to build, principally
-        in its operational aspects: the coordination of a large
-        pool of volunteers in the implementation of the testbed is
-        itself an exercise with relevance to the real world, and
-        commentary on the corresponding logistics is also included
-        in this document. *** Davey's note: I'm not sure this 
-        paragraph is necessary. Or we can use this paragraph in 
-        other section.*** </t>
-
-      <section title="A live DNS Root Testbed">
-        <t>
-          <list style="symbols">
-            <t>How to build a live DNS Root Testbed which is flexible 
-              and adaptive for new experiment idea and changes, especially 
-              with the coordination of a large pool of volunteers?</t>
-            <t>How to introduce real traffic or coin the pattern of real 
-              traffic into the testbed? </t>
-          </list>
-        </t>
-      </section>
+	   <t>How can representative traffic be introduced into
+	     such a captive testbed such that insights into the
+	     impact of specific differences between the testbed and
+	     the Root Server System can be observed?</t>
+         </list>
+       </t>
+     </section>
 
       <section title="Yeti-Root Zone Distribution">
         <t>
