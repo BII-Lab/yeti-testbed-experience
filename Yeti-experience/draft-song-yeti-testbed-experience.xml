@@ -267,7 +267,7 @@
 	can be measured and analysed.</t>
     </section>
 
-    <section title="Controversy">
+    <section title="Controversy" anchor="controversy">
       <t>The Yeti DNS Project, its infrastructure and the various
 	experiments that have been carried out using that infrastructure,
 	have been described by people involved in the project in
@@ -525,59 +525,158 @@
 
       <section title="Transformation of Root Zone to Yeti-Root Zone"
         anchor="transformation">
+	<t>Two distinct approaches have been deployed in the Yeti-DNS
+	  Testbed, separately, to transform the Root Zone into the
+	  Yeti-Root Zone. At a high level both approaches are
+	  equivalent in the sense that they replace a minimal set
+	  of information in the Root Zone with corresponding data
+	  corresponding to the Yeti DNS Testbed; the mechanisms by
+	  which the transforms are executed are different, however.
+	  Each is discussed in turn in <xref target="trans1"/> and
+	  <xref target="trans2"/>, respectively.</t>
 
-        <t>Davey's note: The routine of DM are documented in : https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Setup.md. Regarding the SOA record, it is said "The MNAME and RNAME are set to Yeti values". Currently we implement like this: MNAME: www.yeti-dns.org. RNAME: DM-operator.yeti-dns.org. Such as wide.yeti-dns.org for WIDE and bii.yeti-dns.org for BII.</t>
+        <t>A third approach has also been proposed, but not yet
+          implemented. The motivations and changes implied by that
+          approach are also described in <xref target="trans3"/>.</t>
 
-	<t>The Root Zone is transformed as follows to produce the
-	  Yeti-Root Zone. This transformation is carried out 
-          autonomously on each Yeti DNS Project DM. Each DM carries
-          an authentic copy of the current set of Yeti KSKs, and ZSKs,
-          synchronised between all DMs. Each DM also carries a local
-          copy of each active KSK's private key, and the private key
-          for that DM's own ZSK.</t>
+        <section title="ZSK and KSK Key Sets Shared Between DMs"
+          anchor="trans1">
+	  <t>The approach described here was the first to be
+	    implemented. It features entirely autonomous operation
+	    of each DM, but also requires secret key material (the
+	    private parts of all Yeti-Root KSK and ZSK key-pairs)
+	    to be distributed and maintained on each DM in a
+	    coordinated way.</t>
 
-        <t>
-          <list style="numbers">
-            <t>SOA.MNAME is set to www.yeti-dns.org.</t>
+	  <t>The Root Zone is transformed as follows to produce the
+	    Yeti-Root Zone. This transformation is carried out
+	    autonomously on each Yeti DNS Project DM. Each DM carries
+	    an authentic copy of the current set of Yeti KSK and
+	    ZSK key pairs, synchronised between all DMs (see <xref
+	    target="synch"/>).</t>
 
-	    <t>SOA.RNAME is set to &lt;dm-operator&gt;.yeti-dns.org.
-	      where &lt;dm-operator&gt; is currently one of "wide",
-	      "bii" or "tisf".</t>
+          <t>
+            <list style="numbers">
+              <t>SOA.MNAME is set to www.yeti-dns.org.</t>
 
-            <t>All DNSKEY, RRSIG and NSEC records are removed.</t>
+	      <t>SOA.RNAME is set to &lt;dm-operator&gt;.yeti-dns.org.
+	        where &lt;dm-operator&gt; is currently one of "wide",
+	        "bii" or "tisf".</t>
+  
+              <t>All DNSKEY, RRSIG and NSEC records are removed.</t>
+  
+              <t>The apex NS RRSet is removed, with the corresponding
+                root server glue RRSets.</t>
 
-            <t>The apex NS RRSet is removed, with the corresponding
-              root server glue RRSets.</t>
+	      <t>A Yeti DNSKEY RRSet is added to the apex, comprising
+	        the public parts of all Yeti KSK and ZSKs.</t>
 
-	    <t>A Yeti DNSKEY RRSet is added to the apex, including
-	      the Yeti KSK and all Yeti ZSKs.</t>
+	      <t>A Yeti NS RRSet is added to the apex that includes
+	        all Yeti-Root servers.</t>
 
-            <t>A Yeti NS RRSet is added to the apex, including all
-              Yeti-Root servers.</t>
+	      <t>Glue records (AAAA, since Yeti-Root servers are
+	        v6-only) for all Yeti-Root servers are added.</t>
 
-	    <t>Glue records (AAAA, since Yeti-Root servers are
-	      v6-only) for all Yeti-Root servers are added.</t>
+              <t>The Yeti-Root Zone is signed: the NSEC chain is
+                regenerated; the Yeti KSK is used to
+                sign the DNSKEY RRSet, and the DM's local ZSK to generate
+                every other RRSet.</t>
+            </list>
+          </t>
 
-            <t>The Yeti-Root Zone is signed: the NSEC chain is
-              regenerated; the Yeti KSK is used to
-              sign the DNSKEY RRSet, and the DM's local ZSK to generate
-              every other RRSet.</t>
-          </list>
-        </t>
+	  <t>Note that the SOA.SERIAL value published in the Yeti-Root
+	    Zone is identical to that found in the Root Zone.</t>
+        </section>
 
-        <t>Note that the SOA.SERIAL value published in the Yeti-Root
-          Zone is identical to that found in the Root Zone.</t>
+        <section title="Unique ZSK per DM; No Shared KSK"
+          anchor="trans2">
+          <t>The approach described here was the second to be
+	    implemented. Each DM is provisioned with its own,
+	    dedicated ZSK key pairs that are not shared with other
+	    DMs. A Yeti-Root DNSKEY RRSet is constructed and signed
+	    upstream of all DMs as the union of the set of active
+	    KSKs and the set of active ZSKs for every individual
+	    DM. Each DM now only requires the secret part of its
+	    own dedicated ZSK key pairs to be available locally,
+	    and no other secret key material is shared. The high-level
+            approach is illustrated in <xref target="multi-ZSK"/>.</t>
 
-	<t>A change to this transformation has been proposed that
-	  would preserve the NSEC chain from the Root Zone and all
-	  RRSIG RRs generated using the Root Zone's ZSKs. The DNSKEY
-	  RRSet would be modified to replace the Root Zone KSKs,
-	  and the Yeti KSK would be used to generate replacement
-	  signatures over the apex DNSKEY and NS RRSets. This
-	  approach would provide cryptographically-verifiable
-	  confidence that no owner name in the root zone had been
-	  changed in the process of producing the Yeti-Root zone
-	  from the Root Zone.</t>
+          <figure anchor="multi-ZSK" title="Unique ZSK per DM">
+            <artwork>
+              <![CDATA[
+                         ,----------.         ,-----------.
+                .--------> BII ZSK  +---------> Yeti-Root |
+                | signs  `----------'  signs  `-----------'
+                |
+  ,-----------. |        ,----------.         ,-----------.
+  | Yeti KSK  +-+--------> TISF ZSK +---------> Yeti-Root |
+  `-----------' | signs  `----------'  signs  `-----------'
+                |
+                |        ,----------.         ,-----------.
+                `--------> WIDE ZSK +---------> Yeti-Root |
+                  signs  `----------'  signs  `-----------'
+]]>
+            </artwork>
+          </figure>
+
+          <t>The process of retrieving the Root Zone from the Root
+	    Server System and replacing and signing the apex DNSKEY
+	    RRSet no longer takes place on the DMs, and instead
+	    takes place on a central Hidden Master. The production
+	    of signed DNSKEY RRSets is analogous to the use of
+	    Signed Key Responses (SKR) produced during ICANN KSK
+	    key ceremonies.</t>
+
+          <t>Each DM now retrieves source data (with pre-modified
+	    and Yeti-signed DNSKEY RRset, but otherwise unchanged)
+	    from the Yeti DNS Hidden Master instead of from the
+	    Root Server System.</t>
+
+	  <t>Each DM carries out a similar transformation to that
+	    described in <xref target="trans1"/>, except that DMs
+	    no longer need to modify or sign the DNSKEY RRSet.</t>
+
+          <t>The Yeti-Root Zone served by any particular Yeti-Root
+	    Server will include signatures generated using the ZSK
+	    from the DM that served the Yeti-Root Zone to that
+	    Yeti-Root Server. Signatures cached at resolvers might
+	    be retrieved from any Yeti-Root Server, and hence are
+	    expected to be a mixture of signatures generated by
+	    different ZSKs. Since all ZSKs can be trusted through
+	    the signature by the Yeti KSK over the DNSKEY RRSet,
+	    which includes all ZSKs, the mixture of signatures was
+	    predicted not to be a threat to reliable validation.
+	    Deployment and experimentation confirms this to be the
+	    case, even when individual ZSKs are rolled on different
+            schedules.</t>
+
+	  <t>A consequence of this approach is that the apex DNSKEY
+	    RRSet in the Yeti-Root zone is much larger than the
+	    corresponding DNSKEY RRSet in the Root Zone.</t>
+	</section>
+
+        <section title="Preserving Root Zone NSEC Chain and ZSK RRSIGs"
+          anchor="trans3">
+	  <t>A change to the transformation described in <xref
+	    target="trans2"/> has been proposed that would preserve
+	    the NSEC chain from the Root Zone and all RRSIG RRs
+	    generated using the Root Zone's ZSKs. The DNSKEY RRSet
+	    would continue to be modified to replace the Root Zone
+	    KSKs, and the Yeti KSK would be used to generate
+	    replacement signatures over the apex DNSKEY and NS
+	    RRSets. Source data would continue to flow from the
+	    Root Server System through the Hidden Master to the set
+	    of DMs, but no DNSSEC operations would be required on
+	    the DMs and the source NSEC and most RRSIGs would remain
+	    intact.</t>
+
+	  <t>This approach has been suggested in order to provide
+	    cryptographically-verifiable confidence that no owner
+	    name in the root zone had been changed in the process of
+	    producing the Yeti-Root zone from the Root Zone, addressing
+	    one of the concerns described in <xref target="controversy"/>
+	    in a way that can be verified automatically.</t>
+        </section>
       </section>
 
       <section title="Yeti-Root Zone Distribution">
@@ -596,7 +695,7 @@
           be sent in the conventional manner.</t>
       </section>
 
-      <section title="Synchronization of Service Metadata">
+      <section title="Synchronization of Service Metadata" anchor="synch">
         <t>Changes in the Yeti-DNS Testbed infrastructure such as
 	  the addition or removal of Yeti-Root servers, renumbering
 	  Yeti-Root Servers or DNSSEC key rollovers require coordinated
@@ -773,10 +872,11 @@
           <list style="symbols">
             <t>Platform: 20 of 25 Yeti-Root servers are implemented
               on a VPS rather than bare metal.</t>
+
 	    <t>Operating System: 6 Yeti-Root servers run on
 	      on Linux (Ubuntu, Debian, CentOS, and ArchLinux); 5
-	      run on FreeBSD and 1 on NetBSD. The remainder were not
-              disclosed (XXX really? surely we can find this out. Davey's Note I have update information. I will send to you later)</t>
+	      run on FreeBSD and 1 on NetBSD.</t>
+
 	    <t>DNS software: 18 of 25 Yeti-Root servers use BIND9
 	      (versions varying between 9.9.7 and 9.10.3); four use
 	      NSD (4.10 and 4.15); two use Knot (2.0.1 and 2.1.0)
@@ -799,7 +899,7 @@
 	  with a patch to facilitate triggered file upload <eref
 	  target="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=545985"/>.
 	  PCAP-format files containing packet captures are uploaded
-	  using (XXX check mechanism) to a central repository.</t>
+	  using rsync to central storage.</t>
       </section>
     </section>
 
@@ -829,167 +929,6 @@
           <t><eref target="http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html"/></t>
         </list>
       </t>
-
-      <section title="Multiple-ZSK Operations">
-	<t>Davey's note: There are two documents in repo which will
-	  helpfull for you: <eref
-	  target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md"/>
-	  and <eref
-	  target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md"/>.</t>
-
-        <t>The Root Server System incorporates a root zone signed
-	  using DNSSEC. Responsibility for cryptographic operations
-	  is split between the IANA Functions Operator (PTI), who
-	  takes responsibility for management of the Key Signing
-	  Key (KSK) and associated trust anchor, and the Root Zone
-	  Maintainer (VeriSign) who manages the Zone Signing Key
-	  (ZSK).</t>
-
-	<t>There is no known operational concern with this approach.
-	  However, analogous to the established principle of using
-	  multiple, independent operators to make the Root Server
-	  System robust, an alternative system was implemented in
-	  the Yeti DNS Testbed to add diversity to DNSSEC operations
-	  and assess the impact of any additional complexity of
-	  such an approach on the stability of the Yeti DNS Testbed
-	  as a whole.</t>
-
-	<t>The Multi-ZSK experiment is designed to test operating
-	  the Yeti root using more than a single ZSK. The goal is
-	  to have each distribution master (DM) have a separate
-	  ZSK, signed by a single KSK. This will allow DM to operate
-	  independently, each maintaining their own key secret
-	  material.</t>
-
-        <figure anchor="mulit-zsk" title="Multiple ZSK Experiment">
-          <artwork>
-            <![CDATA[
-                       +--------------+         +-----------+
-              +------->| BII ZSK      |-------->| Yeti root |
-              | signs  +--------------+  signs  +-----------+
-              |
-+-----------+ |        +--------------+         +-----------+
-| Yeti KSK  |-+------->| TISF ZSK     |-------->| Yeti root |
-+-----------+ | signs  +--------------+  signs  +-----------+
-              |
-              |        +--------------+         +-----------+
-              +------->| WIDE ZSK     |-------->| Yeti root |
-                signs  +--------------+  signs  +-----------+
-]]>
-          </artwork>
-        </figure>
-
-	<t>In the MZSK setup, each DM maintains a separate ZSK and
-	  produces a version of the root zone with different
-	  signatures.  Aside from the signatures, the contents of
-	  the Yeti root zone is identical, as shown in  <xref
-	  target="mulit-zsk"/>.</t>
-
-	<t>In DNSSEC, the KSK and ZSK are all returned in a single
-	  value, the DNSKEY Resource Record Set (RRset). Because
-	  of this, DNSSEC resolvers are able to validate answers
-	  as long as they are signed by any of the ZSK.</t>
-
-	<t>This experiment will test the behavior of the Yeti root
-	  servers and resolvers as we have multiple ZSK, both during
-	  normal operation and during rollover. We did not change
-	  the algorithm used, the key lengths, or the timings.
-	  ***Davey: algorithm, key lengths and timing is ought to
-	  be introduce in section 3, architecture part****</t>
-
-          <section title="Proof of Concept">
-            <t>XXX There is some detail missing from this description of
-	      the environment tested in the lab. Presuably "A and B"
-	      are placeholders for Yeti-Root servers deployed in a
-	      captive environment to test, and not related to actual
-	      Yeti-Root servers. The phrase "resolver switch" is not
-	      familiar, and needs explanation. There's no detail about
-	      the algorithms or key sizes used in the ZSKs, how the
-	      root zone apex DNSKEY RRSet was constructed, what
-	      signatures by the KSK were involved, and what trust
-	      anchors were configured in validators. The commentary
-	      on response size is suggestive of experimentation, but
-	      no experiment is described. We need more detail of what
-	      happened here for its inclusion in this document to be
-	      useful. XXX </t>
-
-          <t>Davey's notes: a full report on this lab test:
-	    <eref
-	    target="http://lists.yeti-dns.org/pipermail/discuss/attachments/20151021/01fd3827/attachment.txt"/>.
-	    Right now I just use a brief description below on this
-	    lab test to show the result.</t>
-
-	  <t>In preparation for the experiment, a lab test was done
-	    to verify the behavior of DNS resolvers under controlled
-	    conditions. A DNS resolver was configured using two
-	    experimental root servers. Traffic was sent insuring
-	    that the resolver had the ZSK from one or both of the
-	    servers, and then the validation results checked. The
-	    lab test confirmed that if a root server tried to use
-	    a ZSK that was not present in the DNSKEY RRset that it
-	    would fail, but that even if two servers used separate
-	    ZSK this resolves properly as long as they are both
-	    present in the DNSKEY RRset.</t>
-	</section>
-
-	<section title="Experiment">
-	  <t>After the lab test, the MZSK experiment is being
-	  conducted
-	    on the Yeti platform. There are two phases:</t>
-
-          <t>XXX It's not entirely obvious that Phase 1 here does not
-            correspond to the lab experiment described above in "Proof
-            of Concept". Is it different? Is there a more detailed
-            description of what was done, here? XXX</t>
-
-          <t>Davey's note:Phase 1 is different from proof of concept because it is done in the Yeti root testbed not lab test. You can refer to the link: https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md#phase-1 </t>
-
-          <t>
-            <list style="symbols">
-	      <t>Phase 1. In the first phase, we confirmed that
-		using multiple ZSKs works in the wild. We insured
-		that using the maximum number of ZSKs continues to
-		work in the resolver side.  Here one of the DM (BII)
-		created and added 5 ZSKs using the existing
-		synchronization mechanism.  (If all 3 ZSKs are
-		rolling then we have 6 total. To get this number
-		we add 5.)</t>
-
-              <t>Phase 2. In the second phase, we delegated the
-                management of the ZSKs so that each DM creates and
-                publishes a separate ZSK. For this phase, modified
-                zone generation protocol and software was used <xref
-                target="Yeti-DM-Sync-MZSK"/>, which allows the DM to
-                sign without access to the private parts of ZSKs
-                generated by other DMs. In this phase we roll all
-                three ZSKs separately.</t>
-            </list>
-          </t>
-        </section>
-
-        <section title="Conclusion">
-	  <t>XXX There are not really any substantive results
-	    described in the text below. Presumably the core
-	    conclusion is that the approach with multiple ZSK
-	    managers works, but to answer the question we want to
-	    know about failure modes, operational complexity, etc
-	    -- the notes below suggest success on the grounds of
-	    "we got it running after some difficulties" but say
-	    nothing about the other stuff. XXX</t>
-
-      <t>Davey's note: The two documents about MZSK experiment may give you some clue. In general in my understand, we are not sure 1) DNSSEC resolvers continue to function properly with a MZSK setup (may fail?) 2)Yeti system would continue to function properly with an MZSK setup(do we need any specially setup ?) 3)the impact for large response (we report one error due to the failure)</t>
-
-	  <t>The MZSK experiment was finished by the end of 2016-04.
-	    Almost everything appears to be working. But there have
-	    been some findings <xref target="Experiment-MZSK-notes"/>,
-	    including discovering that IPv6 fragmented packets are
-	    not forwarded on an Ethernet bridge with netfilter
-	    ip6_tables loaded on one authority server, and issue
-	    with IXFR falling back to AXFR due to multiple signers
-	    which will be detailed in a separate draft describing
-	    as a problem statement.</t>
-	</section>
-      </section>
 
       <section title="Root Renumbering Issue and Hint File Update">
 	<t>XXX This experiment seems to be more about testing a
@@ -1562,8 +1501,32 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 
       <section title="Revision History">
         <section title="draft-song-yeti-testbed-experience-04">
-          <t>Add Joe Abley as co-editor. Substantial editorial review.</t>
-        </section>
+          <t>Substantial editorial review and rearrangement of text
+	    by Joe Abley at request of BII.</t>
+
+	  <t>Added what is intended to be a balanced assessment of
+	    the controversy that has arisen around the Yeti DNS
+	    Project, at the request of the Independent Submissions
+	    Editorial Board.</t>
+
+          <t>Changed the focus of the document from the description
+	    of individual experiments on a Root-like testbed to the
+	    construction and motivations of the testbed itself,
+	    since that better describes the output of the Yeti DNS
+	    Project to date. In the considered opinion of this
+	    reviewer, the novel approaches taken in the construction
+	    of the testbed infrastructure and the technical challenges
+	    met in doing so are useful to record, and the RFC series
+	    is a reasonable place to record operational experiences
+	    related to core Internet infrastructure.</t>
+
+	  <t>Note that due to draft cut-off deadlines some of the
+	    technical details described in this revision of the
+	    document may not exactly match operational reality;
+	    however, this revision provides an indicative level of
+	    detail, focus and flow which it is hoped will be helpful
+	    to reviewers.</t>
+	</section>
       </section>
     </section>
   </back>
