@@ -267,55 +267,6 @@
 	can be measured and analysed.</t>
     </section>
 
-    <section title="Controversy" anchor="controversy">
-      <t>The Yeti DNS Project, its infrastructure and the various
-	experiments that have been carried out using that infrastructure,
-	have been described by people involved in the project in
-	many public meetings at technical venues since its inception.
-	The mailing lists using which the operation of the
-	infrastructure has been coordinated are open to join, and
-	their archives are public. The project as a whole has been
-	the subject of robust public discussion.</t>
-
-      <t>Some commentators have expressed concern that the Yeti DNS
-	Project is, in effect, operating an "alternate root,"
-	challenging the IAB's comments published in <xref
-	target="RFC2826"/>. Other such alternate roots are considered
-	to have caused end-user confusion and instability in the
-	namespace of the DNS by the introduction of new top-level
-	labels or the different use of top-level labels present in
-	the Root Server System. The coordinators of the Yeti DNS
-	Project do not consider the Yeti DNS Project to be an
-	alternate root in this sense, since by design the namespace
-	enabled by the Yeti-Root Zone is identical to that of the
-	Root Zone.</t>
-
-      <t>Some commentators have expressed concern that the Yeti DNS
-	Project seeks to influence or subvert administrative policy
-	relating to the Root Server System, in particular in the
-	use of DNSSEC trust anchors not published by the IANA and
-	the use of Yeti-Root Servers in regions where governments
-	or other organisations have expressed interest in operating
-	a Root Server. The coordinators of the Yeti-Root project
-	observe that their mandate is entirely technical and has
-	no ambition to influence policy directly; they do hope,
-	however, that technical findings from the Yeti DNS Project
-	might act as a useful resource for the wider technical
-	community.</t>
-
-      <t>Finally, some concern has been expressed about the possible
-	applications of the Yeti DNS Project to the governments of
-	countries where access to the Internet is subject to
-	substantial centralised control, in contrast to most other
-	jurisdictions where such controls are either lighter or not
-	present. The coordinators of the Yeti DNS Project have taken
-	care to steer all discussions and related decisions about
-	the technical work of the project to public venues in the
-	interests of full transparency, and encourage anybody
-	concerned about the decision-making process to participate
-	in those venues and review their archives directly.</t>
-    </section>
-
     <section title="Areas of Study">
      <t>Examples of topics that the Yeti DNS Testbed was built to
        address are included below, each illustrated with indicative
@@ -1428,6 +1379,55 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 ]]>
         </artwork>
       </figure>
+    </section>
+
+    <section title="Controversy" anchor="controversy">
+      <t>The Yeti DNS Project, its infrastructure and the various
+	experiments that have been carried out using that infrastructure,
+	have been described by people involved in the project in
+	many public meetings at technical venues since its inception.
+	The mailing lists using which the operation of the
+	infrastructure has been coordinated are open to join, and
+	their archives are public. The project as a whole has been
+	the subject of robust public discussion.</t>
+
+      <t>Some commentators have expressed concern that the Yeti DNS
+	Project is, in effect, operating an "alternate root,"
+	challenging the IAB's comments published in <xref
+	target="RFC2826"/>. Other such alternate roots are considered
+	to have caused end-user confusion and instability in the
+	namespace of the DNS by the introduction of new top-level
+	labels or the different use of top-level labels present in
+	the Root Server System. The coordinators of the Yeti DNS
+	Project do not consider the Yeti DNS Project to be an
+	alternate root in this sense, since by design the namespace
+	enabled by the Yeti-Root Zone is identical to that of the
+	Root Zone.</t>
+
+      <t>Some commentators have expressed concern that the Yeti DNS
+	Project seeks to influence or subvert administrative policy
+	relating to the Root Server System, in particular in the
+	use of DNSSEC trust anchors not published by the IANA and
+	the use of Yeti-Root Servers in regions where governments
+	or other organisations have expressed interest in operating
+	a Root Server. The coordinators of the Yeti-Root project
+	observe that their mandate is entirely technical and has
+	no ambition to influence policy directly; they do hope,
+	however, that technical findings from the Yeti DNS Project
+	might act as a useful resource for the wider technical
+	community.</t>
+
+      <t>Finally, some concern has been expressed about the possible
+	applications of the Yeti DNS Project to the governments of
+	countries where access to the Internet is subject to
+	substantial centralised control, in contrast to most other
+	jurisdictions where such controls are either lighter or not
+	present. The coordinators of the Yeti DNS Project have taken
+	care to steer all discussions and related decisions about
+	the technical work of the project to public venues in the
+	interests of full transparency, and encourage anybody
+	concerned about the decision-making process to participate
+	in those venues and review their archives directly.</t>
     </section>
 
     <section title="About This Document">
