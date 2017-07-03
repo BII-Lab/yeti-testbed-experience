@@ -404,7 +404,7 @@
       </section>
     </section>
 
-    <section title="Yeti DNS Testbed Infrastructure">
+    <section title="Yeti DNS Testbed Infrastructure" anchor="testbed">
       <t>The purpose of the testbed is to allow DNS queries from
 	stub resolvers, mediated by recursive resolvers, to be
 	delivered to Yeti-Root servers, and for corresponding
@@ -903,83 +903,61 @@
       </section>
     </section>
 
-    <section title="Experience with Yeti DNS">
-      <t>As introduced, Yeti DNS is a root testbed designed for 
-        trying new ideas. For each proposed idea, it is firstly 
-        tested in Lab environment as a proof of concept before it 
-        is implemented in the testbed. The approach is straightforward that 
-        we set the system up according to the experiment proposal
-        with monitoring on the data flow and resolution path. 
-        Operational issues, impacts and complexities are observed 
-        and discussed mainly in the mailing list. Some experiments 
-        and findings are summarized in the blog of Yeti DNS Project. 
-        This section introduces the experience with Yeti DNS.</t>
+    <section title="Operational Experience with Yeti DNS Testbed">
+      <t>The following sections provide commentary on the operation
+	of the Yeti-DNS Testbed described in <xref target="testbed"/>.
+        More detailed descriptions of observed phenomena are available
+        in Yeti DNS mailing list archives and on the Yeti DNS blog.</t>
 
-      <t>Davey's note: we have done other experiments and document
-	them in yeti blog.  If you find them useful we can add to
-	experiment section:
+        <section title="Root Renumbering Issue and Hint File Update">
+	  <t>Renumbering events in the Root Server System are
+	    relatively rare. Although each such event is accompanied
+	    by the publication of an updated hints file in standard
+	    locations, the task of updating local copies of that
+	    file used by DNS resolvers is manual, and the process
+	    has an observably-long tail: for example, in 2015 J-Root
+	    was still receiving traffic at its old address some
+	    thirteen years after renumbering <xref
+	    target="Wessels2015"/>.</t>
 
-        <list style="numbers">
-          <t><eref target="http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-Root-Zone-Update.html"/></t>
+	  <t>The observed impact of these old, deployed hints file
+	    is minimal, likely due to the very low frequency of
+	    such renumbering events. Even the oldest of hints file
+	    would still contain some accurate root server addresses
+	    from which priming responses could be obtained.</t>
 
-          <t><eref target="http://yeti-dns.org/yeti/blog/2017/03/03/bind-edns-fallback-and-dn.ssec-issue.html"/></t>
+	  <t>By contrast, due to the experimental nature of the
+	    system and the fact that it is operated mainly by
+	    volunteers, Yeti-Root Servers are added, removed and
+	    renumbered with much greater frequency. A tool to
+	    facilitate automatic maintenance of hints files was
+	    therefore created, <xref target="hintUpdate"/>.</t>
 
-	  <t><eref target="http://yeti-dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-Root-Server-System.html"/></t>
+	  <t>The automated procedure followed by the hintUpdate
+	    tool is as follows.
 
-          <t><eref target="http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html"/></t>
-        </list>
-      </t>
+            <list style="numbers">
+	      <t>Use the local resolver to obtain a response to the
+	        query ./IN/NS;</t>
 
-      <section title="Root Renumbering Issue and Hint File Update">
-	<t>XXX This experiment seems to be more about testing a
-	  script than finding something out about the root server
-	  system using a testbed. Presumably the tool described
-	  here could be more conventionally tested using a set of
-	  unit tests using (e.g.) vagrant. What is the experiment
-	  here that requires the use of the Yeti testbed? The final
-	  paragraph suggests that the testbed provides a useful
-	  place for this work because in the Yeti-Root the root
-	  zone apex NS set is signed, whereas in the root zone it
-	  is not. But that is demonstrably incorrect; the root zone
-	  apex NS set *is* signed. XXX</t>
+	      <t>Use the local resolver to obtain a set of IPv4 and
+	        IPv6 addresses for each nameserver;</t>
 
-    <t>Davey's note: I think we could put it into another section or subsection : Yeti tools. Right now we did not document them. Actually we have some tools developed for Yeti. Let's me give you some links: 1)http://yeti-dns.org/yeti/blog/2016/06/15/Mirroring-traffic-using-dnsdist.html 2) http://dnsv6lab.net/2016/09/06/DNS-pcap-fragments/ 3) http://dnsv6lab.net/2016/10/13/ymmv/ </t>
+              <t>Validate all signatures obtained from the local
+                resolvers, and confirm that all data is signed;</t>
 
-	<t>With the recent renumbering of H root Server's IP address,
-	  there is a discussion of ways that resolvers can update
-	  their hint file.  Traditional ways include using FTP
-	  protocol by doing a wget and using dig to double-check
-	  the servers' addresses manually.  Each way would depend
-	  on manual operation.  As a result, there are many old
-	  machines that have not updated their hint files.  As a
-	  proof, after completion of renumbering in thirteen years
-	  ago, there is an observation that the "Old J-Root" can
-	  still receive DNS query traffic <xref
-	  target="Renumbering-J-Root"/>.</t>
+              <t>Compare the data obtained to that contained within
+                the currently-active hints file; if there are differences,
+                rotate the old one way and replace it with a new one.</t>
+            </list>
+          </t>
 
-	<t>This experiment proposal aims to find an automatic way
-	  for hint-file updating.  The already-completed work is a
-	  shell script tool which provides the function that updates
-	  a hint-file in file system automatically with DNSSEC and
-	  trust anchor validation.  <xref
-	  target="Hintfile-Auto-Update"/>.</t>
-
-	<t>The methodology is straightforward.  The tool first
-	  queries the NS list for "." domain and queries A and AAAA
-	  records for every name on the NS list.  It requires DNSSEC
-	  validation for both the NS list and the A and AAAA answers.
-	  After getting all the answers, the tool compares the new
-	  hint file with the old one.  If there is a difference,
-	  it renames the old one with a time-stamp and replaces the
-	  old one with the new one.  Otherwise the tool deletes the
-	  new hint file and nothing will be changed.</t>
-
-        <t>Note that in current IANA root system the servers named
-          in the root NS record are not signed. So the tool can not
-          fully work in the production network.  In Yeti root system
-          some of the names listed in the NS record are signed,
-          which provides a test environment for such a proposal.</t>
-      </section>
+          <t>This tool would not function unmodified when used in the
+	    Root Server System, since the names of individual Root
+	    Servers (e.g. A.ROOT-SERVERS.NET) are not signed. All
+	    Yeti-Root Server names are signed, however, and hence
+	    this tool functions as expected in that environment.</t>
+        </section>
 
       <section title="Fragmentation of DNS Responses">
         <t>XXX This section starts to identify a problem, but does not
@@ -1243,7 +1221,7 @@
         </front>
       </reference>
 
-      <reference anchor="Renumbering-J-Root"
+      <reference anchor="Wessels2015"
         target="https://indico.dns-oarc.net/event/24/session/10/contribution/10/material/slides/0.pdf">
         <front>
           <title>Thirteen Years of “Old J-Root”</title>
@@ -1317,7 +1295,7 @@
         </front>
       </reference>
 
-      <reference anchor="Hintfile-Auto-Update"
+      <reference anchor="hintUpdate"
         target="https://github.com/BII-Lab/Hintfile-Auto-Update">
         <front>
           <title>Hintfile Auto Update</title>
