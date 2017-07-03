@@ -104,7 +104,7 @@ Table of Contents
      4.1.  Root Zone Retrieval . . . . . . . . . . . . . . . . . . .   8
      4.2.  Transformation of Root Zone to Yeti-Root Zone . . . . . .   9
      4.3.  Yeti-Root Zone Distribution . . . . . . . . . . . . . . .  10
-     4.4.  Information Synchronization . . . . . . . . . . . . . . .  10
+     4.4.  Synchronization of Service Metadata . . . . . . . . . . .  10
      4.5.  Yeti-Root Server Naming Scheme  . . . . . . . . . . . . .  11
 
 
@@ -527,33 +527,33 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 4.3.  Yeti-Root Zone Distribution
 
-   Davey's note: I re-sent mail with title : DM configuration
+   Each Yeti DM is configured with a full list of Yeti-Root Server
+   addresses to send NOTIFY messages to, and to form the basis for an
+   address-based access-control list for zone transfers.  Authentication
+   by address could be replaced with more rigourous mechanisms (e.g.
+   using Transaction Signatures (TSIG) [RFC2845]); this has not been
+   done at the time of writing since the use of address-based controls
+   avoid the need for the distribution of shared secrets amongst the
+   Yeti-Root Server Operators.
 
-   XXX(need details about NOTIFY configuration on Yeti-DMs)XXX
+   Individual Yeti-Root Servers are configured with a full set of Yeti
+   DM addresses to which SOA and AXFR requests may be sent in the
+   conventional manner.
 
-   XXX(need details about TSIG authentication on Yeti-DMs)XXX
+4.4.  Synchronization of Service Metadata
 
-   XXX(examples of configuration from DMs and Yeti-Root servers might be
-   handy)XXX
+   Changes in the Yeti-DNS Testbed infrastructure such as the addition
+   or removal of Yeti-Root servers, renumbering Yeti-Root Servers or
+   DNSSEC key rollovers require coordinated changes to take place on all
+   DMs.  The Yeti-DNS Testbed is subject to more frequent changes than
+   are observed in the Root Server System and includes substantially
+   more Yeti-Root Servers than there are Root Servers, and hence a
+   manual change process in the Yeti Testbed would be more likely to
+   suffer from human error.  An automated process was consequently
+   implemented.
 
-4.4.  Information Synchronization
-
-   XXX(Joe needs more information about the content of this section
-   before he can suggest changes)XXX
-
-   Given three DMs operational in Yeti root system, it is necessary to
-   prevent any inconsistency caused by human mistakes in operation.  The
-   straight method is to share the same parameters to produce the Yeti
-   root zone.  There parameters includes following set of files:
-
-   o  the list of Yeti root servers, including:
-
-      *  public IPv6 address and host name
-
-      *  IPv6 addresses originating zone transfer
-
-      *  IPv6 addresses to send DNS notify to
-
+   A repository of all service metadata involved in the operation of
+   each DM was implemented as a separate git repository hosted at
 
 
 
@@ -562,25 +562,12 @@ Song, et al.             Expires January 4, 2018               [Page 10]
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
-   o  the ZSKs used to sign the root
-
-   o  the KSK used to sign the root
-
-   o  the SERIAL when this information is active
-
-   XXX(that list describes the contents of files, not the files
-   themselves.  Can I see examples of the actual files that are
-   used?)XXX
-
-   Davey's Note: I sent you a mailing with the title: directories and
-   files in DM's repo.
-
-   The operation is simple that each DM operator synchronize the files
-   with the information needed to produce the Yeti root zone.
-   XXX(how?)XXX When a change is desired XX(by whom?)XX (such as adding
-   a new server or rolling the ZSK), a DM operator updates the local
-   file and push to other DM XX(how?)XX.  A SOA SERIAL in the future is
-   chosen for when the changes become active.
+   github.com, since this provided a simple, transparent and familiar
+   mechanism for participants to review.  Requests to change the service
+   metadata for a DM are submitted as pull requests from a fork of the
+   corresponding repository; each DM operator reviews pull requests and
+   merges them to indicate approval.  Once merged, changes are pulled
+   automatically to individual DMs and promoted to production.
 
 4.5.  Yeti-Root Server Naming Scheme
 
@@ -610,14 +597,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    Various approaches to normalise the composition of the priming
    response were considered, including:
 
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 11]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    o  Require use of DNS implementations that exhibit the desired
       behaviour in the priming response (e.g.  NSD) in favour of BIND9;
 
@@ -629,6 +608,15 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
       necessary, giving each a source of authoritative data with which
       the authority section of a priming response could be fully
       populated.  This is the approach used in the Root Server System.
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 11]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
 
    The potential mitigation of renaming all Yeti-Root Servers using a
    scheme that would allow their names to exist in the balliwick of the
@@ -650,6 +638,18 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    Root servers.  At the time of writing there are 25 Yeti-Root servers
    distributed globally, one of which is named using an IDNA2008
    [RFC5890] label, shown in the following list in punycode.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1374,6 +1374,11 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               Unique DNS Root", RFC 2826, DOI 10.17487/RFC2826, May
               2000, <http://www.rfc-editor.org/info/rfc2826>.
 
+   [RFC2845]  Vixie, P., Gudmundsson, O., Eastlake 3rd, D., and B.
+              Wellington, "Secret Key Transaction Authentication for DNS
+              (TSIG)", RFC 2845, DOI 10.17487/RFC2845, May 2000,
+              <http://www.rfc-editor.org/info/rfc2845>.
+
    [RFC4986]  Eland, H., Mundy, R., Crocker, S., and S. Krishnaswamy,
               "Requirements Related to DNS Security (DNSSEC) Trust
               Anchor Rollover", RFC 4986, DOI 10.17487/RFC4986, August
@@ -1388,11 +1393,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               RFC 5890, DOI 10.17487/RFC5890, August 2010,
               <http://www.rfc-editor.org/info/rfc5890>.
 
-   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
-              for DNS (EDNS(0))", STD 75, RFC 6891,
-              DOI 10.17487/RFC6891, April 2013,
-              <http://www.rfc-editor.org/info/rfc6891>.
-
 
 
 
@@ -1401,6 +1401,11 @@ Song, et al.             Expires January 4, 2018               [Page 25]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
+
+   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
+              for DNS (EDNS(0))", STD 75, RFC 6891,
+              DOI 10.17487/RFC6891, April 2013,
+              <http://www.rfc-editor.org/info/rfc6891>.
 
    [RFC7626]  Bortzmeyer, S., "DNS Privacy Considerations", RFC 7626,
               DOI 10.17487/RFC7626, August 2015,
@@ -1445,11 +1450,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
    [Yeti-DNS-Project]
               "Website of Yeti DNS Project", <http://www.yeti-dns.org>.
-
-
-
-
-
 
 
 

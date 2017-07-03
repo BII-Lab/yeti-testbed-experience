@@ -16,6 +16,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1996.xml">
   <!ENTITY RFC2826 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2826.xml">
+  <!ENTITY RFC2845 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2845.xml">
   <!ENTITY RFC4968 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4986.xml">
   <!ENTITY RFC5011 SYSTEM
@@ -579,55 +581,43 @@
       </section>
 
       <section title="Yeti-Root Zone Distribution">
-        <t>Davey's note: I re-sent mail with title : DM configuration</t>
+	<t>Each Yeti DM is configured with a full list of Yeti-Root
+	  Server addresses to send NOTIFY messages to, and to form
+	  the basis for an address-based access-control list for
+	  zone transfers. Authentication by address could be replaced
+	  with more rigourous mechanisms (e.g. using Transaction
+	  Signatures (TSIG) <xref target="RFC2845"/>); this has not
+	  been done at the time of writing since the use of
+	  address-based controls avoid the need for the distribution
+	  of shared secrets amongst the Yeti-Root Server Operators.</t>
 
-        <t>XXX(need details about NOTIFY configuration on Yeti-DMs)XXX</t>
-
-        <t>XXX(need details about TSIG authentication on Yeti-DMs)XXX</t>
-
-        <t>XXX(examples of configuration from DMs and Yeti-Root servers
-          might be handy)XXX</t>
+        <t>Individual Yeti-Root Servers are configured with a full
+          set of Yeti DM addresses to which SOA and AXFR requests may
+          be sent in the conventional manner.</t>
       </section>
 
-      <section title="Information Synchronization">
-        <t>XXX(Joe needs more information about the content of this section
-          before he can suggest changes)XXX</t>
+      <section title="Synchronization of Service Metadata">
+        <t>Changes in the Yeti-DNS Testbed infrastructure such as
+	  the addition or removal of Yeti-Root servers, renumbering
+	  Yeti-Root Servers or DNSSEC key rollovers require coordinated
+	  changes to take place on all DMs. The Yeti-DNS Testbed
+	  is subject to more frequent changes than are observed in
+	  the Root Server System and includes substantially more
+	  Yeti-Root Servers than there are Root Servers, and hence
+	  a manual change process in the Yeti Testbed would be more
+	  likely to suffer from human error. An automated process
+	  was consequently implemented.</t>
 
-        <t>Given three DMs operational in Yeti root system, it is
-          necessary to prevent any inconsistency caused by human
-          mistakes in operation.  The straight method is to share
-          the same parameters to produce the Yeti root zone.  There
-          parameters includes following set of files:</t>
-
-        <t>
-          <list style="symbols">
-            <t>the list of Yeti root servers, including:
-              <list style="symbols">
-                <t>public IPv6 address and host name </t>
-                <t>IPv6 addresses originating zone transfer</t>
-                <t>IPv6 addresses to send DNS notify to</t>
-              </list>
-            </t>
-            <t>the ZSKs used to sign the root</t>
-            <t>the KSK used to sign the root</t>
-            <t>the SERIAL when this information is active</t>
-          </list>
-        </t>
-
-        <t>XXX(that list describes the contents of files, not the files
-          themselves. Can I see examples of the actual files that are
-          used?)XXX</t>
-
-	<t>Davey's Note: I sent you a mailing with the title:
-	  directories and files in DM's repo.</t>
-
-        <t>The operation is simple that each DM operator synchronize
-          the files with the information needed to produce the Yeti
-          root zone. XXX(how?)XXX  When a change is desired XX(by
-          whom?)XX (such as adding a new server or rolling the ZSK),
-          a DM operator updates the local file and push to other
-          DM XX(how?)XX.  A SOA SERIAL in the future is chosen for
-          when the changes become active. </t>
+	<t>A repository of all service metadata involved in the
+	  operation of each DM was implemented as a separate git
+	  repository hosted at github.com, since this provided a
+	  simple, transparent and familiar mechanism for participants
+	  to review. Requests to change the service metadata for a
+	  DM are submitted as pull requests from a fork of the
+	  corresponding repository; each DM operator reviews pull
+	  requests and merges them to indicate approval. Once merged,
+	  changes are pulled automatically to individual DMs and
+	  promoted to production.</t>
       </section>
 
       <section title="Yeti-Root Server Naming Scheme">
@@ -1282,6 +1272,7 @@
       &RFC1035;
       &RFC1996;
       &RFC2826;
+      &RFC2845;
       &RFC4968;
       &RFC7626;
       &RFC5011;
