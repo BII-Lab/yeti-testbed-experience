@@ -5,13 +5,11 @@
 Internet Engineering Task Force                             L. Song, Ed.
 Internet-Draft                                               D. Liu, Ed.
 Intended status: Informational                Beijing Internet Institute
-Expires: January 1, 2018                                   P. Vixie, Ed.
+Expires: January 4, 2018                                   P. Vixie, Ed.
                                                                     TISF
                                                                Kato, Ed.
                                             Keio University/WIDE Project
-                                                           J. Abley, Ed.
-                                                         Snake Hill Labs
-                                                           June 30, 2017
+                                                            July 3, 2017
 
 
                             Yeti DNS Testbed
@@ -53,9 +51,11 @@ Abstract
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 1]
+
+
+Song, et al.             Expires January 4, 2018                [Page 1]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 Status of This Memo
@@ -73,7 +73,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 1, 2018.
+   This Internet-Draft will expire on January 4, 2018.
 
 Copyright Notice
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 2]
+Song, et al.             Expires January 4, 2018                [Page 2]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
      3.7.  Traffic Capture and Analysis  . . . . . . . . . . . . . .  13
@@ -165,9 +165,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 3]
+Song, et al.             Expires January 4, 2018                [Page 3]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    Aspects of the operational structure of the Root Server System have
@@ -221,9 +221,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 4]
+Song, et al.             Expires January 4, 2018                [Page 4]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    The infrastructure on which the experiments have been run has also
@@ -277,9 +277,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 5]
+Song, et al.             Expires January 4, 2018                [Page 5]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 2.5.  DNSSEC in the Yeti-Root Zone
@@ -333,9 +333,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 6]
+Song, et al.             Expires January 4, 2018                [Page 6]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    the IANA, to transform it into the Yeti-Root that can be used in the
@@ -389,9 +389,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 7]
+Song, et al.             Expires January 4, 2018                [Page 7]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    At the time of writing, unauthenticated zone transfers of the root
@@ -445,9 +445,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 8]
+Song, et al.             Expires January 4, 2018                [Page 8]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    The transformation of Root Zone to Yeti-Root zone takes place
@@ -501,9 +501,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018                [Page 9]
+Song, et al.             Expires January 4, 2018                [Page 9]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    The operation is simple that each DM operator synchronize the files
@@ -557,9 +557,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 10]
+Song, et al.             Expires January 4, 2018               [Page 10]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    It is found that modification of IANA root zone by adding a new TLD
@@ -613,9 +613,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 11]
+Song, et al.             Expires January 4, 2018               [Page 11]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    +-------------------------------------+---------------+-------------+
@@ -669,9 +669,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 12]
+Song, et al.             Expires January 4, 2018               [Page 12]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    Significant software diversity exists across the set of Yeti-Root
@@ -725,9 +725,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 13]
+Song, et al.             Expires January 4, 2018               [Page 13]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    System.html 4) http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-
@@ -781,9 +781,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 14]
+Song, et al.             Expires January 4, 2018               [Page 14]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    signatures, the contents of the Yeti root zone is identical, as shown
@@ -837,9 +837,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 15]
+Song, et al.             Expires January 4, 2018               [Page 15]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    XXX It's not entirely obvious that Phase 1 here does not correspond
@@ -893,9 +893,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 16]
+Song, et al.             Expires January 4, 2018               [Page 16]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 4.2.  Root Renumbering Issue and Hint File Update
@@ -949,9 +949,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 17]
+Song, et al.             Expires January 4, 2018               [Page 17]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    the NS record are signed, which provides a test environment for such
@@ -1005,9 +1005,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 18]
+Song, et al.             Expires January 4, 2018               [Page 18]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    scenario for an experimental KSK roll.  The experiment may not be
@@ -1061,9 +1061,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 19]
+Song, et al.             Expires January 4, 2018               [Page 19]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    to 2048 bits in 2016.  However, it is not fully tested by the real
@@ -1117,9 +1117,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 20]
+Song, et al.             Expires January 4, 2018               [Page 20]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    While the latter is not a technical error, but it will cause the
@@ -1151,36 +1151,34 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 6.  IANA Considerations
 
-   This document requires no action from the IANA.
+   This document requests no action of the IANA.
 
 7.  Acknowledgments
 
-   The editors fully acknowledge that this memo is based on joint work
-   and discussions of many people in the mailing list of the Yeti DNS
-   Project [Yeti-DNS-Project].  Some of them actually are co-authors of
-   this memo but limited by the number of co-authors listed in the
-   headline.  The people deserve the credit who help to construct the
-   Yeti testbed and contribute to this document, so their effort is
-   acknowledged here with a name list:
+   The editors would like to acknowledge the contributions of the
+   various and many subscribers to the Yeti DNS Project mailing lists,
+   including the following people who were involved in the
+   implementation and operation of the Yeti DNS testbed itself:
 
-   Tomohiro Ishihara, Antonio Prado, Stephane Bortzmeyer, Mickael
-   Jouanne, Pierre Beyssac, Joao Damas, Pavel Khramtsov, Ma Yan, Otmar
-   Lendl, Praveen Misra, Carsten Strotmann, Edwin Gomez, Remi Gacogne,
-   Guillaume de Lafond, Yves Bovard, Hugo Salgado-Hernandez, Li Zhen,
-   Daobiao Gong, Runxia Wan.
+      Tomohiro Ishihara, Antonio Prado, Stephane Bortzmeyer, Mickael
+      Jouanne, Pierre Beyssac, Joao Damas, Pavel Khramtsov, Ma Yan,
+      Otmar Lendl, Praveen Misra, Carsten Strotmann, Edwin Gomez, Remi
+      Gacogne, Guillaume de Lafond, Yves Bovard, Hugo Salgado-Hernandez,
+      Li Zhen, Daobiao Gong, Runxia Wan.
 
-
-
+   The editors also acknowledge the contributions of the Independent
+   Submissions Editorial Board, and of the following reviewers whose
+   opinions helped improve the clarity of this document:
 
 
-Song, et al.             Expires January 1, 2018               [Page 21]
+
+
+Song, et al.             Expires January 4, 2018               [Page 21]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
-   Acknowledgment to all anonymous Yeti participants and volunteers who
-   contribute Yeti resolvers to make the experimental testbed functional
-   and workable.
+      Subramanian Moonesamy, Joe Abley.
 
 8.  References
 
@@ -1229,9 +1227,11 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 22]
+
+
+Song, et al.             Expires January 4, 2018               [Page 22]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    [I-D.wkumari-dnsop-trust-management]
@@ -1285,9 +1285,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 23]
+Song, et al.             Expires January 4, 2018               [Page 23]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    [RFC4986]  Eland, H., Mundy, R., Crocker, S., and S. Krishnaswamy,
@@ -1341,9 +1341,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 24]
+Song, et al.             Expires January 4, 2018               [Page 24]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    [TNO]      Gijsen, B., Jamakovic, A., and F. Roijers, "Root Scaling
@@ -1397,9 +1397,9 @@ Appendix A.  Yeti-Root Hints File
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 25]
+Song, et al.             Expires January 4, 2018               [Page 25]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    yeti.bofh.priv.at     3600000  IN   AAAA   2a01:4f8:161:6106:1::10
@@ -1453,9 +1453,9 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 26]
+Song, et al.             Expires January 4, 2018               [Page 26]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 Appendix B.  About This Document
@@ -1509,9 +1509,9 @@ Authors' Addresses
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 27]
+Song, et al.             Expires January 4, 2018               [Page 27]
 
-Internet-Draft              Yeti DNS Testbed                   June 2017
+Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
    Paul Vixie (editor)
@@ -1534,14 +1534,6 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
    URI:   http://www.kmd.keio.ac.jp/
 
 
-   Joe Abley (editor)
-   Snake Hill Labs
-   300-184 York Street
-   London, ON  N6A 1B5
-   Canada
-
-   Email: jabley@shl.io
-   URI:   http://www.shl.io/
 
 
 
@@ -1565,4 +1557,12 @@ Internet-Draft              Yeti DNS Testbed                   June 2017
 
 
 
-Song, et al.             Expires January 1, 2018               [Page 28]
+
+
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 28]

@@ -145,21 +145,6 @@
       </address>
     </author>
 
-    <author fullname="Joe Abley" initials="J." surname="Abley" role="editor">
-      <organization>Snake Hill Labs</organization>
-      <address>
-        <postal>
-          <street>300-184 York Street</street>
-          <city>London</city>
-          <region>ON</region>
-          <code>N6A 1B5</code>
-          <country>Canada</country>
-        </postal>
-        <email>jabley@shl.io</email>
-        <uri>http://www.shl.io/</uri>
-      </address>
-    </author>
-
     <date/>
 
     <!-- Meta-data Declarations -->
@@ -1174,29 +1159,37 @@
     </section>
 
     <section title="IANA Considerations">
-      <t>This document requires no action from the IANA.</t>
+      <t>This document requests no action of the IANA.</t>
     </section>
 
     <section title="Acknowledgments">
-      <t>The editors fully acknowledge that this memo is based
-        on joint work and discussions of many people in the mailing
-        list of the Yeti DNS Project <xref target="Yeti-DNS-Project"/>.
-        Some of them actually are co-authors of this memo but
-        limited by the number of co-authors listed in the headline.
-        The people deserve the credit who help to construct the
-        Yeti testbed and contribute to this document, so their
-        effort is acknowledged here with a name list: </t>
+      <t>The editors would like to acknowledge the contributions of
+        the various and many subscribers to the Yeti DNS Project
+        mailing lists, including the following people who were
+        involved in the implementation and operation of the Yeti
+        DNS testbed itself:</t>
 
-      <t>Tomohiro Ishihara, Antonio Prado, Stephane Bortzmeyer,
-        Mickael Jouanne, Pierre Beyssac, Joao Damas, Pavel
-        Khramtsov, Ma Yan, Otmar Lendl, Praveen Misra, Carsten
-        Strotmann, Edwin Gomez, Remi Gacogne, Guillaume de Lafond,
-        Yves Bovard, Hugo Salgado-Hernández, Li Zhen, Daobiao
-        Gong, Runxia Wan.</t>
+      <t>
+        <list style="empty">
+	  <t>Tomohiro Ishihara, Antonio Prado, Stephane Bortzmeyer,
+	    Mickael Jouanne, Pierre Beyssac, Joao Damas, Pavel
+	    Khramtsov, Ma Yan, Otmar Lendl, Praveen Misra, Carsten
+	    Strotmann, Edwin Gomez, Remi Gacogne, Guillaume de Lafond,
+	    Yves Bovard, Hugo Salgado-Hernández, Li Zhen, Daobiao
+	    Gong, Runxia Wan.</t>
+        </list>
+      </t>
 
-      <t>Acknowledgment to all anonymous Yeti participants and
-        volunteers who contribute Yeti resolvers to make the
-        experimental testbed functional and workable.</t>
+      <t>The editors also acknowledge the contributions of the
+	Independent Submissions Editorial Board, and of the following
+	reviewers whose opinions helped improve the clarity of this
+	document:</t>
+
+      <t>
+        <list style="empty">
+          <t>Subramanian Moonesamy, Joe Abley.</t>
+        </list>
+      </t>
     </section>
   </middle>
 
