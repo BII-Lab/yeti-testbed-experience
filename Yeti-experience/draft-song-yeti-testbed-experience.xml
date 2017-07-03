@@ -526,24 +526,56 @@
 
         <t>Davey's note: The routine of DM are documented in : https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Setup.md. Regarding the SOA record, it is said "The MNAME and RNAME are set to Yeti values". Currently we implement like this: MNAME: www.yeti-dns.org. RNAME: DM-operator.yeti-dns.org. Such as wide.yeti-dns.org for WIDE and bii.yeti-dns.org for BII.</t>
 
-        <t>XXX(need description of the precise process followed here)XXX</t>
+	<t>The Root Zone is transformed as follows to produce the
+	  Yeti-Root Zone. This transformation is carried out 
+          autonomously on each Yeti DNS Project DM. Each DM carries
+          an authentic copy of the current set of Yeti KSKs, and ZSKs,
+          synchronised between all DMs. Each DM also carries a local
+          copy of each active KSK's private key, and the private key
+          for that DM's own ZSK.</t>
 
-        <t>XXX(remove RRSIG)XXX</t>
+        <t>
+          <list style="numbers">
+            <t>SOA.MNAME is set to www.yeti-dns.org.</t>
 
-        <t>XXX(remove apex NS RRSet)XXX</t>
+	    <t>SOA.RNAME is set to &lt;dm-operator&gt;.yeti-dns.org.
+	      where &lt;dm-operator&gt; is currently one of "wide",
+	      "bii" or "tisf".</t>
 
-        <t>XXX(add apex Yeti NS RRSet)XXX</t>
+            <t>All DNSKEY, RRSIG and NSEC records are removed.</t>
 
-        <t>XXX(remove apex DNSKEY RRSet)XXX</t>
+            <t>The apex NS RRSet is removed, with the corresponding
+              root server glue RRSets.</t>
 
-        <t>XXX(add apex Yeti DNSKEY RRSet)XXX</t>
+	    <t>A Yeti DNSKEY RRSet is added to the apex, including
+	      the Yeti KSK and all Yeti ZSKs.</t>
 
-        <t>XXX(sign zone using specified keys)XXX</t>
+            <t>A Yeti NS RRSet is added to the apex, including all
+              Yeti-Root servers.</t>
 
-        <t>The transformation of Root Zone to Yeti-Root zone takes
-          place independently on each of the Yeti DMs.</t>
+	    <t>Glue records (AAAA, since Yeti-Root servers are
+	      v6-only) for all Yeti-Root servers are added.</t>
 
-        <t>Note SOA.SERIAL preservation during transformation process.</t>
+            <t>The Yeti-Root Zone is signed: the NSEC chain is
+              regenerated; the Yeti KSK is used to
+              sign the DNSKEY RRSet, and the DM's local ZSK to generate
+              every other RRSet.</t>
+          </list>
+        </t>
+
+        <t>Note that the SOA.SERIAL value published in the Yeti-Root
+          Zone is identical to that found in the Root Zone.</t>
+
+	<t>A change to this transformation has been proposed that
+	  would preserve the NSEC chain from the Root Zone and all
+	  RRSIG RRs generated using the Root Zone's ZSKs. The DNSKEY
+	  RRSet would be modified to replace the Root Zone KSKs,
+	  and the Yeti KSK would be used to generate replacement
+	  signatures over the apex DNSKEY and NS RRSets. This
+	  approach would provide cryptographically-verifiable
+	  confidence that no owner name in the root zone had been
+	  changed in the process of producing the Yeti-Root zone
+	  from the Root Zone.</t>
       </section>
 
       <section title="Yeti-Root Zone Distribution">
