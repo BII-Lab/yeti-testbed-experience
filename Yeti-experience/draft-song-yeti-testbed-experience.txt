@@ -115,29 +115,29 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
      4.6.  Yeti Root Servers . . . . . . . . . . . . . . . . . . . .  12
-     4.7.  Traffic Capture and Analysis  . . . . . . . . . . . . . .  13
-   5.  Experience with Yeti DNS  . . . . . . . . . . . . . . . . . .  13
-     5.1.  Multiple-ZSK Operations . . . . . . . . . . . . . . . . .  14
-       5.1.1.  Proof of Concept  . . . . . . . . . . . . . . . . . .  15
-       5.1.2.  Experiment  . . . . . . . . . . . . . . . . . . . . .  16
-       5.1.3.  Conclusion  . . . . . . . . . . . . . . . . . . . . .  16
-     5.2.  Root Renumbering Issue and Hint File Update . . . . . . .  17
-     5.3.  Fragmentation of DNS Responses  . . . . . . . . . . . . .  18
-     5.4.  The KSK Rollover Experiment in Yeti . . . . . . . . . . .  19
-     5.5.  Bigger ZSK for Yeti . . . . . . . . . . . . . . . . . . .  20
-   6.  Other Technical findings and bugs . . . . . . . . . . . . . .  20
-     6.1.  IPv6 fragments issue  . . . . . . . . . . . . . . . . . .  20
-     6.2.  Root name compression issue . . . . . . . . . . . . . . .  21
-     6.3.  SOA update delay issue  . . . . . . . . . . . . . . . . .  21
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
-   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  22
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
-   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  26
-   Appendix B.  About This Document  . . . . . . . . . . . . . . . .  27
-     B.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  27
-     B.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  28
-       B.2.1.  draft-song-yeti-testbed-experience-04 . . . . . . . .  28
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+     4.7.  Traffic Capture and Analysis  . . . . . . . . . . . . . .  14
+   5.  Experience with Yeti DNS  . . . . . . . . . . . . . . . . . .  14
+     5.1.  Multiple-ZSK Operations . . . . . . . . . . . . . . . . .  15
+       5.1.1.  Proof of Concept  . . . . . . . . . . . . . . . . . .  16
+       5.1.2.  Experiment  . . . . . . . . . . . . . . . . . . . . .  17
+       5.1.3.  Conclusion  . . . . . . . . . . . . . . . . . . . . .  17
+     5.2.  Root Renumbering Issue and Hint File Update . . . . . . .  18
+     5.3.  Fragmentation of DNS Responses  . . . . . . . . . . . . .  19
+     5.4.  The KSK Rollover Experiment in Yeti . . . . . . . . . . .  20
+     5.5.  Bigger ZSK for Yeti . . . . . . . . . . . . . . . . . . .  21
+   6.  Other Technical findings and bugs . . . . . . . . . . . . . .  21
+     6.1.  IPv6 fragments issue  . . . . . . . . . . . . . . . . . .  21
+     6.2.  Root name compression issue . . . . . . . . . . . . . . .  22
+     6.3.  SOA update delay issue  . . . . . . . . . . . . . . . . .  22
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+   8.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  23
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
+   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  27
+   Appendix B.  About This Document  . . . . . . . . . . . . . . . .  28
+     B.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  28
+     B.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  29
+       B.2.1.  draft-song-yeti-testbed-experience-04 . . . . . . . .  29
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  29
 
 1.  Introduction
 
@@ -568,10 +568,11 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    names (A through M) under the domain ROOT-SERVERS.NET (More
    information can be found in [RSSAC023]).  One reason behind this
    naming scheme is that DNS label compression can be used to produce a
-   smaller DNS response within 512 bytes.  In Yeti testbed it reuse the
-   originally naming scheme using free-form names chosen by their
-   respective operators(Appendix A).  This naming schemes is chosen to
-   fulfill following purposes:
+   smaller DNS response within 512 bytes.
+
+   In Yeti testbed it reuse the originally naming scheme using free-form
+   names chosen by their respective operators (Appendix A).  This naming
+   schemes is chosen to fulfill following purposes:
 
    o  Intentionally produces larger packets for priming responses for
       less name compression efficiency.  One Yeti experiment is to test
@@ -608,8 +609,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    trivial discussions on this issue in Yeti discuss mailing list,
    regarding the proposal .yeti-dns for root name or .local for new
    AS112 [I-D.bortzmeyer-dname-root].  It is argued that this kind of
-   experiment should based on community consensus from technical bodies
-   like IETF and be operated within a limited duration in some cases.
+
 
 
 
@@ -617,6 +617,9 @@ Song, et al.             Expires January 4, 2018               [Page 11]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
+
+   experiment should based on community consensus from technical bodies
+   like IETF and be operated within a limited duration in some cases.
 
    Note that The ICANN Root Server System Advisory Committee (RSSAC) is
    working on a related document which aims to analyze alternative
@@ -628,6 +631,48 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    Root servers.  At the time of writing there are 25 Yeti-Root servers
    distributed globally, one of which is named using an IDNA2008
    [RFC5890] label, shown in the following list in punycode.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 12]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
 
    +-------------------------------------+---------------+-------------+
    | Name                                | Operator      | Location    |
@@ -665,15 +710,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    | yeti-ns.datev.net                   | DATEV         | Germany     |
    +-------------------------------------+---------------+-------------+
 
-
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 12]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    The current list of Yeti-Root server is made available to a
    participating resolver first using a substitute hints file Appendix A
    and subsequently by the usual resolver priming process
@@ -686,6 +722,13 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    System serve the ROOT-SERVERS.NET zone in addition to the root zone,
    and all but one also serve the ARPA zone.  Yeti-Root servers serve
    the Yeti-Root zone only.
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 13]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
 
    Significant software diversity exists across the set of Yeti-Root
    servers, as reported by their volunteer operators:
@@ -722,14 +765,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    As introduced, Yeti DNS is a root testbed designed for trying new
    ideas.  For each proposed idea, it is firstly tested in Lab
    environment as a proof of concept before it is implemented in the
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 13]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    testbed.  The approach is straightforward that we set the system up
    according to the experiment proposal with monitoring on the data flow
    and resolution path.  Operational issues, impacts and complexities
@@ -739,19 +774,33 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
    Davey's note: we have done other experiments and document them in
    yeti blog.  If you find them useful we can add to experiment section:
-   1) http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-Root-
-   Zone-Update.html 2) http://yeti-dns.org/yeti/blog/2017/03/03/bind-
-   edns-fallback-and-dn.ssec-issue.html 3) http://yeti-
-   dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-Root-Server-
-   System.html 4) http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-
-   issue-during-Yeti-KSK-rollover.html
+
+   1.  <http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-
+       Root-Zone-Update.html>
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 14]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
+
+   2.  <http://yeti-dns.org/yeti/blog/2017/03/03/bind-edns-fallback-and-
+       dn.ssec-issue.html>
+
+   3.  <http://yeti-dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-
+       Root-Server-System.html>
+
+   4.  <http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-
+       Yeti-KSK-rollover.html>
 
 5.1.  Multiple-ZSK Operations
 
    Davey's note: There are two documents in repo which will helpfull for
-   you: 1) https://github.com/BII-Lab/Yeti-Project/blob/master/doc/
-   Report-MZSK.md 2)https://github.com/BII-Lab/Yeti-
-   Project/blob/master/doc/Experiment-MZSK.md
+   you: <https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-
+   MZSK.md> and <https://github.com/BII-Lab/Yeti-
+   Project/blob/master/doc/Experiment-MZSK.md>.
 
    The Root Server System incorporates a root zone signed using DNSSEC.
    Responsibility for cryptographic operations is split between the IANA
@@ -781,7 +830,14 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 14]
+
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 15]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -814,7 +870,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    This experiment will test the behavior of the Yeti root servers and
    resolvers as we have multiple ZSK, both during normal operation and
    during rollover.  We did not change the algorithm used, the key
-   lengths, or the timings. ***Davey: algorithm, key lengths and timing
+   lengths, or the timings.  ***Davey: algorithm, key lengths and timing
    is ought to be introduce in section 3, architecture part****
 
 5.1.1.  Proof of Concept
@@ -831,18 +887,18 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    experiment is described.  We need more detail of what happened here
    for its inclusion in this document to be useful.  XXX
 
-   Davey's notes: a full report on this lab test: http://lists.yeti-
+   Davey's notes: a full report on this lab test: <http://lists.yeti-
    dns.org/pipermail/discuss/attachments/20151021/01fd3827/
 
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 15]
+Song, et al.             Expires January 4, 2018               [Page 16]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
-   attachment.txt.  Right now I just use a brief description below on
+   attachment.txt>.  Right now I just use a brief description below on
    this lab test to show the result.
 
    In preparation for the experiment, a lab test was done to verify the
@@ -893,7 +949,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 16]
+Song, et al.             Expires January 4, 2018               [Page 17]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -949,7 +1005,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 17]
+Song, et al.             Expires January 4, 2018               [Page 18]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1005,7 +1061,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 18]
+Song, et al.             Expires January 4, 2018               [Page 19]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1061,7 +1117,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 19]
+Song, et al.             Expires January 4, 2018               [Page 20]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1117,7 +1173,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 20]
+Song, et al.             Expires January 4, 2018               [Page 21]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1173,7 +1229,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 21]
+Song, et al.             Expires January 4, 2018               [Page 22]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1229,7 +1285,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 22]
+Song, et al.             Expires January 4, 2018               [Page 23]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1285,7 +1341,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 23]
+Song, et al.             Expires January 4, 2018               [Page 24]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1341,7 +1397,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 24]
+Song, et al.             Expires January 4, 2018               [Page 25]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1397,7 +1453,7 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 25]
+Song, et al.             Expires January 4, 2018               [Page 26]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1453,7 +1509,7 @@ Appendix A.  Yeti-Root Hints File
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 26]
+Song, et al.             Expires January 4, 2018               [Page 27]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1509,7 +1565,7 @@ B.1.  Venue
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 27]
+Song, et al.             Expires January 4, 2018               [Page 28]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1565,7 +1621,7 @@ Authors' Addresses
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 28]
+Song, et al.             Expires January 4, 2018               [Page 29]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
@@ -1621,4 +1677,4 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 29]
+Song, et al.             Expires January 4, 2018               [Page 30]

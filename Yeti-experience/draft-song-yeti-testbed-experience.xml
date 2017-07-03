@@ -557,8 +557,6 @@
       </section>
 
       <section title="Information Synchronization">
-
-
         <t>XXX(Joe needs more information about the content of this section
           before he can suggest changes)XXX</t>
 
@@ -587,7 +585,8 @@
           themselves. Can I see examples of the actual files that are
           used?)XXX</t>
 
-          <t>Davey's Note: I sent you a mailing with the title: directories and files in DM's repo.</t>
+	<t>Davey's Note: I sent you a mailing with the title:
+	  directories and files in DM's repo.</t>
 
         <t>The operation is simple that each DM operator synchronize
           the files with the information needed to produce the Yeti
@@ -598,19 +597,19 @@
           when the changes become active. </t>
       </section>
 
-    <section title="Yeti-Root Server Naming Scheme">
-    
-    <t>The current naming scheme was normalized to use single-character 
-      host names (A through M) under the domain ROOT-SERVERS.NET (More 
-      information can be found in <xref target="RSSAC023"/>). One reason 
-      behind this naming scheme is that DNS label compression can be used 
-      to produce a smaller DNS response within 512 bytes.
-      
-      In Yeti testbed it reuse the originally naming scheme using free-form 
-      names chosen by their respective operators(Appendix A). This naming 
-      schemes is chosen to fulfill following purposes:</t>
+      <section title="Yeti-Root Server Naming Scheme">
+        <t>The current naming scheme was normalized to use single-character 
+          host names (A through M) under the domain ROOT-SERVERS.NET (More 
+          information can be found in <xref target="RSSAC023"/>). One reason 
+          behind this naming scheme is that DNS label compression can be used 
+          to produce a smaller DNS response within 512 bytes.</t>
 
-      <t>
+	<t>In Yeti testbed it reuse the originally naming scheme
+	  using free-form names chosen by their respective operators
+	  (Appendix A). This naming schemes is chosen to fulfill
+	  following purposes:</t>
+
+        <t>
           <list style="symbols">
             <t>Intentionally produces larger packets for priming responses for 
               less name compression efficiency. One Yeti experiment is to test 
@@ -624,43 +623,44 @@
           </list>
         </t>
 
-      <t>There is a issue for this naming scheme in which the priming
-   response may not contain all glue record for Yeti Root servers. It
-   is documented as a technical findings <xref target="Yeti-glue-issue"/>.  
-   There are two approaches to solve the issue: one is to patch BIND 9 to includes
-   the glue records in the additional section.  The other one is to add
-   a zone file for each root server and answer for all of them at each
-   Yeti server.  That means each Yeti root server would have a small zone 
-   file for "bii.dns-lab.net", "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net", 
-   and so on.
-    </t>
+	<t>There is a issue for this naming scheme in which the
+	  priming response may not contain all glue record for Yeti
+	  Root servers. It is documented as a technical findings
+	  <xref target="Yeti-glue-issue"/>.  There are two approaches
+	  to solve the issue: one is to patch BIND 9 to includes
+	  the glue records in the additional section.  The other
+	  one is to add a zone file for each root server and answer
+	  for all of them at each Yeti server.  That means each
+	  Yeti root server would have a small zone file for
+	  "bii.dns-lab.net", "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net",
+	  and so on.</t>
 
-    <t>Another naming scheme under Yeti lab test is to use a
-    special non-delegated TLD, like .yeti-dns for root server
-    operated by BII. The benefit of non-delegated TLD naming
-    scheme are in two aspects: 1) the response to a priming
-    query is protected by DNSSEC; 2) To meet a political
-    reason that the zone authoritative for root server is not
-    delegated and belong to particular companies or organizations
-    except IANA; 3) reduce the dependency of root server names
-    to other DNS service; 4) to mitigate some kind of cache
-    poisoning activities.</t>
+	<t>Another naming scheme under Yeti lab test is to use a
+	  special non-delegated TLD, like .yeti-dns for root server
+	  operated by BII. The benefit of non-delegated TLD naming
+	  scheme are in two aspects: 1) the response to a priming
+	  query is protected by DNSSEC; 2) To meet a political
+	  reason that the zone authoritative for root server is not
+	  delegated and belong to particular companies or organizations
+	  except IANA; 3) reduce the dependency of root server names
+	  to other DNS service; 4) to mitigate some kind of cache
+	  poisoning activities.</t>
 
-  <t>It is found that modification of IANA root zone by adding
-    a new TLD is so controversial even for scientific purpose.
-    There are non-trivial discussions on this issue in Yeti
-    discuss mailing list, regarding the proposal .yeti-dns
-    for root name or .local for new AS112 <xref
-    target="I-D.bortzmeyer-dname-root"/>.  It is argued that
-    this kind of experiment should based on community consensus
-    from technical bodies like IETF and be operated within a
-    limited duration in some cases.</t>
+	<t>It is found that modification of IANA root zone by adding
+	  a new TLD is so controversial even for scientific purpose.
+	  There are non-trivial discussions on this issue in Yeti
+	  discuss mailing list, regarding the proposal .yeti-dns
+	  for root name or .local for new AS112 <xref
+	  target="I-D.bortzmeyer-dname-root"/>.  It is argued that
+	  this kind of experiment should based on community consensus
+	  from technical bodies like IETF and be operated within a
+	  limited duration in some cases.</t>
 
-  <t>Note that The ICANN Root Server System Advisory
-    Committee (RSSAC) is working on a related document which
-    aims to analyze alternative naming schemes.</t>
+	<t>Note that The ICANN Root Server System Advisory Committee
+	  (RSSAC) is working on a related document which aims to
+	  analyze alternative naming schemes.</t>
+      </section>
 
-  </section>
       <section title="Yeti Root Servers">
         <t>Various volunteers have donated authoritative servers
           to act as Yeti-Root servers. At the time of writing there
@@ -778,9 +778,7 @@
       </section>
     </section>
 
-
     <section title="Experience with Yeti DNS">
-
       <t>As introduced, Yeti DNS is a root testbed designed for 
         trying new ideas. For each proposed idea, it is firstly 
         tested in Lab environment as a proof of concept before it 
@@ -790,22 +788,29 @@
         Operational issues, impacts and complexities are observed 
         and discussed mainly in the mailing list. Some experiments 
         and findings are summarized in the blog of Yeti DNS Project. 
-        This section introduces the experience with Yeti DNS. 
+        This section introduces the experience with Yeti DNS.</t>
 
+      <t>Davey's note: we have done other experiments and document
+	them in yeti blog.  If you find them useful we can add to
+	experiment section:
+
+        <list style="numbers">
+          <t><eref target="http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-Root-Zone-Update.html"/></t>
+
+          <t><eref target="http://yeti-dns.org/yeti/blog/2017/03/03/bind-edns-fallback-and-dn.ssec-issue.html"/></t>
+
+	  <t><eref target="http://yeti-dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-Root-Server-System.html"/></t>
+
+          <t><eref target="http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html"/></t>
+        </list>
       </t>
 
-      <t>Davey's note: we have done other experiments and document them in yeti blog. 
-        If you find them useful we can add to experiment section: 
-1) http://yeti-dns.org/yeti/blog/2017/03/26/Monitoring-on-Yeti-Root-Zone-Update.html
-2) http://yeti-dns.org/yeti/blog/2017/03/03/bind-edns-fallback-and-dn.ssec-issue.html
-3) http://yeti-dns.org/yeti/blog/2016/12/20/Scoring-the-Yeti-DNS-Root-Server-System.html
-4) http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html
-</t>
-
       <section title="Multiple-ZSK Operations">
-
-      <t>Davey's note: There are two documents in repo which will helpfull for you: 1) https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md 2)https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md </t>
-
+	<t>Davey's note: There are two documents in repo which will
+	  helpfull for you: <eref
+	  target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Report-MZSK.md"/>
+	  and <eref
+	  target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Experiment-MZSK.md"/>.</t>
 
         <t>The Root Server System incorporates a root zone signed
 	  using DNSSEC. Responsibility for cryptographic operations
@@ -824,15 +829,16 @@
 	  such an approach on the stability of the Yeti DNS Testbed
 	  as a whole.</t>
 
-    <t>The Multi-ZSK experiment is designed to test operating 
-      the Yeti root using more than a single ZSK. The goal is 
-      to have each distribution master (DM) have a separate ZSK, 
-      signed by a single KSK. This will allow DM to operate 
-      independently, each maintaining their own key secret material. </t>
+	<t>The Multi-ZSK experiment is designed to test operating
+	  the Yeti root using more than a single ZSK. The goal is
+	  to have each distribution master (DM) have a separate
+	  ZSK, signed by a single KSK. This will allow DM to operate
+	  independently, each maintaining their own key secret
+	  material.</t>
 
-    <figure anchor="mulit-zsk" title="Multiple ZSK Experiment">
-        <artwork>
-          <![CDATA[
+        <figure anchor="mulit-zsk" title="Multiple ZSK Experiment">
+          <artwork>
+            <![CDATA[
                        +--------------+         +-----------+
               +------->| BII ZSK      |-------->| Yeti root |
               | signs  +--------------+  signs  +-----------+
@@ -845,62 +851,66 @@
               +------->| WIDE ZSK     |-------->| Yeti root |
                 signs  +--------------+  signs  +-----------+
 ]]>
-        </artwork>
-      </figure>
+          </artwork>
+        </figure>
 
-      <t>In the MZSK setup, each DM maintains a separate ZSK and 
-        produces a version of the root zone with different signatures. 
-        Aside from the signatures, the contents of the Yeti root zone 
-        is identical, as shown in  <xref target="mulit-zsk"/>. </t>
+	<t>In the MZSK setup, each DM maintains a separate ZSK and
+	  produces a version of the root zone with different
+	  signatures.  Aside from the signatures, the contents of
+	  the Yeti root zone is identical, as shown in  <xref
+	  target="mulit-zsk"/>.</t>
 
-      <t>In DNSSEC, the KSK and ZSK are all returned in a single value, 
-        the DNSKEY Resource Record Set (RRset). Because of this, DNSSEC 
-        resolvers are able to validate answers as long as they are signed 
-        by any of the ZSK.</t>
+	<t>In DNSSEC, the KSK and ZSK are all returned in a single
+	  value, the DNSKEY Resource Record Set (RRset). Because
+	  of this, DNSSEC resolvers are able to validate answers
+	  as long as they are signed by any of the ZSK.</t>
 
-    <t> This experiment will test the behavior of the Yeti root servers 
-      and resolvers as we have multiple ZSK, both during normal 
-      operation and during rollover. We did not change the algorithm 
-      used, the key lengths, or the timings. ***Davey: algorithm, 
-      key lengths and timing is ought to be introduce in section 3, 
-      architecture part****</t>
+	<t>This experiment will test the behavior of the Yeti root
+	  servers and resolvers as we have multiple ZSK, both during
+	  normal operation and during rollover. We did not change
+	  the algorithm used, the key lengths, or the timings.
+	  ***Davey: algorithm, key lengths and timing is ought to
+	  be introduce in section 3, architecture part****</t>
 
+          <section title="Proof of Concept">
+            <t>XXX There is some detail missing from this description of
+	      the environment tested in the lab. Presuably "A and B"
+	      are placeholders for Yeti-Root servers deployed in a
+	      captive environment to test, and not related to actual
+	      Yeti-Root servers. The phrase "resolver switch" is not
+	      familiar, and needs explanation. There's no detail about
+	      the algorithms or key sizes used in the ZSKs, how the
+	      root zone apex DNSKEY RRSet was constructed, what
+	      signatures by the KSK were involved, and what trust
+	      anchors were configured in validators. The commentary
+	      on response size is suggestive of experimentation, but
+	      no experiment is described. We need more detail of what
+	      happened here for its inclusion in this document to be
+	      useful. XXX </t>
 
-        <section title="Proof of Concept">
-          <t>XXX There is some detail missing from this description of
-	    the environment tested in the lab. Presuably "A and B"
-	    are placeholders for Yeti-Root servers deployed in a
-	    captive environment to test, and not related to actual
-	    Yeti-Root servers. The phrase "resolver switch" is not
-	    familiar, and needs explanation. There's no detail about
-	    the algorithms or key sizes used in the ZSKs, how the
-	    root zone apex DNSKEY RRSet was constructed, what
-	    signatures by the KSK were involved, and what trust
-	    anchors were configured in validators. The commentary
-	    on response size is suggestive of experimentation, but
-	    no experiment is described. We need more detail of what
-	    happened here for its inclusion in this document to be
-	    useful. XXX </t>
+          <t>Davey's notes: a full report on this lab test:
+	    <eref
+	    target="http://lists.yeti-dns.org/pipermail/discuss/attachments/20151021/01fd3827/attachment.txt"/>.
+	    Right now I just use a brief description below on this
+	    lab test to show the result.</t>
 
-      <t>Davey's notes: a full report on this lab test:
-      http://lists.yeti-dns.org/pipermail/discuss/attachments/20151021/01fd3827/attachment.txt. 
-      Right now I just use a brief description below on this lab test to show the result.</t>
+	  <t>In preparation for the experiment, a lab test was done
+	    to verify the behavior of DNS resolvers under controlled
+	    conditions. A DNS resolver was configured using two
+	    experimental root servers. Traffic was sent insuring
+	    that the resolver had the ZSK from one or both of the
+	    servers, and then the validation results checked. The
+	    lab test confirmed that if a root server tried to use
+	    a ZSK that was not present in the DNSKEY RRset that it
+	    would fail, but that even if two servers used separate
+	    ZSK this resolves properly as long as they are both
+	    present in the DNSKEY RRset.</t>
+	</section>
 
-	  <t>In preparation for the experiment, a lab test was done 
-      to verify the behavior of DNS resolvers under controlled 
-      conditions. A DNS resolver was configured using two 
-      experimental root servers. Traffic was sent insuring that 
-      the resolver had the ZSK from one or both of the servers, 
-      and then the validation results checked. The lab test confirmed 
-      that if a root server tried to use a ZSK that was not present 
-      in the DNSKEY RRset that it would fail, but that even if 
-      two servers used separate ZSK this resolves properly as 
-      long as they are both present in the DNSKEY RRset.</t>
-        </section>
-        
-        <section title="Experiment">
-          <t>After the lab test, the MZSK experiment is being conducted
-            on the Yeti platform. There are two phases:</t>
+	<section title="Experiment">
+	  <t>After the lab test, the MZSK experiment is being
+	  conducted
+	    on the Yeti platform. There are two phases:</t>
 
           <t>XXX It's not entirely obvious that Phase 1 here does not
             correspond to the lab experiment described above in "Proof
