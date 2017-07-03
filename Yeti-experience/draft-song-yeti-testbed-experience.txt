@@ -404,8 +404,8 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
      | Collection   |    |  DM   |    |  DM   |    |  DM   |
      `----+----+----'    `---+---'    `---+---'    `---+---'
           |    |       ,-----'    ,-------'            `----.
-          |    |       |          |                         |
-          ^    ^       |          |                         |  Yeti-Root
+          |    |       |          |                         |  Yeti-Root
+          ^    ^       |          |                         |     Zone
           |    |   ,---V---.  ,---V---.                 ,---V---.
           |    `---+ Yeti  |  | Yeti  |  . . . . . . .  | Yeti  |
           |        | Root  |  | Root  |                 | Root  |
