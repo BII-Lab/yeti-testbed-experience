@@ -719,7 +719,7 @@
 	  promoted to production.</t>
       </section>
 
-      <section title="Yeti-Root Server Naming Scheme">
+      <section title="Yeti-Root Server Naming Scheme" anchor="naming">
 	<t>The current naming scheme for Root Servers was normalized
 	  to use single-character host names (A through M) under
 	  the domain ROOT-SERVERS.NET, as described in <xref
@@ -960,63 +960,52 @@
         </section>
 
         <section title="Fragmentation of DNS Responses">
-	  <t>In consideration of new DNS protocol and operation,
-	    there is always a hard limit on the DNS packet size.
-	    Take Yeti for example: adding more root servers, using
-	    the Yeti naming scheme, rolling the KSK, and Multi-ZSK
-	    all increase the packet size.  The fear of large DNS
-	    packets mainly stem from two aspects: one is IP-fragments
-	    and the other is frequently falling back to TCP.</t>
+	  <t>In the Root Server System, structural changes with the
+	    potential to increase response sizes (and hence
+	    fragmentation, fallback to TCP transport or both) have
+	    been exercised with great care, since the impact on
+	    clients has been difficult to predict or measure. The
+	    Yeti DNS Testbed is experimental and has the luxury of
+	    a known client base, making it far easier to make such
+	    changes and measure their impact.</t>
 
-	  <t>Fragmentation may cause serious issues; if one of the
-	    fragment is lost at random, it results in the loss of
-	    entire packet and involve timeout.  If the fragment is
-	    dropped by a middle-box, the query always results in
-	    failure, and result in name resolution failure unless
-	    the resolver falls back to TCP. It is known at this
-	    moment that limited number of security middle-box
+          <t>Many of the experimental design choices described in
+	    this document were expected to trigger larger responses.
+	    For example, the choice of naming scheme for Yeti-Root
+	    Servers described in <xref target="naming"/> defeats
+	    label compression the priming response; the Yeti-Root
+	    zone transformation approach described in <xref
+	    target="trans2"/> greatly enlarges the apex DNSKEY
+	    RRSet. An increased incidence of fragmentation was
+	    therefore expected.</t>
+
+          <t>XXX Note to reviewers: results of fragmentation and
+            TCP fallback measurements to be summarised here XXX</t>
+
+	  <t>The Yeti-DNS Testbed provides service on IPv6 only.
+	    IPv6 has a fragmentation model that is different from
+	    IPv4 -- in particular, fragmentation always takes place
+	    on a sending end-host, and not on an intermediate router.</t>
+
+	  <t>Fragmentation may cause serious issues; if a single
+	    fragment is lost, it results in the loss of the entire
+	    datagram of which the fragment was a part, and in the
+	    DNS frequently triggers a timeout. It is known at this
+	    moment that only a limited number of security middle-box
 	    implementations support IPv6 fragments.</t>
 
-          <t>A possible solution is to split a single DNS message
-            across multiple UDP datagrams.  This DNS fragments mechanism
-            is documented in <xref target="I-D.muks-dns-message-fragments"/>
-            as an experimental IETF draft.</t>
-
-        <t>Davey's note: Maybe we can move and extend it to section 4.3</t>
-
-        <t>There are two cases in Yeti testbed reported that some
-          Yeti root servers failed to pull the zone from a Distribution
-          Master via AXFR/IXFR. Two facts have been revealed in
-          both client side and server side after trouble shooting.</t>
-
-        <t>One fact in client side is that some operation system
-          can not handle IPv6 fragments correctly and AXRF/IXFR in
-          TCP fails.  The bug covers several OSs and one VM platform
-          (listed below).</t>
-
-        <texttable>
-          <ttcol>OS</ttcol>
-          <ttcol>VM</ttcol>
-
-          <c>NetBSD 6.1 and 7.0RC1</c><c>VMware ESXI 5.5</c>
-          <c>FreeBSD10.0 </c><c></c>
-          <c>Debian 3.2</c><c></c>
-        </texttable>
-
-        <t>Another fact is from server side in which one TCP segment
-          of AXRF/ IXFR is fragmented in IP layer resulting in two
-          fragmented packets.  This weird behavior has been documented
-          IETF draft<xref target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>.
-          It reports a situation that some implementations of TCP
-          running over IPv6 neglect to check the IPV6_USE_MIN_MTU
-          value when performing MSS negotiation and when constructing
-          a TCP segment.  It will cause TCP MSS option set to 1440
-          bytes, but IP layer will limit the packet less than 1280
-          bytes and fragment the packet to two fragmented packets.</t>
-
-        <t>While the latter is not a technical error, but it will
-          cause the error in the former fact which deserves much
-          attention in IPv6 operation.</t>
+	  <t>The consequences of fragmentation were not limited to DNS
+	    using UDP transpoert. There are two cases reported where
+	    some Yeti root servers failed to transfer the Yeti-Root
+	    zone from a DM.  Further experimentation revealed that
+	    combinations of NetBSD 6.1, NetBSD 7.0RC1, FreeBSD 10.0,
+	    Debian 3.2 and VMWare ESXI 5.5 resulted in a high TCP
+	    MSS value of 1440 octets being negotiated between client
+	    and server despite the presence of the IPV6_USE_MIN_MTU
+	    socket option, as described in <xref
+	    target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>.  The
+	    mismatch appears to cause outbound segments greater in
+	    size than 1280 octets to be dropped before sending.</t>
       </section>
 
       <section title="Root name compression issue">

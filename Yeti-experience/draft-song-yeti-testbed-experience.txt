@@ -123,11 +123,11 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
      5.1.  Automated Hints File Maintenance  . . . . . . . . . . . .  16
      5.2.  Fragmentation of DNS Responses  . . . . . . . . . . . . .  17
      5.3.  Root name compression issue . . . . . . . . . . . . . . .  18
-     5.4.  The KSK Rollover Experiment in Yeti . . . . . . . . . . .  19
+     5.4.  The KSK Rollover Experiment in Yeti . . . . . . . . . . .  18
      5.5.  Bigger ZSK for Yeti . . . . . . . . . . . . . . . . . . .  20
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  20
    7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  20
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
    Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  24
    Appendix B.  About This Document  . . . . . . . . . . . . . . . .  26
      B.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  26
@@ -927,24 +927,24 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 5.2.  Fragmentation of DNS Responses
 
-   In consideration of new DNS protocol and operation, there is always a
-   hard limit on the DNS packet size.  Take Yeti for example: adding
-   more root servers, using the Yeti naming scheme, rolling the KSK, and
-   Multi-ZSK all increase the packet size.  The fear of large DNS
-   packets mainly stem from two aspects: one is IP-fragments and the
-   other is frequently falling back to TCP.
+   In the Root Server System, structural changes with the potential to
+   increase response sizes (and hence fragmentation, fallback to TCP
+   transport or both) have been exercised with great care, since the
+   impact on clients has been difficult to predict or measure.  The Yeti
+   DNS Testbed is experimental and has the luxury of a known client
+   base, making it far easier to make such changes and measure their
+   impact.
 
-   Fragmentation may cause serious issues; if one of the fragment is
-   lost at random, it results in the loss of entire packet and involve
-   timeout.  If the fragment is dropped by a middle-box, the query
-   always results in failure, and result in name resolution failure
-   unless the resolver falls back to TCP.  It is known at this moment
-   that limited number of security middle-box implementations support
-   IPv6 fragments.
+   Many of the experimental design choices described in this document
+   were expected to trigger larger responses.  For example, the choice
+   of naming scheme for Yeti-Root Servers described in Section 4.5
+   defeats label compression the priming response; the Yeti-Root zone
+   transformation approach described in Section 4.2.2 greatly enlarges
+   the apex DNSKEY RRSet.  An increased incidence of fragmentation was
+   therefore expected.
 
-   A possible solution is to split a single DNS message across multiple
-   UDP datagrams.  This DNS fragments mechanism is documented in
-   [I-D.muks-dns-message-fragments] as an experimental IETF draft.
+   XXX Note to reviewers: results of fragmentation and TCP fallback
+   measurements to be summarised here XXX
 
 
 
@@ -954,38 +954,27 @@ Song, et al.             Expires January 4, 2018               [Page 17]
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
-   Davey's note: Maybe we can move and extend it to section 4.3
+   The Yeti-DNS Testbed provides service on IPv6 only.  IPv6 has a
+   fragmentation model that is different from IPv4 -- in particular,
+   fragmentation always takes place on a sending end-host, and not on an
+   intermediate router.
 
-   There are two cases in Yeti testbed reported that some Yeti root
-   servers failed to pull the zone from a Distribution Master via AXFR/
-   IXFR.  Two facts have been revealed in both client side and server
-   side after trouble shooting.
+   Fragmentation may cause serious issues; if a single fragment is lost,
+   it results in the loss of the entire datagram of which the fragment
+   was a part, and in the DNS frequently triggers a timeout.  It is
+   known at this moment that only a limited number of security middle-
+   box implementations support IPv6 fragments.
 
-   One fact in client side is that some operation system can not handle
-   IPv6 fragments correctly and AXRF/IXFR in TCP fails.  The bug covers
-   several OSs and one VM platform (listed below).
-
-                +-----------------------+-----------------+
-                | OS                    | VM              |
-                +-----------------------+-----------------+
-                | NetBSD 6.1 and 7.0RC1 | VMware ESXI 5.5 |
-                | FreeBSD10.0           |                 |
-                | Debian 3.2            |                 |
-                +-----------------------+-----------------+
-
-   Another fact is from server side in which one TCP segment of AXRF/
-   IXFR is fragmented in IP layer resulting in two fragmented packets.
-   This weird behavior has been documented IETF
-   draft[I-D.andrews-tcp-and-ipv6-use-minmtu].  It reports a situation
-   that some implementations of TCP running over IPv6 neglect to check
-   the IPV6_USE_MIN_MTU value when performing MSS negotiation and when
-   constructing a TCP segment.  It will cause TCP MSS option set to 1440
-   bytes, but IP layer will limit the packet less than 1280 bytes and
-   fragment the packet to two fragmented packets.
-
-   While the latter is not a technical error, but it will cause the
-   error in the former fact which deserves much attention in IPv6
-   operation.
+   The consequences of fragmentation were not limited to DNS using UDP
+   transpoert.  There are two cases reported where some Yeti root
+   servers failed to transfer the Yeti-Root zone from a DM.  Further
+   experimentation revealed that combinations of NetBSD 6.1, NetBSD
+   7.0RC1, FreeBSD 10.0, Debian 3.2 and VMWare ESXI 5.5 resulted in a
+   high TCP MSS value of 1440 octets being negotiated between client and
+   server despite the presence of the IPV6_USE_MIN_MTU socket option, as
+   described in [I-D.andrews-tcp-and-ipv6-use-minmtu].  The mismatch
+   appears to cause outbound segments greater in size than 1280 octets
+   to be dropped before sending.
 
 5.3.  Root name compression issue
 
@@ -1002,14 +991,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    expect such name compression for root.  Both Knot and Go DNS lib have
    fixed that bug by now.
 
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 18]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
 5.4.  The KSK Rollover Experiment in Yeti
 
    The Yeti DNS Project provides a good basis to conduct a real-world
@@ -1021,6 +1002,14 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
    The IANA root KSK has not been rolled as of the writing.  ICANN put
    together a design team to analyze the problem and make
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 18]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
+
    recommendations.  The design team put together a
    plan[ICANN-ROOT-ROLL].  The Yeti DNS Project may evaluate this
    scenario for an experimental KSK roll.  The experiment may not be
@@ -1057,6 +1046,17 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    carefully during the KSK rollover for each view when the it is
    created.
 
+   Another of the questions of KSK rollover is how can an authority
+   server know the resolver is ready for RFC5011.  Two Internet-Drafts
+   [I-D.wessels-edns-key-tag] and [I-D.wkumari-dnsop-trust-management]
+   try to address the problem.  In addition a compliant resolver
+   implementation may fail without any complain if it is not correctly
+   configured.  In the case of Unbound 1.5.8, the key is only readable
+   for DNS users [auto-trust-anchor-file].
+
+
+
+
 
 
 
@@ -1065,14 +1065,6 @@ Song, et al.             Expires January 4, 2018               [Page 19]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
-
-   Another of the questions of KSK rollover is how can an authority
-   server know the resolver is ready for RFC5011.  Two Internet-Drafts
-   [I-D.wessels-edns-key-tag] and [I-D.wkumari-dnsop-trust-management]
-   try to address the problem.  In addition a compliant resolver
-   implementation may fail without any complain if it is not correctly
-   configured.  In the case of Unbound 1.5.8, the key is only readable
-   for DNS users [auto-trust-anchor-file].
 
 5.5.  Bigger ZSK for Yeti
 
@@ -1114,6 +1106,14 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
       Subramanian Moonesamy, Joe Abley.
 
+8.  References
+
+   [auto-trust-anchor-file]
+              "Unbound should test that auto-* files are writable",
+              2016, <https://www.nlnetlabs.nl/bugs-script/
+              show_bug.cgi?id=758>.
+
+
 
 
 
@@ -1121,13 +1121,6 @@ Song, et al.             Expires January 4, 2018               [Page 20]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
-
-8.  References
-
-   [auto-trust-anchor-file]
-              "Unbound should test that auto-* files are writable",
-              2016, <https://www.nlnetlabs.nl/bugs-script/
-              show_bug.cgi?id=758>.
 
    [Experiment-MZSK-notes]
               "MZSK Experiment Notes", 2016, <https://github.com/shane-
@@ -1166,18 +1159,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               Wessels, D., "The EDNS Key Tag Option", draft-wessels-
               edns-key-tag-00 (work in progress), July 2015.
 
-
-
-
-
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 21]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    [I-D.wkumari-dnsop-trust-management]
               Kumari, W., Huston, G., Hunt, E., and R. Arends,
               "Signalling of DNS Security (DNSSEC) Trust Anchors",
@@ -1188,6 +1169,14 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               "Root Zone KSK Rollover Plan", 2016,
               <https://www.iana.org/reports/2016/root-ksk-rollover-
               design-20160307.pdf>.
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 21]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
 
    [ISC-TN-2003-1]
               Abley, J., "Hierarchical Anycast for Global Service
@@ -1225,15 +1214,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               Unique DNS Root", RFC 2826, DOI 10.17487/RFC2826, May
               2000, <http://www.rfc-editor.org/info/rfc2826>.
 
-
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 22]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    [RFC2845]  Vixie, P., Gudmundsson, O., Eastlake 3rd, D., and B.
               Wellington, "Secret Key Transaction Authentication for DNS
               (TSIG)", RFC 2845, DOI 10.17487/RFC2845, May 2000,
@@ -1243,6 +1223,16 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               "Requirements Related to DNS Security (DNSSEC) Trust
               Anchor Rollover", RFC 4986, DOI 10.17487/RFC4986, August
               2007, <http://www.rfc-editor.org/info/rfc4986>.
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 22]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
 
    [RFC5011]  StJohns, M., "Automated Updates of DNS Security (DNSSEC)
               Trust Anchors", STD 74, RFC 5011, DOI 10.17487/RFC5011,
@@ -1283,17 +1273,22 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
               <https://www.icann.org/en/system/files/files/rssac-001-
               root-service-expectations-04dec15-en.pdf>.
 
+   [RSSAC023]
+              "History of the Root Server System", November 2016,
+              <https://www.icann.org/en/system/files/files/rssac-
+              023-04nov16-en.pdf>.
+
+
+
+
+
+
 
 
 Song, et al.             Expires January 4, 2018               [Page 23]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
-
-   [RSSAC023]
-              "History of the Root Server System", November 2016,
-              <https://www.icann.org/en/system/files/files/rssac-
-              023-04nov16-en.pdf>.
 
    [TNO2009]  Gijsen, B., Jamakovic, A., and F. Roijers, "Root Scaling
               Study: Description of the DNS Root Scaling Model",
@@ -1338,6 +1333,11 @@ Appendix A.  Yeti-Root Hints File
    yeti-ns.as59715.net   3600000  IN   AAAA   \
                               2a02:cdc5:9715:0:185:5:203:53
    .                     3600000  IN   NS     dahu1.yeti.eu.org
+   dahu1.yeti.eu.org     3600000  IN   AAAA   \
+                              2001:4b98:dc2:45:216:3eff:fe4b:8c5b
+   .                     3600000  IN   NS     ns-yeti.bondis.org
+   ns-yeti.bondis.org    3600000  IN   AAAA   2a02:2810:0:405::250
+   .                     3600000  IN   NS     yeti-ns.ix.ru
 
 
 
@@ -1346,11 +1346,6 @@ Song, et al.             Expires January 4, 2018               [Page 24]
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
-   dahu1.yeti.eu.org     3600000  IN   AAAA   \
-                              2001:4b98:dc2:45:216:3eff:fe4b:8c5b
-   .                     3600000  IN   NS     ns-yeti.bondis.org
-   ns-yeti.bondis.org    3600000  IN   AAAA   2a02:2810:0:405::250
-   .                     3600000  IN   NS     yeti-ns.ix.ru
    yeti-ns.ix.ru         3600000  IN   AAAA   2001:6d0:6d06::53
    .                     3600000  IN   NS     yeti.bofh.priv.at
    yeti.bofh.priv.at     3600000  IN   AAAA   2a01:4f8:161:6106:1::10
@@ -1394,19 +1389,17 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
                          3600000  IN   AAAA   2001:e30:1c1e:10::333
    .                     3600000  IN   NS     yeti1.ipv6.ernet.in
    yeti1.ipv6.ernet.in   3600000  IN   AAAA   2001:e30:187d::333
+   .                     3600000  IN   NS     yeti-dns02.dnsworkshop.org
+   yeti-dns02.dnsworkshop.org \
+                         3600000  IN   AAAA   2001:19f0:0:1133::53
+   .                     3600000  IN   NS     yeti.mind-dns.nl
+   yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 
 
 
 Song, et al.             Expires January 4, 2018               [Page 25]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
-   .                     3600000  IN   NS     yeti-dns02.dnsworkshop.org
-   yeti-dns02.dnsworkshop.org \
-                         3600000  IN   AAAA   2001:19f0:0:1133::53
-   .                     3600000  IN   NS     yeti.mind-dns.nl
-   yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 
 
 Appendix B.  About This Document
@@ -1450,6 +1443,13 @@ B.2.2.  draft-song-yeti-testbed-experience-04
    Changed the focus of the document from the description of individual
    experiments on a Root-like testbed to the construction and
    motivations of the testbed itself, since that better describes the
+   output of the Yeti DNS Project to date.  In the considered opinion of
+   this reviewer, the novel approaches taken in the construction of the
+   testbed infrastructure and the technical challenges met in doing so
+   are useful to record, and the RFC series is a reasonable place to
+   record operational experiences related to core Internet
+   infrastructure.
+
 
 
 
@@ -1457,13 +1457,6 @@ Song, et al.             Expires January 4, 2018               [Page 26]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
-
-   output of the Yeti DNS Project to date.  In the considered opinion of
-   this reviewer, the novel approaches taken in the construction of the
-   testbed infrastructure and the technical challenges met in doing so
-   are useful to record, and the RFC series is a reasonable place to
-   record operational experiences related to core Internet
-   infrastructure.
 
    Note that due to draft cut-off deadlines some of the technical
    details described in this revision of the document may not exactly
@@ -1503,17 +1496,6 @@ Authors' Addresses
    URI:   http://www.redbarn.org/
 
 
-
-
-
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 27]
-
-Internet-Draft              Yeti DNS Testbed                   July 2017
-
-
    Akira Kato (editor)
    Keio University/WIDE Project
    Graduate School of Media Design, 4-1-1 Hiyoshi, Kohoku
@@ -1527,42 +1509,4 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Song, et al.             Expires January 4, 2018               [Page 28]
+Song, et al.             Expires January 4, 2018               [Page 27]
