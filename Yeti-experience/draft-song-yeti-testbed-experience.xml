@@ -22,6 +22,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5011.xml">
   <!ENTITY RFC5890 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
+  <!ENTITY RFC6891 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6891.xml">
   <!ENTITY RFC7626 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7626.xml">
   <!ENTITY RFC7720 SYSTEM
@@ -486,10 +488,11 @@
         <t>Since Yeti DNS servers cannot receive DNS NOTIFY
           <xref target="RFC1996"/> messages from the Root Server
 	  System, a polling approach is used. Each Yeti Distribution
-	  Master (DM) requests the root zone SOA record from F-Root
-	  and performs a zone transfer from the same server if the
-	  retrieved value of SOA.SERIAL is greater than that of the
-	  last retrieved zone.</t>
+	  Master (DM) requests the root zone SOA record from a
+	  nameserver that permits unauthenticated zone transfers
+	  of the root zone, and performs a zone transfer from that
+	  server if the retrieved value of SOA.SERIAL is greater
+	  than that of the last retrieved zone.</t>
 
 	 <t>At the time of writing, unauthenticated zone transfers
 	  of the root zone are available directly from B-Root,
@@ -598,67 +601,69 @@
       </section>
 
       <section title="Yeti-Root Server Naming Scheme">
-        <t>The current naming scheme was normalized to use single-character 
-          host names (A through M) under the domain ROOT-SERVERS.NET (More 
-          information can be found in <xref target="RSSAC023"/>). One reason 
-          behind this naming scheme is that DNS label compression can be used 
-          to produce a smaller DNS response within 512 bytes.</t>
+	<t>The current naming scheme for Root Servers was normalized
+	  to use single-character host names (A through M) under
+	  the domain ROOT-SERVERS.NET, as described in <xref
+	  target="RSSAC023"/>). The principal benefit of this naming
+	  scheme is that DNS label compression can be used to produce
+	  a priming response that will fit within 512 bytes, the
+	  maximum DNS message size using UDP transport without EDNS0
+	  <xref target="RFC6891"/>.</t>
 
-	<t>In Yeti testbed it reuse the originally naming scheme
-	  using free-form names chosen by their respective operators
-	  (Appendix A). This naming schemes is chosen to fulfill
-	  following purposes:</t>
+        <t>Yeti-Root Servers do not use this optimisation, but rather
+          use free-form nameserver names chosen by their respective
+	  operators -- in other words, no attempt is made to minimise
+	  the size of the priming response through the use of label
+	  compression. This approach aims to challenge the need for
+	  a minimally-sized priming response in a modern DNS ecosystem
+	  where EDNS(0) is prevalent.</t>
 
-        <t>
+        <t>Priming responses from Yeti-Root Servers do not always
+	  include server addresses in the additional section, as
+	  is the case with priming responses from Root Servers. In
+	  particular, Yeti-Root Servers running BIND9 return an
+	  empty additional section, forcing resolvers to complete
+	  the priming process with a set of conventional recursive
+	  lookups in order to resolve addresses for each Yeti-Root
+	  server. Yeti-Root Servers running NSD appeared to return
+          a fully-populated additional section.</t>
+
+        <t>Various approaches to normalise the composition of the
+          priming response were considered, including:
+
           <list style="symbols">
-            <t>Intentionally produces larger packets for priming responses for 
-              less name compression efficiency. One Yeti experiment is to test 
-              the package fragmentation in IPv6-only environment </t>
+            <t>Require use of DNS implementations that exhibit
+              the desired behaviour in the priming response (e.g.
+              NSD) in favour of BIND9;</t>
 
-            <t>Remove the dependency on the single name like .NET or root-servers.net. 
-              Yeti enjoy more more participation from independent participant and 
-              avoid central administration on naming as much as possible.</t>
+            <t>Modification of BIND9 (and any other server with
+              similar behaviour) for use by Yeti-Root Servers;</t>
 
-            <t>Encourage DNSSEC deployment on individual Root names</t>
-          </list>
-        </t>
+	    <t>Isolate the names of Yeti-Root Servers in one or
+	      more zones that could be slaved on each Yeti-Root
+	      Server, renaming servers as necessary, giving each a
+	      source of authoritative data with which the authority
+	      section of a priming response could be fully populated.
+	      This is the approach used in the Root Server System.</t>
+	  </list>
+	</t>
 
-	<t>There is a issue for this naming scheme in which the
-	  priming response may not contain all glue record for Yeti
-	  Root servers. It is documented as a technical findings
-	  <xref target="Yeti-glue-issue"/>.  There are two approaches
-	  to solve the issue: one is to patch BIND 9 to includes
-	  the glue records in the additional section.  The other
-	  one is to add a zone file for each root server and answer
-	  for all of them at each Yeti server.  That means each
-	  Yeti root server would have a small zone file for
-	  "bii.dns-lab.net", "yeti-ns.wide.ad.jp", "yeti-ns.tisf.net",
-	  and so on.</t>
+        <t>The potential mitigation of renaming all Yeti-Root Servers
+          using a scheme that would allow their names to exist in the
+          balliwick of the root zone was not considered, since that
+          approach implies the invention of new top-level labels not
+          present in the Root Zone.</t>
 
-	<t>Another naming scheme under Yeti lab test is to use a
-	  special non-delegated TLD, like .yeti-dns for root server
-	  operated by BII. The benefit of non-delegated TLD naming
-	  scheme are in two aspects: 1) the response to a priming
-	  query is protected by DNSSEC; 2) To meet a political
-	  reason that the zone authoritative for root server is not
-	  delegated and belong to particular companies or organizations
-	  except IANA; 3) reduce the dependency of root server names
-	  to other DNS service; 4) to mitigate some kind of cache
-	  poisoning activities.</t>
-
-	<t>It is found that modification of IANA root zone by adding
-	  a new TLD is so controversial even for scientific purpose.
-	  There are non-trivial discussions on this issue in Yeti
-	  discuss mailing list, regarding the proposal .yeti-dns
-	  for root name or .local for new AS112 <xref
-	  target="I-D.bortzmeyer-dname-root"/>.  It is argued that
-	  this kind of experiment should based on community consensus
-	  from technical bodies like IETF and be operated within a
-	  limited duration in some cases.</t>
-
-	<t>Note that The ICANN Root Server System Advisory Committee
-	  (RSSAC) is working on a related document which aims to
-	  analyze alternative naming schemes.</t>
+	<t>Given the relative infrequency of priming queries by
+	  individual resolvers and the additional complexity or
+	  other compromises implied by each of those mitigations,
+	  the decision was made to make no effort to ensure that
+	  the composition of priming responses was identical across
+	  servers. Even the empty additional sections generated by
+	  Yeti-Root Servers running BIND9 seem to be sufficient for
+	  all resolver software tested; resolvers simply perform a
+	  new recursive lookup for each authoritative server name
+	  they need to resolve.</t>
       </section>
 
       <section title="Yeti Root Servers">
@@ -1251,6 +1256,7 @@
       &RFC7626;
       &RFC5011;
       &RFC5890;
+      &RFC6891;
       &RFC7720;
       &I-D.muks-dns-message-fragments;
       &I-D.wkumari-dnsop-trust-management;
