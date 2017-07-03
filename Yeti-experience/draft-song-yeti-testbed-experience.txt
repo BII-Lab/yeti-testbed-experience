@@ -132,7 +132,8 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    Appendix B.  About This Document  . . . . . . . . . . . . . . . .  26
      B.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  26
      B.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  26
-       B.2.1.  draft-song-yeti-testbed-experience-04 . . . . . . . .  26
+       B.2.1.  draft-song-yeti-testbed-experience-00 through -03 . .  26
+       B.2.2.  draft-song-yeti-testbed-experience-04 . . . . . . . .  26
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
 1.  Introduction
@@ -161,7 +162,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    Aspects of the operational structure of the Root Server System have
    been described in such documents as [TNO2009], [ISC-TN-2003-1],
    [RSSAC001] and [RFC7720].  Such references, considered together,
-   provide sufficient insight into the operations of the system as a
 
 
 
@@ -170,6 +170,7 @@ Song, et al.             Expires January 4, 2018                [Page 3]
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
+   provide sufficient insight into the operations of the system as a
    whole that it is straightforward to imagine structural changes to the
    root server system's infrastructure, and to wonder what the
    operational implications of such changes might be.
@@ -217,7 +218,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    comments published in [RFC2826].  Other such alternate roots are
    considered to have caused end-user confusion and instability in the
    namespace of the DNS by the introduction of new top-level labels or
-   the different use of top-level labels present in the Root Server
 
 
 
@@ -226,6 +226,7 @@ Song, et al.             Expires January 4, 2018                [Page 4]
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
 
+   the different use of top-level labels present in the Root Server
    System.  The coordinators of the Yeti DNS Project do not consider the
    Yeti DNS Project to be an alternate root in this sense, since by
    design the namespace enabled by the Yeti-Root Zone is identical to
@@ -273,7 +274,6 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    o  What are the scaling properties of Yeti-Root zone distribution as
       the number of Yeti-Root servers, Yeti-Root server instances or
       intermediate distribution points increase?
-
 
 
 
@@ -1432,7 +1432,13 @@ B.1.  Venue
 
 B.2.  Revision History
 
-B.2.1.  draft-song-yeti-testbed-experience-04
+B.2.1.  draft-song-yeti-testbed-experience-00 through -03
+
+   Change history is available in the public GitHub repository where
+   this document is maintained: <https://github.com/BII-Lab/yeti-
+   testbed-experience>.
+
+B.2.2.  draft-song-yeti-testbed-experience-04
 
    Substantial editorial review and rearrangement of text by Joe Abley
    at request of BII.
@@ -1444,12 +1450,6 @@ B.2.1.  draft-song-yeti-testbed-experience-04
    Changed the focus of the document from the description of individual
    experiments on a Root-like testbed to the construction and
    motivations of the testbed itself, since that better describes the
-   output of the Yeti DNS Project to date.  In the considered opinion of
-   this reviewer, the novel approaches taken in the construction of the
-   testbed infrastructure and the technical challenges met in doing so
-   are useful to record, and the RFC series is a reasonable place to
-   record operational experiences related to core Internet
-   infrastructure.
 
 
 
@@ -1457,6 +1457,13 @@ Song, et al.             Expires January 4, 2018               [Page 26]
 
 Internet-Draft              Yeti DNS Testbed                   July 2017
 
+
+   output of the Yeti DNS Project to date.  In the considered opinion of
+   this reviewer, the novel approaches taken in the construction of the
+   testbed infrastructure and the technical challenges met in doing so
+   are useful to record, and the RFC series is a reasonable place to
+   record operational experiences related to core Internet
+   infrastructure.
 
    Note that due to draft cut-off deadlines some of the technical
    details described in this revision of the document may not exactly
@@ -1496,6 +1503,17 @@ Authors' Addresses
    URI:   http://www.redbarn.org/
 
 
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 27]
+
+Internet-Draft              Yeti DNS Testbed                   July 2017
+
+
    Akira Kato (editor)
    Keio University/WIDE Project
    Graduate School of Media Design, 4-1-1 Hiyoshi, Kohoku
@@ -1509,4 +1527,42 @@ Authors' Addresses
 
 
 
-Song, et al.             Expires January 4, 2018               [Page 27]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Song, et al.             Expires January 4, 2018               [Page 28]

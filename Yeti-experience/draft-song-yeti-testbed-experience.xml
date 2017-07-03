@@ -1449,6 +1449,12 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
       </section>
 
       <section title="Revision History">
+        <section title="draft-song-yeti-testbed-experience-00 through -03">
+	  <t>Change history is available in the public GitHub
+	    repository where this document is maintained: <eref
+	    target="https://github.com/BII-Lab/yeti-testbed-experience"/>.</t>
+	</section>
+
         <section title="draft-song-yeti-testbed-experience-04">
           <t>Substantial editorial review and rearrangement of text
 	    by Joe Abley at request of BII.</t>
