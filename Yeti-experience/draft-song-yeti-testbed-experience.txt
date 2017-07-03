@@ -1390,9 +1390,9 @@ Internet-Draft              Yeti DNS Testbed                   July 2017
    [Yeti-DNS-Project]
               "Website of Yeti DNS Project", <http://www.yeti-dns.org>.
 
-   [Yeti-glue-issue]
-              "Yeti Glue Issue", 2015,
-              <http://yeti-dns.org/resource/Yeti-glue-issue.txt>.
+
+
+
 
 
 

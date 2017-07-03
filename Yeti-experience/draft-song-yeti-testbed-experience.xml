@@ -1364,15 +1364,6 @@
         </front>
       </reference>
 
-      <reference anchor="Yeti-glue-issue"
-        target="http://yeti-dns.org/resource/Yeti-glue-issue.txt">
-        <front>
-          <title>Yeti Glue Issue</title>
-          <author/>
-          <date year="2015" />
-        </front>
-      </reference>
-
       <reference anchor="auto-trust-anchor-file"
         target="https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=758">
         <front>
