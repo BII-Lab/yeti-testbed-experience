@@ -736,7 +736,7 @@
 	  they need to resolve.</t>
       </section>
 
-      <section title="Yeti Root Servers">
+      <section title="Yeti-Root Servers">
         <t>Various volunteers have donated authoritative servers
           to act as Yeti-Root servers. At the time of writing there
           are 25 Yeti-Root servers distributed globally, one of
@@ -986,6 +986,25 @@
 	  subsequent releases.</t>
       </section>
 
+      <section title="Increased ZSK Key Size">
+        <t>The ZSK key size used in the Yeti-DNS Testbed was initially
+          1024 bits, consistent with the size of the ZSK used in the
+          Root Zone at the time the Yeti DNS Project was started. It
+          later became clear that the ZSK key size in the Root Zone
+          was to be increased.</t>
+
+        <t>The ZSK key size in the Yeti-Root zone was subsequently
+          increased in an attempt to identify any unexpected
+          operational effects of doing so.</t>
+
+        <t>XXX Note to reviewers: observations following that change
+          to be inserted here. XXX</t>
+
+        <t>The ZSK key size in the Root Zone was increased from
+          1024 bits to 2048 bits in October 2016.
+          <xref target="Verisign2016"/>.</t>
+      </section>
+
 <!-- deferred for 04
 
       <section title="The KSK Rollover Experiment in Yeti">
@@ -1153,6 +1172,16 @@
           <title>Thirteen Years of “Old J-Root”</title>
           <author fullname="Duane Wessels" initials="D." surname="Wessels"/>
           <date year="2015" />
+        </front>
+      </reference>
+
+      <reference anchor="Verisign2016"
+        target="https://blog.verisign.com/security/increasing-the-strength-of-the-zone-signing-key-for-the-root-zone/">
+        <front>
+	  <title>Increasing the Strength of the Zone Signing Key
+	    for the Root Zone</title>
+          <author fullname="Duane Wessels" initials="D." surname="Wessels"/>
+          <date day="6" month="May" year="2016"/>
         </front>
       </reference>
 
