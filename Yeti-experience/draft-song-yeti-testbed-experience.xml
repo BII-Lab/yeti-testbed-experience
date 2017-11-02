@@ -12,6 +12,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1034.xml">
   <!ENTITY RFC1035 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
+  <!ENTITY RFC1995 SYSTEM 
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1995.xml">
   <!ENTITY RFC1996 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1996.xml">
   <!ENTITY RFC2826 SYSTEM
@@ -20,12 +22,20 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2845.xml">
   <!ENTITY RFC5011 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5011.xml">
-  <!ENTITY RFC5890 SYSTEM
-    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
+  <!ENTITY RFC5936 SYSTEM 
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5936.xml">
+  <!ENTITY RFC6219 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6219.xml">
   <!ENTITY RFC6891 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6891.xml">
   <!ENTITY RFC7720 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7720.xml">
+  <!ENTITY RFC7872 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7872.xml">
+  <!ENTITY RFC5890 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
+
+
 
   <!ENTITY I-D.muks-dns-message-fragments SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-muks-dns-message-fragments-00.xml">
@@ -39,6 +49,11 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-bortzmeyer-dname-root-00.xml">
   <!ENTITY I-D.ietf-dnsop-resolver-priming SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-dnsop-resolver-priming-07.xml">
+    <!ENTITY I-D.taylor-v6ops-fragdrop SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-taylor-v6ops-fragdrop-02.xml">
+    <!ENTITY I-D.song-atr-large-resp SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-song-atr-large-resp-00.xml">
+    
 ]>
 
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -81,7 +96,7 @@
 <?rfc comments="no" ?>
 <?rfc inline="yes" ?>
 
-<rfc category="info" docName="draft-song-yeti-testbed-experience-04"
+<rfc category="info" docName="draft-song-yeti-testbed-experience-05"
     ipr="trust200902">
 
   <front>
@@ -117,6 +132,7 @@
       </address>
     </author>
 
+
     <author fullname="Paul Vixie" initials="P." surname="Vixie" role="editor">
       <organization>TISF</organization>
       <address>
@@ -147,6 +163,17 @@
       </address>
     </author>
 
+    <author fullname="Shane Kerr" initials="S." surname="Kerr">
+      <address>
+        <postal>
+          <street>Antoon Coolenlaan 41</street>
+          <city>Uithoorn</city>
+          <code>1422 GN</code>
+          <country>NL</country>
+        </postal>
+        <email>shane@time-travellers.org</email>
+      </address>
+    </author>
     <date/>
 
     <!-- Meta-data Declarations -->
@@ -851,8 +878,7 @@
     </section>
 
     <section title="Operational Experience with Yeti DNS Testbed">
-      <t>The following sections provide commentary on the operation
-	of the Yeti-DNS Testbed described in <xref target="testbed"/>.
+      <t>The following sections provide commentary on the operation and impact analyses of the Yeti-DNS Testbed described in <xref target="testbed"/>.
         More detailed descriptions of observed phenomena are available
         in Yeti DNS mailing list archives and on the Yeti DNS blog.</t>
 
@@ -904,9 +930,22 @@
 	    Servers (e.g. A.ROOT-SERVERS.NET) are not signed. All
 	    Yeti-Root Server names are signed, however, and hence
 	    this tool functions as expected in that environment.</t>
-        </section>
+    </section>
 
-        <section title="Fragmentation of DNS Responses">
+    <section title="IPv6-only root operation">
+
+    <t>Yeti DNS testbed was designed to explore whether it can survive 
+      in pure IPv6 environment or not. So every root server required 
+      to run only with non-EUI64 IPv6 addressed. There are mainly two 
+      questions in designers' mind when constructing this testbed: 1) 
+      is there any gap between IPv6-only Root and IPv4 Root to provide 
+      full function of root server. 2) is it possible that IPv6-only 
+      root can serve the Internet, even part of which still only speak 
+      IPv4. There are some findings and impacts which IPv6-only property 
+      bring to Root system. </t>
+
+      <section title="Impact of IPv6 fragmentation">
+
 	  <t>In the Root Server System, structural changes with the
 	    potential to increase response sizes (and hence
 	    fragmentation, fallback to TCP transport or both) have
@@ -916,18 +955,18 @@
 	    a known client base, making it far easier to make such
 	    changes and measure their impact.</t>
 
-          <t>Many of the experimental design choices described in
+      <t>Many of the experimental design choices described in
 	    this document were expected to trigger larger responses.
 	    For example, the choice of naming scheme for Yeti-Root
 	    Servers described in <xref target="naming"/> defeats
-	    label compression the priming response; the Yeti-Root
+	    label compression the priming response which introduce 
+      a large priming response (up to 1754 octets with 25 NS 
+      server and their glue) ; the Yeti-Root
 	    zone transformation approach described in <xref
 	    target="trans2"/> greatly enlarges the apex DNSKEY
-	    RRSet. An increased incidence of fragmentation was
-	    therefore expected.</t>
-
-          <t>XXX Note to reviewers: results of fragmentation and
-            TCP fallback measurements to be summarised here XXX</t>
+	    RRSet especially during the KSK rollover (up to 1975 
+      octets with 3 ZSK and 2 KSK). An increased 
+      incidence of fragmentation was therefore expected.</t>
 
 	  <t>The Yeti-DNS Testbed provides service on IPv6 only.
 	    IPv6 has a fragmentation model that is different from
@@ -939,21 +978,192 @@
 	    datagram of which the fragment was a part, and in the
 	    DNS frequently triggers a timeout. It is known at this
 	    moment that only a limited number of security middle-box
-	    implementations support IPv6 fragments.</t>
+	    implementations support IPv6 fragments. Some public 
+      measurements and reports <xref target="I-D.taylor-v6ops-fragdrop"/> 
+      <xref target="RFC7872"/> shows that there is notable packets drop rate 
+      due to the mistreatment of middle-box on IPv6 fragment. 
+      One APNIC study <xref target="IPv6-frag-DNS"/> reported that 37% of 
+      endpoints using IPv6-capable DNS resolver cannot receive 
+      a fragmented IPv6 response over UDP. 
+    </t>
+      
+      <t>To study the impact, RIPE Atlas probes are used to 
+        spot failures like timeout for DNSKEY queries via UDP. 
+        For each Yeti server, a Atlas measurement was setup 
+        asking for 100 IPv6-enabled probes from 5 regions, in 
+        each 2 hours sending DNS query for DNSKEY via UDP with 
+        DO bit set. An monitoring report during Yeti KSK rollover 
+        shows that statistically large packets will trigger higher 
+        failure rate (up to 7%) due to IPv6 fragmentation issues, 
+        which accordingly increase probability of retries and TCP 
+        fallback. Even within 1500 bytes, when response size reaches 
+        1414 bytes, the failure rate reaches around 2%. 
+        Note that ICANN KSK rollover will produce packets exceeding 
+        1414 Bytes. </t>
+
+      <t>Regarding the large DNS response via UDP, some existing 
+          root servers(A, B, G and J) truncating the response once 
+          the large IPv6 packet surpasses 1280 octets. In Yeti DNS 
+          Testbed, there are two proposals are discussed and 
+          implemented in Yeti experiments.One proposal is called 
+          DNS fragments <xref target="I-D.muks-dns-message-fragments"/> 
+          which is to fragment the 
+          large response in DNS level. Another proposal is called 
+          DNS ATR <xref target="I-D.song-atr-large-resp"/> which 
+          introduces an simple improvement on authoritative server 
+          by replying additional truncated response just after the 
+          normal large response.</t>
 
 	  <t>The consequences of fragmentation were not limited to DNS
-	    using UDP transpoert. There are two cases reported where
+	    using UDP transport. There are two cases reported where
 	    some Yeti root servers failed to transfer the Yeti-Root
-	    zone from a DM.  Further experimentation revealed that
+	    zone from a DM. When checking the DM log file, it is found 
+      that some root servers experienced " socket is not connected" 
+      errors when they pulled the zone file. Further experimentation 
+      revealed that
 	    combinations of NetBSD 6.1, NetBSD 7.0RC1, FreeBSD 10.0,
 	    Debian 3.2 and VMWare ESXI 5.5 resulted in a high TCP
 	    MSS value of 1440 octets being negotiated between client
 	    and server despite the presence of the IPV6_USE_MIN_MTU
 	    socket option, as described in <xref
-	    target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>.  The
+	    target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>. The
 	    mismatch appears to cause outbound segments greater in
-	    size than 1280 octets to be dropped before sending.</t>
+	    size than 1280 octets to be dropped before sending. </t>
+
+      <t>
+      One proposal to handle this issue is to change the Local 
+      TCP MSS to be 1220 (1280-ip6/tcp header)and advise it if 
+      IPV6_USE_MINMTU=1. Yeti root from WIDE and SWITCH set this 
+      during the test one year ago. Now at the time of writing, 
+      11 out of 25 change the MSS setting in Yeti DNS Testbed. 
+      </t>
+    </section>
+
+    <section title="How IPv6-only Root serve IPv4 users?">
+
+      <t>Although It is straightforward to setup the IPv6-only 
+        root, but it is unknown if it is practical for IPv6-only 
+        root to serve the production networks which are still 
+        largely speak only in IPv4. In Yeti DNS Testbed it is 
+        demonstrated that IPv6-only root can serve the Internet 
+        in a incremental approach, even for IPv4 network and users. 
+      </t>
+      <t>It is intuitive to propose to update the resolver to 
+        dual-stack and configured it with hint file including 
+        IPv6 glues. The dual-stack resolver connects IPv6 root 
+        with IPv4-only or dual-stack end users. However, when we 
+        approached some partners who agreed to try IPv6-only root 
+        in experimental network, they normally do not want to give 
+        up the IPv4 root for redundancy reason due to unstable 
+        IPv6 network performance. So it is adopted in campuses that 
+        one IPv4 resolver address (using current IPv4 addresses of 
+        A-M root) and one IPv6 resolver address (using Yeti root) 
+        are configured for their customer via DHCPv4 and DHCPv6 
+        respectively. The end users can choose which DNS they use 
+        (normally IPv6 first or using Happy eyeballs). Ideally, 
+        the end users DNS traffic will largely be sent to the 
+        resolver consuming IPv6-only root when IPv6 is widely deployed.
+      </t>
+      <t>For resolvers who resident in IPv4 only networks, they can 
+        forward the query to dual stack resolvers they have trust in. 
+        Or they can configure the resolver with a hint file containing 
+        a set of IPv4 addresses which are mapped to IPv6 addresses of 
+        root in a IPv4/IPv6 translation devices. The query will be 
+        routed to the translation devices and forward in IPv6 to 
+        IPv6-only root. It is designed and going to be implemented 
+        in CERNET2 using IVI <xref target="RFC6219"/> technology.
+      </t>
       </section>
+    </section>
+
+    <section title="Experience on Multiple Signers">
+
+    <t>
+      In <xref target="testbed"/> it is introduced how three 
+      Distributor Masters (DM) works and how they share the control
+      over the Yeti root zone. This section will describe some findings 
+      and experiences on its operation.
+    </t>
+
+    <section title="IXFR fallback to AXFR">
+
+      <t>
+        In DNS specifications authoritative name server uses full 
+        zone transfer (AXFR) <xref target="RFC5936"/>, incremental 
+        Zone Transfer (IXFR)<xref target="RFC1995"/>, and NOTIFY 
+        <xref target="RFC1996"/> to achieve coherency 
+        of the zone contents.  IXFR is an optimization for large DNS 
+        zone transfer, which allows server only transfer the changed 
+        portion(s) to client. AXFR fallback usually happens at server 
+        side by simply returning IXFR client the entire new zone in 
+        condition that IXFR server cannot fulfill the given delta-update 
+        request.
+      </t>
+      <t>
+        One experiment in Yeti is designed to test multiple signers with 
+        Multiple ZSKs (MZSK). It is required that all public ZSKs used 
+        by DMs are included in the zone as a key set; and resolver can 
+        validate the message by picking one key from the key set. From 
+        DNSSEC point of view, it is technically workable. However, different 
+        signers do produce different RRSIG RR which introduces zone inconsistency 
+        from beginning in this case. In current setting of Yeti experiment, 
+        it is possible that one client does AXFR/IXFR from one server and later 
+        asks for IXFR from another server. 
+    </t>
+
+     <t>
+        It is observed that when the IXFR client switched from one IXFR 
+        server to another, it received a IXFR response deleting RRSIG record 
+        that does not exist. One IXFR client running NSD 4.1.7 rejected IXFR 
+        response, made a log indicating a bad data and then asked for full zone 
+        transfer. Luckily, Yeti root zone is relatively small (691K), so the fallback 
+        to AXFR does not cause significant performance degeneration. But if operator 
+        does host big zone with MZSK model, it will cause problem based on current IXFR.
+     </t>
+     <t>
+        Another observation is that another IXFR client running Knot 2.1.0 
+        in similar situation just accepts the IXFR response, ignores the 
+        differences and generates a merged zone with two RRSIG RRs. It not only 
+        produces larger response, but also causes DNSSEC failure when a new 
+        zone is generated given that old RRSIG is the signature of old zone RRs.   
+     </t>
+
+      <t>
+         One possible solutions is asking for development of RRSIG-aware IXFR 
+         format in which the RRSIG is treated as a special and RRSIG RR should 
+         always be transfered in full (like it does in AXFR). Another solution 
+         is adopting the behavior of NSD 4.1.7 as a improvement for IXFR protocol 
+         in which an IXFR client should fall back to AXFR automatically in the 
+         event of an IXFR incoherence error.
+      </t>
+    </section>
+    
+    <section title="Latency of Root Zone update">
+
+    <t>
+      Regarding the timing of Root Zone fetch and soa update, Each Yeti DM 
+      checks the root zone serial hourly (in 20 minutes interval) to see if 
+      the IANA root zone has changed . A new version of the Yeti root zone 
+      is generated if the IANA root zone has changed. In this model, root 
+      servers is expected pull the zone from one DM for each new update, 
+      because 20 min is expected to be enough for root zone publication. 
+      But it is not the true in Yeti testbed in a monitoring test. 
+    </t>
+    <t>
+      It once was reported that one server running on Bundy 1.2.0 on FreeBSD 
+      10.2-RELEASE had some bugs on SOA update with more than 10 hours delay. 
+      Besides that server, half of Yeti servers has more than 20 min delay, 
+      some even with 40 min delay. One possible reason may be that the server 
+      failed to pull the Zone on one DM due to network failure(for example IPv6 
+      fragmentation issue introduce previously) and turn to another DM which introduces 
+      the delay. It is also observed that even in the same 20-minutes time frame, 
+      not all servers pull from a single DM. It is possible that some servers not 
+      use FCFS strategy to pull the zone after they receive the notify. They may 
+      pull the zone based on other metrics like the rtt , or manual preference.
+    </t>
+
+    </section>
+    </section>
 
       <section title="Root Label Compression in Knot">
 	<t><xref target="RFC1035"/> specifies that domain names can
@@ -1142,19 +1352,25 @@
     <references title="References">
       &RFC1034;
       &RFC1035;
+      &RFC1995;
       &RFC1996;
       &RFC2826;
       &RFC2845;
       &RFC5011;
       &RFC5890;
+      &RFC5936;
+      &RFC6219;
       &RFC6891;
       &RFC7720;
-      <!-- &I-D.muks-dns-message-fragments; -->
+      &RFC7872;
+      &I-D.muks-dns-message-fragments;
       <!-- &I-D.wkumari-dnsop-trust-management; -->
       &I-D.andrews-tcp-and-ipv6-use-minmtu;
       <!-- &I-D.wessels-edns-key-tag; -->
       <!-- &I-D.bortzmeyer-dname-root; -->
       &I-D.ietf-dnsop-resolver-priming;
+      &I-D.taylor-v6ops-fragdrop;
+      &I-D.song-atr-large-resp;
 
       <reference anchor="ITI2014"
         target="https://www.icann.org/en/system/files/files/iti-report-15may14-en.pdf">
@@ -1224,6 +1440,16 @@
         </front>
       </reference>
 
+     <reference anchor="IPv6-frag-DNS" target="https://blog.apnic.net/2017/08/22/dealing-ipv6-fragmentation-dns">
+            <front>
+                <title>Dealing with IPv6 fragmentation in the DNS</title>
+                <author fullname= "Goeff Huston">
+                  <organization></organization>
+                  <address></address>
+                </author>
+                <date year="2017" month="August" day="22"/>
+            </front>
+     </reference>  
 <!--
       <reference anchor="ROOT-FAQ"
         target="https://www.isoc.org/briefings/020/">
