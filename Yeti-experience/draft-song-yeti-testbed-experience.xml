@@ -1204,7 +1204,10 @@
           operational effects of doing so.</t>
 
         <t>XXX Note to reviewers: observations following that change
-          to be inserted here. XXX</t>
+          to be inserted here. XXX
+          DaveyNOte: There are some background in the discusion of 
+          inreasing the ZSK key Size. Calculate the increase of DNS response</t>
+
 
         <t>The ZSK key size in the Root Zone was increased from
           1024 bits to 2048 bits in October 2016.
@@ -1212,17 +1215,90 @@
       </section>
 
       <section title="KSK Rollover">
+
+
 	<t>The Root Zone KSK is expected to undergo a
 	  carefully-orchestrated rollover as described in <xref
 	  target="ICANN2016"/>. ICANN has commissioned various tests
 	  and has published an external test plan <xref
-	  target="ICANN2017"/>.</t>
+	  target="ICANN2017"/>. After some studies and discussions in the 
+    community ICANN announced a postponing of the KSK rollover in 2017. 
+  </t>
+   
+   <t> DaveyNote: More background should be inserted here. Should we introduce 
+    the basic concept of KSK rollover in the beginning of this section. Or 
+    should we put some concept introduction in the study areas?</t>
 
-	<t>The planned approach was also modelled in the Yeti-DNS
-	  Testbed.</t>
+    
+	<t>During the period, tests were performed on KSK rollover and the 
+    planned approach was also modelled in the live root Testbed.</t>
 
         <t>XXX Note to reviewers: observations about the KSK rollover
           in the Yeti-Root zone to be inserted here. XXX</t>
+
+  <t>
+    There are mainly three rollover tests on Yeti testbed. </t>
+
+  <t>The first Yeti KSK rollover (happened during 2015-xx-xx) was designed to simulate 
+    the worst case and to see how to recover. In RFC5011 there 
+    is a 30-day hold-down timer before inactivate the old key but it was 
+    deliberately ignored. The rollover between the two keys was made in 
+    one week after new key created. And the old key was deleted in another week.  
+    It is found that some clients (Unbound) receive SERVFAILs because the 
+    new key was still in AddPend state when old key was inactive. To recover 
+    from failure，the trusted key should be reset on the affected resolvers 
+    manually by an alert administrator or by an out-of-band automatic recovery 
+    process.  </t>
+
+    <t>It is proved the worth of doing with a recovery mechanism out of band. 
+      The experience during ICANN KSK rollover and the final desiccation of 
+      postponing is due to a fact. The fact is that even RFC5011 is implemented 
+      on resolvers, there are still many reasons causing the failure of KSK rollover.
+    </t> 
+
+    <t>The second Yeti KSK rollover (happened during 2015-xx-xx) was design 
+      for a simulation on the ICANN's KSK rollover. It waited 30 days after a new
+          KSK is published in the root zone. Different from ICANN
+          rollover plan, it revokes the old key once the new key
+          become active.  We don't want to wait too long, so we shorten
+          the time for key publish and delete in server side. </t>
+
+      <t>During the second KSK rolling test one bug was <xref target="KROLL-ISSUE"/>spotted
+          on one Yeti resolver (using BIND 9.10.4-p2). An resolver is 
+          used to configured with multiple views for different subnets 
+          before the KSK rollover. DNSSEC failures are reported once we 
+          added new view for new users after rolling the key. It is very 
+          likely to happen for new-hands to operate their resolvers who 
+          may intuitively all the views can be inhered the managed key 
+          during KSK rollover. In addition, by checking the manual of 
+          BIND9.10.4-P2, it is said that unlike trusted-keys, 
+          managed-keys may only be set at the top level of named.conf, 
+          not within a view. It gives an assumption that for each view, 
+          managed-key can not be set per view in BIND. So it may happen 
+          for senior engineers they may also encounter this problem. After 
+          setting the managed-keys of new views, the DNSSEC validation 
+          works for this view.
+        </t>
+
+        <t>This issue was reported in xxth DNS-OARC meeting to make it widely aware. 
+          We suggest currently BIND multiple-view operation needs extra 
+          guidance for RFC5011. The manage-keys should be set carefully during 
+          the KSK rollover for each view when the it is created. Afterwards ISC 
+          published a report on this issue during KSK rollover for BIND users</t>
+
+
+          <t>The third KSK rollover is done in 2017-xx-xx after the ZSK is 
+            increased to 2048 bits. The focus was put on the monitoring and 
+            impact analysis of large DNS response in Yeti testbed especially 
+            for DNSKEY queries. As it is introduced in section 4.2.1, Yeti KSK 
+            rollover has issue when large DNS response is generated and transmitted 
+            via IPv6. A gloomy atmosphere in the community is observed for DNS in 
+            IPv6-only environment. In the authors' opinion maybe it is time to 
+            consider different transmit protocol for large DNS response, for example 
+            the DNSKEY query during KSK rollover.</t>
+
+            <t>DaveyNote: A small conclusion?</t>
+
       </section>
 
 <!-- deferred for 04
@@ -1527,7 +1603,6 @@
       </reference>
 -->
 
-<!--
       <reference anchor="KROLL-ISSUE"
         target="http://yeti-dns.org/yeti/blog/2016/10/26/A-DNSSEC-issue-during-Yeti-KSK-rollover.html">
         <front>
@@ -1536,7 +1611,6 @@
           <date year="2016" />
         </front>
       </reference>
--->
 
       <reference anchor="TNO2009"
         target="https://www.icann.org/en/system/files/files/root-scaling-model-description-29sep09-en.pdf">
