@@ -119,28 +119,29 @@ Internet-Draft              Yeti DNS Testbed               November 2017
      3.6.  Yeti-Root Servers . . . . . . . . . . . . . . . . . . . .  13
      3.7.  Traffic Capture and Analysis  . . . . . . . . . . . . . .  15
    4.  Operational Experience with Yeti DNS Testbed  . . . . . . . .  15
-     4.1.  Automated Hints File Maintenance  . . . . . . . . . . . .  15
-     4.2.  IPv6-only root operation  . . . . . . . . . . . . . . . .  16
-       4.2.1.  Impact of IPv6 fragmentation  . . . . . . . . . . . .  16
-       4.2.2.  How IPv6-only Root serve IPv4 users?  . . . . . . . .  18
-     4.3.  Experience on capturing big DNS Messages  . . . . . . . .  19
-     4.4.  Experience on Multiple Signers  . . . . . . . . . . . . .  19
-       4.4.1.  IXFR fallback to AXFR . . . . . . . . . . . . . . . .  20
-       4.4.2.  Latency of Root Zone update . . . . . . . . . . . . .  21
-     4.5.  Root Label Compression in Knot  . . . . . . . . . . . . .  21
-     4.6.  Increased ZSK Key Size  . . . . . . . . . . . . . . . . .  22
-     4.7.  KSK Rollover  . . . . . . . . . . . . . . . . . . . . . .  22
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
-   6.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  27
+     4.1.  IPv6-only root operation  . . . . . . . . . . . . . . . .  15
+       4.1.1.  Impact of IPv6 fragmentation  . . . . . . . . . . . .  16
+       4.1.2.  How IPv6-only Root serve IPv4 users?  . . . . . . . .  17
+     4.2.  Experience on Multiple Signers  . . . . . . . . . . . . .  18
+       4.2.1.  IXFR fallback to AXFR . . . . . . . . . . . . . . . .  18
+       4.2.2.  Latency of Root Zone update . . . . . . . . . . . . .  19
+     4.3.  KSK Rollover  . . . . . . . . . . . . . . . . . . . . . .  19
+     4.4.  Experience on capturing big DNS Messages  . . . . . . . .  21
+     4.5.  Automated Hints File Maintenance  . . . . . . . . . . . .  22
+     4.6.  Root Label Compression in Knot  . . . . . . . . . . . . .  23
+     4.7.  Increased ZSK Key Size  . . . . . . . . . . . . . . . . .  23
+   5.  conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  24
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
+   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  28
    Appendix B.  Tools developed for Yeti DNS testbed . . . . . . . .  29
    Appendix C.  Controversy  . . . . . . . . . . . . . . . . . . . .  30
    Appendix D.  About This Document  . . . . . . . . . . . . . . . .  31
      D.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  31
      D.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  31
-       D.2.1.  draft-song-yeti-testbed-experience-00 through -03 . .  31
-       D.2.2.  draft-song-yeti-testbed-experience-04 . . . . . . . .  31
+       D.2.1.  draft-song-yeti-testbed-experience-00 through -03 . .  32
+       D.2.2.  draft-song-yeti-testbed-experience-04 . . . . . . . .  32
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  32
 
 1.  Introduction
@@ -161,7 +162,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    trust anchor.  Together, even the projects listed in this brief
    summary imply tremendous operational change, all the more impressive
    when considered the necessary caution when managing Internet critical
-   infrastructure, and the context of the adjacent administrative
 
 
 
@@ -170,6 +170,7 @@ Song, et al.              Expires May 15, 2018                  [Page 3]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
+   infrastructure, and the context of the adjacent administrative
    changes involved in root zone management and the (relatively
    speaking) massive increase in the the number of delegations in the
    root zone itself.
@@ -214,7 +215,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    Examples of topics that the Yeti DNS Testbed was built to address are
    included below, each illustrated with indicative questions.
-
 
 
 
@@ -820,56 +820,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    detailed descriptions of observed phenomena are available in Yeti DNS
    mailing list archives and on the Yeti DNS blog.
 
-4.1.  Automated Hints File Maintenance
-
-   Renumbering events in the Root Server System are relatively rare.
-   Although each such event is accompanied by the publication of an
-   updated hints file in standard locations, the task of updating local
-   copies of that file used by DNS resolvers is manual, and the process
-   has an observably-long tail: for example, in 2015 J-Root was still
-   receiving traffic at its old address some thirteen years after
-   renumbering [Wessels2015].
-
-   The observed impact of these old, deployed hints file is minimal,
-   likely due to the very low frequency of such renumbering events.
-   Even the oldest of hints file would still contain some accurate root
-   server addresses from which priming responses could be obtained.
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 15]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
-   By contrast, due to the experimental nature of the system and the
-   fact that it is operated mainly by volunteers, Yeti-Root Servers are
-   added, removed and renumbered with much greater frequency.  A tool to
-   facilitate automatic maintenance of hints files was therefore
-   created, [hintUpdate].
-
-   The automated procedure followed by the hintUpdate tool is as
-   follows.
-
-   1.  Use the local resolver to obtain a response to the query ./IN/NS;
-
-   2.  Use the local resolver to obtain a set of IPv4 and IPv6 addresses
-       for each nameserver;
-
-   3.  Validate all signatures obtained from the local resolvers, and
-       confirm that all data is signed;
-
-   4.  Compare the data obtained to that contained within the currently-
-       active hints file; if there are differences, rotate the old one
-       way and replace it with a new one.
-
-   This tool would not function unmodified when used in the Root Server
-   System, since the names of individual Root Servers (e.g.  A.ROOT-
-   SERVERS.NET) are not signed.  All Yeti-Root Server names are signed,
-   however, and hence this tool functions as expected in that
-   environment.
-
-4.2.  IPv6-only root operation
+4.1.  IPv6-only root operation
 
    Yeti DNS testbed was designed to explore whether it can survive in
    pure IPv6 environment or not.  So every root server required to run
@@ -880,7 +831,18 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    Internet, even part of which still only speak IPv4.  There are some
    findings and impacts which IPv6-only property bring to Root system.
 
-4.2.1.  Impact of IPv6 fragmentation
+
+
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 15]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+4.1.1.  Impact of IPv6 fragmentation
 
    In the Root Server System, structural changes with the potential to
    increase response sizes (and hence fragmentation, fallback to TCP
@@ -889,14 +851,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    DNS Testbed is experimental and has the luxury of a known client
    base, making it far easier to make such changes and measure their
    impact.
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 16]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    Many of the experimental design choices described in this document
    were expected to trigger larger responses.  For example, the choice
@@ -936,6 +890,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    around 2%.  Note that ICANN KSK rollover will produce packets
    exceeding 1414 Bytes.
 
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 16]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    Regarding the large DNS response via UDP, some existing root
    servers(A, B, G and J) truncating the response once the large IPv6
    packet surpasses 1280 octets.  In Yeti DNS Testbed, there are two
@@ -945,14 +907,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    proposal is called DNS ATR [I-D.song-atr-large-resp] which introduces
    an simple improvement on authoritative server by replying additional
    truncated response just after the normal large response.
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 17]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    The consequences of fragmentation were not limited to DNS using UDP
    transport.  There are two cases reported where some Yeti root servers
@@ -973,7 +927,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    Now at the time of writing, 11 out of 25 change the MSS setting in
    Yeti DNS Testbed.
 
-4.2.2.  How IPv6-only Root serve IPv4 users?
+4.1.2.  How IPv6-only Root serve IPv4 users?
 
    Although It is straightforward to setup the IPv6-only root, but it is
    unknown if it is practical for IPv6-only root to serve the production
@@ -992,6 +946,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    resolver address (using Yeti root) are configured for their customer
    via DHCPv4 and DHCPv6 respectively.  The end users can choose which
    DNS they use (normally IPv6 first or using Happy eyeballs).  Ideally,
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 17]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    the end users DNS traffic will largely be sent to the resolver
    consuming IPv6-only root when IPv6 is widely deployed.
 
@@ -1003,70 +965,13 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    devices and forward in IPv6 to IPv6-only root.  It is designed and
    going to be implemented in CERNET2 using IVI [RFC6219] technology.
 
-
-
-Song, et al.              Expires May 15, 2018                 [Page 18]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
-4.3.  Experience on capturing big DNS Messages
-
-   Many DNS operators capture DNS packets for operational purposes, such
-   as gathering statistics, tracking abuse, and so on.  While in
-   principle something designed for logging DNS like dnstap might be
-   better, in practice capturing packets with an external tool and then
-   storing them in pcap format is much more common.  These tools may be
-   something DNS-specific, like dnscap, or they may be a generic tool
-   like tcpdump.
-
-   Yeti testbed captures DNS packets using dnscap to collect all packet
-   information.  The problem with fragmentation for pcap is that pcap
-   files usually contain the IP fragments as separate packets, which
-   means that the DNS message is split up and cannot be easily parsed or
-   otherwise processed.  For DNS over TCP, it will be worse that a
-   single message may be split over multiple TCP packets, or a single
-   TCP packet may contain multiple messages.  Since pcap is packet-
-   oriented, it is difficult to get to the underlying DNS messages.
-
-   Since very few DNS messages are large enough to require fragmentation
-   or truncation, a common approach is simply to ignore these messages
-   when analyzing at pcap packet captures.  However, in the Yeti testbed
-   we have been using DNS configurations where our servers return large
-   answers.  This means that we have a lot of fragmented IP packets and
-   TCP.
-
-   The approach that we took was to build a tool that takes a pcap input
-   and: 1) Defragments any fragmented IP packets;2) Extracts any DNS
-   messages that it finds in TCP streams.  IP-format pcap was used,
-   because that's what is used in Yeti testbed.  Ethernet framing
-   information is not necessary, for example.  The output of this tool
-   is a pcap file without DNS in IP fragments or carried by TCP.  Any
-   non-DNS packets are copied across unchanged (this may be useful for
-   looking at ICMP unreachable messages, for example).  Any non-
-   fragmented UDP DNS packets are also copied unchanged.
-
-   Most of the "heavy lifting" of this processing is done via Google's
-   gopacket library.  This allows us to read and write pcap files, and
-   also provides functionality for IPv4 defragmentation as well as TCP
-   reassembly.  The library did not support IPv6 defragmentation.  We
-   are pushing the changes upstream, so hopefully these will be a part
-   of the base library soon.
-
-4.4.  Experience on Multiple Signers
+4.2.  Experience on Multiple Signers
 
    In Section 3 it is introduced how three Distributor Masters (DM)
    works and how they share the control over the Yeti root zone.  This
    section will describe some findings and experiences on its operation.
 
-
-
-Song, et al.              Expires May 15, 2018                 [Page 19]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
-4.4.1.  IXFR fallback to AXFR
+4.2.1.  IXFR fallback to AXFR
 
    In DNS specifications authoritative name server uses full zone
    transfer (AXFR) [RFC5936], incremental Zone Transfer (IXFR)[RFC1995],
@@ -1096,6 +1001,15 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    degeneration.  But if operator does host big zone with MZSK model, it
    will cause problem based on current IXFR.
 
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 18]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    Another observation is that another IXFR client running Knot 2.1.0 in
    similar situation just accepts the IXFR response, ignores the
    differences and generates a merged zone with two RRSIG RRs.  It not
@@ -1110,19 +1024,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    IXFR protocol in which an IXFR client should fall back to AXFR
    automatically in the event of an IXFR incoherence error.
 
-
-
-
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 20]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
-4.4.2.  Latency of Root Zone update
+4.2.2.  Latency of Root Zone update
 
    Regarding the timing of Root Zone fetch and soa update, Each Yeti DM
    checks the root zone serial hourly (in 20 minutes interval) to see if
@@ -1145,59 +1047,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    pull the zone based on other metrics like the rtt , or manual
    preference.
 
-4.5.  Root Label Compression in Knot
-
-   [RFC1035] specifies that domain names can be compressed when encoded
-   in DNS messages, being represented as one of
-
-   1.  a sequence of labels ending in a zero octet;
-
-   2.  a pointer; or
-
-   3.  a sequence of labels ending with a pointer.
-
-   The purpose of this flexibility is to reduce the size of domain names
-   encoded in DNS messages.
-
-   It was observed that Yeti-Root Servers running knot 2.0 would
-   compress the zero-length label (the root domain, often represented as
-   ".") using a pointer to an earlier example.  Although legal, this
-   encoding increases the encoded size of the root label from one octet
-   to two; it was also found to break some client software, in
-   particular the Go DNS library.  Bug reports were filed against both
-   knot and the Go DNS library, and both were resolved in subsequent
-   releases.
-
-
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 21]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
-4.6.  Increased ZSK Key Size
-
-   The ZSK key size used in the Yeti-DNS Testbed was initially 1024
-   bits, consistent with the size of the ZSK used in the Root Zone at
-   the time the Yeti DNS Project was started.  It later became clear
-   that the ZSK key size in the Root Zone was to be increased.
-
-   The ZSK key size in the Yeti-Root zone was subsequently increased in
-   an attempt to identify any unexpected operational effects of doing
-   so.
-
-   XXX Note to reviewers: observations following that change to be
-   inserted here.  XXX DaveyNOte: There are some background in the
-   discusion of inreasing the ZSK key Size.  Calculate the increase of
-   DNS response
-
-   The ZSK key size in the Root Zone was increased from 1024 bits to
-   2048 bits in October 2016.  [Verisign2016].
-
-4.7.  KSK Rollover
+4.3.  KSK Rollover
 
    The Root Zone KSK is expected to undergo a carefully-orchestrated
    rollover as described in [ICANN2016].  ICANN has commissioned various
@@ -1207,6 +1057,15 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    DaveyNote: More background should be inserted here.  Should we
    introduce the basic concept of KSK rollover in the beginning of this
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 19]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    section.  Or should we put some concept introduction in the study
    areas?
 
@@ -1226,14 +1085,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    in another week.  It is found that some clients (Unbound) receive
    SERVFAILs because the new key was still in AddPend state when old key
    was inactive.  To recover from failure&#65292;the trusted key should
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 22]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    be reset on the affected resolvers manually by an alert administrator
    or by an out-of-band automatic recovery process.
 
@@ -1262,6 +1113,15 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    named.conf, not within a view.  It gives an assumption that for each
    view, managed-key can not be set per view in BIND.  So it may happen
    for senior engineers they may also encounter this problem.  After
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 20]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    setting the managed-keys of new views, the DNSSEC validation works
    for this view.
 
@@ -1282,6 +1142,146 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    maybe it is time to consider different transmit protocol for large
    DNS response, for example the DNSKEY query during KSK rollover.
 
+   DaveyNote: A small conclusion?
+
+4.4.  Experience on capturing big DNS Messages
+
+   Many DNS operators capture DNS packets for operational purposes, such
+   as gathering statistics, tracking abuse, and so on.  While in
+   principle something designed for logging DNS like dnstap might be
+   better, in practice capturing packets with an external tool and then
+   storing them in pcap format is much more common.  These tools may be
+   something DNS-specific, like dnscap, or they may be a generic tool
+   like tcpdump.
+
+   Yeti testbed captures DNS packets using dnscap to collect all packet
+   information.  The problem with fragmentation for pcap is that pcap
+   files usually contain the IP fragments as separate packets, which
+   means that the DNS message is split up and cannot be easily parsed or
+   otherwise processed.  For DNS over TCP, it will be worse that a
+   single message may be split over multiple TCP packets, or a single
+   TCP packet may contain multiple messages.  Since pcap is packet-
+   oriented, it is difficult to get to the underlying DNS messages.
+
+   Since very few DNS messages are large enough to require fragmentation
+   or truncation, a common approach is simply to ignore these messages
+   when analyzing at pcap packet captures.  However, in the Yeti testbed
+   we have been using DNS configurations where our servers return large
+   answers.  This means that we have a lot of fragmented IP packets and
+   TCP.
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 21]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+   The approach that we took was to build a tool that takes a pcap input
+   and: 1) Defragments any fragmented IP packets;2) Extracts any DNS
+   messages that it finds in TCP streams.  IP-format pcap was used,
+   because that's what is used in Yeti testbed.  Ethernet framing
+   information is not necessary, for example.  The output of this tool
+   is a pcap file without DNS in IP fragments or carried by TCP.  Any
+   non-DNS packets are copied across unchanged (this may be useful for
+   looking at ICMP unreachable messages, for example).  Any non-
+   fragmented UDP DNS packets are also copied unchanged.
+
+   Most of the "heavy lifting" of this processing is done via Google's
+   gopacket library.  This allows us to read and write pcap files, and
+   also provides functionality for IPv4 defragmentation as well as TCP
+   reassembly.  The library did not support IPv6 defragmentation.  We
+   are pushing the changes upstream, so hopefully these will be a part
+   of the base library soon.
+
+4.5.  Automated Hints File Maintenance
+
+   Renumbering events in the Root Server System are relatively rare.
+   Although each such event is accompanied by the publication of an
+   updated hints file in standard locations, the task of updating local
+   copies of that file used by DNS resolvers is manual, and the process
+   has an observably-long tail: for example, in 2015 J-Root was still
+   receiving traffic at its old address some thirteen years after
+   renumbering [Wessels2015].
+
+   The observed impact of these old, deployed hints file is minimal,
+   likely due to the very low frequency of such renumbering events.
+   Even the oldest of hints file would still contain some accurate root
+   server addresses from which priming responses could be obtained.
+
+   By contrast, due to the experimental nature of the system and the
+   fact that it is operated mainly by volunteers, Yeti-Root Servers are
+   added, removed and renumbered with much greater frequency.  A tool to
+   facilitate automatic maintenance of hints files was therefore
+   created, [hintUpdate].
+
+   The automated procedure followed by the hintUpdate tool is as
+   follows.
+
+   1.  Use the local resolver to obtain a response to the query ./IN/NS;
+
+   2.  Use the local resolver to obtain a set of IPv4 and IPv6 addresses
+       for each nameserver;
+
+   3.  Validate all signatures obtained from the local resolvers, and
+       confirm that all data is signed;
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 22]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+   4.  Compare the data obtained to that contained within the currently-
+       active hints file; if there are differences, rotate the old one
+       way and replace it with a new one.
+
+   This tool would not function unmodified when used in the Root Server
+   System, since the names of individual Root Servers (e.g.  A.ROOT-
+   SERVERS.NET) are not signed.  All Yeti-Root Server names are signed,
+   however, and hence this tool functions as expected in that
+   environment.
+
+4.6.  Root Label Compression in Knot
+
+   [RFC1035] specifies that domain names can be compressed when encoded
+   in DNS messages, being represented as one of
+
+   1.  a sequence of labels ending in a zero octet;
+
+   2.  a pointer; or
+
+   3.  a sequence of labels ending with a pointer.
+
+   The purpose of this flexibility is to reduce the size of domain names
+   encoded in DNS messages.
+
+   It was observed that Yeti-Root Servers running knot 2.0 would
+   compress the zero-length label (the root domain, often represented as
+   ".") using a pointer to an earlier example.  Although legal, this
+   encoding increases the encoded size of the root label from one octet
+   to two; it was also found to break some client software, in
+   particular the Go DNS library.  Bug reports were filed against both
+   knot and the Go DNS library, and both were resolved in subsequent
+   releases.
+
+4.7.  Increased ZSK Key Size
+
+   The ZSK key size used in the Yeti-DNS Testbed was initially 1024
+   bits, consistent with the size of the ZSK used in the Root Zone at
+   the time the Yeti DNS Project was started.  It later became clear
+   that the ZSK key size in the Root Zone was to be increased.
+
+   The ZSK key size in the Yeti-Root zone was subsequently increased in
+   an attempt to identify any unexpected operational effects of doing
+   so.
+
+   XXX Note to reviewers: observations following that change to be
+   inserted here.  XXX DaveyNOte: There are some background in the
+   discusion of inreasing the ZSK key Size.  Calculate the increase of
+   DNS response
 
 
 
@@ -1290,13 +1290,24 @@ Song, et al.              Expires May 15, 2018                 [Page 23]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-   DaveyNote: A small conclusion?
+   The ZSK key size in the Root Zone was increased from 1024 bits to
+   2048 bits in October 2016.  [Verisign2016].
 
-5.  IANA Considerations
+5.  conclusion
+
+   IPv6-only Root operation
+
+   Multiple signer(share zone control)
+
+   Yeti's DNSSEC practice: KSK rollover and larger ZSK
+
+   Alternative approach for Root Zone Distribution
+
+6.  IANA Considerations
 
    This document requests no action of the IANA.
 
-6.  Acknowledgments
+7.  Acknowledgments
 
    The editors would like to acknowledge the contributions of the
    various and many subscribers to the Yeti DNS Project mailing lists,
@@ -1315,7 +1326,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
       Subramanian Moonesamy, Joe Abley.
 
-7.  References
+8.  References
 
    [hintUpdate]
               "Hintfile Auto Update", 2015, <https://github.com/BII-Lab/
@@ -1326,6 +1337,15 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               draft-andrews-tcp-and-ipv6-use-minmtu-04 (work in
               progress), October 2015.
 
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 24]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    [I-D.ietf-dnsop-resolver-priming]
               Koch, P., Larson, M., and P. Hoffman, "Initializing a DNS
               Resolver with Priming Queries", draft-ietf-dnsop-resolver-
@@ -1335,16 +1355,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               Sivaraman, M., Kerr, S., and D. Song, "DNS message
               fragments", draft-muks-dns-message-fragments-00 (work in
               progress), July 2015.
-
-
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 24]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    [I-D.song-atr-large-resp]
               Song, L., "ATR: Additional Truncated Response for Large
@@ -1381,6 +1391,17 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               <https://www.icann.org/en/system/files/files/iti-report-
               15may14-en.pdf>.
 
+
+
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 25]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    [KROLL-ISSUE]
               "A DNSSEC issue during Yeti KSK rollover", 2016,
               <http://yeti-dns.org/yeti/blog/2016/10/26/
@@ -1393,14 +1414,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
               November 1987, <https://www.rfc-editor.org/info/rfc1035>.
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 25]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    [RFC1995]  Ohta, M., "Incremental Zone Transfer in DNS", RFC 1995,
               DOI 10.17487/RFC1995, August 1996, <https://www.rfc-
@@ -1432,6 +1445,19 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               (AXFR)", RFC 5936, DOI 10.17487/RFC5936, June 2010,
               <https://www.rfc-editor.org/info/rfc5936>.
 
+
+
+
+
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 26]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    [RFC6219]  Li, X., Bao, C., Chen, M., Zhang, H., and J. Wu, "The
               China Education and Research Network (CERNET) IVI
               Translation Design and Deployment for the IPv4/IPv6
@@ -1448,15 +1474,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               Protocol and Deployment Requirements", BCP 40, RFC 7720,
               DOI 10.17487/RFC7720, December 2015, <https://www.rfc-
               editor.org/info/rfc7720>.
-
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 26]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    [RFC7872]  Gont, F., Linkova, J., Chown, T., and W. Liu,
               "Observations on the Dropping of Packets with IPv6
@@ -1489,6 +1506,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               <https://blog.verisign.com/security/increasing-the-
               strength-of-the-zone-signing-key-for-the-root-zone/>.
 
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 27]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    [Wessels2015]
               Wessels, D., "Thirteen Years of "Old J-Root"", 2015,
               <https://indico.dns-
@@ -1506,12 +1531,6 @@ Appendix A.  Yeti-Root Hints File
    order to fit within the production constraints of this document.
    Wrapped lines are indicated with a blackslash character ("\"),
    following common convention.
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 27]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
 
 
    .                     3600000  IN   NS     bii.dns-lab.net
@@ -1543,6 +1562,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    .                     3600000  IN   NS     dahu2.yeti.eu.org
    dahu2.yeti.eu.org     3600000  IN   AAAA   2001:67c:217c:6::2
    .                     3600000  IN   NS     yeti.aquaray.com
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 28]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    yeti.aquaray.com      3600000  IN   AAAA   2a02:ec0:200::1
    .                     3600000  IN   NS     yeti-ns.switch.ch
    yeti-ns.switch.ch     3600000  IN   AAAA   2001:620:0:ff::29
@@ -1562,14 +1589,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
                            3e23e8160039594a33894f6564e1b1.yeti-dns.net
    3e23e8160039594a33894f6564e1b1.yeti-dns.net \
                          3600000  IN   AAAA   2803:80:1004:63::1
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 28]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    .                     3600000  IN   NS     \
                            3f79bb7b435b05321651daefd374cd.yeti-dns.net
    3f79bb7b435b05321651daefd374cd.yeti-dns.net \
@@ -1599,6 +1618,14 @@ Appendix B.  Tools developed for Yeti DNS testbed
    easy and safe for a DNS administrator to copy their resolver IANA
    root DNS traffic to the Yeti root.  For each query and answer that
    the resolver has made to the IANA root servers, a version will be
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 29]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    sent to the some Yeti root servers.The Yeti answer that is returned
    will be compared to the IANA answer, and if there is a difference
    this will be logged.  It is a open source in Github
@@ -1617,14 +1644,6 @@ Appendix B.  Tools developed for Yeti DNS testbed
    explore splitting DNS messages in the protocol itself, so they will
    not by fragmented by the IP layer. (https://github.com/BII-Lab/DNS-
    layer-Fragmentation)
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 29]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    In addition there is a test script of DNS ATR
    [I-D.song-atr-large-resp].  It works as a proxy demo of ATR which
@@ -1655,6 +1674,14 @@ Appendix C.  Controversy
    design the namespace enabled by the Yeti-Root Zone is identical to
    that of the Root Zone.
 
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 30]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    Some commentators have expressed concern that the Yeti DNS Project
    seeks to influence or subvert administrative policy relating to the
    Root Server System, in particular in the use of DNSSEC trust anchors
@@ -1674,14 +1701,6 @@ Appendix C.  Controversy
    Project have taken care to steer all discussions and related
    decisions about the technical work of the project to public venues in
    the interests of full transparency, and encourage anybody concerned
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 30]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    about the decision-making process to participate in those venues and
    review their archives directly.
 
@@ -1708,6 +1727,17 @@ D.1.  Venue
 
 D.2.  Revision History
 
+
+
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 31]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
 D.2.1.  draft-song-yeti-testbed-experience-00 through -03
 
    Change history is available in the public GitHub repository where
@@ -1730,14 +1760,6 @@ D.2.2.  draft-song-yeti-testbed-experience-04
    this reviewer, the novel approaches taken in the construction of the
    testbed infrastructure and the technical challenges met in doing so
    are useful to record, and the RFC series is a reasonable place to
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 31]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    record operational experiences related to core Internet
    infrastructure.
 
@@ -1757,6 +1779,19 @@ Authors' Addresses
 
    Email: songlinjian@gmail.com
    URI:   http://www.biigroup.com/
+
+
+
+
+
+
+
+
+
+
+Song, et al.              Expires May 15, 2018                 [Page 32]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
 
 
    Dong Liu (editor)
@@ -1779,21 +1814,6 @@ Authors' Addresses
    URI:   http://www.redbarn.org/
 
 
-
-
-
-
-
-
-
-
-
-
-Song, et al.              Expires May 15, 2018                 [Page 32]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    Akira Kato (editor)
    Keio University/WIDE Project
    Graduate School of Media Design, 4-1-1 Hiyoshi, Kohoku
@@ -1810,26 +1830,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    NL
 
    Email: shane@time-travellers.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

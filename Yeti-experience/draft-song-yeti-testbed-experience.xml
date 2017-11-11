@@ -886,55 +886,6 @@
         in Yeti DNS mailing list archives and on the Yeti DNS blog.
       </t>
 
-  	<section title="Automated Hints File Maintenance">
-  	  <t>Renumbering events in the Root Server System are
-  	    relatively rare. Although each such event is accompanied
-  	    by the publication of an updated hints file in standard
-  	    locations, the task of updating local copies of that
-  	    file used by DNS resolvers is manual, and the process
-  	    has an observably-long tail: for example, in 2015 J-Root
-  	    was still receiving traffic at its old address some
-  	    thirteen years after renumbering <xref
-  	    target="Wessels2015"/>.</t>
-
-  	  <t>The observed impact of these old, deployed hints file
-  	    is minimal, likely due to the very low frequency of
-  	    such renumbering events. Even the oldest of hints file
-  	    would still contain some accurate root server addresses
-  	    from which priming responses could be obtained.</t>
-
-  	  <t>By contrast, due to the experimental nature of the
-  	    system and the fact that it is operated mainly by
-  	    volunteers, Yeti-Root Servers are added, removed and
-  	    renumbered with much greater frequency. A tool to
-  	    facilitate automatic maintenance of hints files was
-  	    therefore created, <xref target="hintUpdate"/>.</t>
-
-  	  <t>The automated procedure followed by the hintUpdate
-  	    tool is as follows.
-
-        <list style="numbers">
-  	      <t>Use the local resolver to obtain a response to the
-  	        query ./IN/NS;</t>
-
-  	      <t>Use the local resolver to obtain a set of IPv4 and
-  	        IPv6 addresses for each nameserver;</t>
-
-                <t>Validate all signatures obtained from the local
-                  resolvers, and confirm that all data is signed;</t>
-
-                <t>Compare the data obtained to that contained within
-                  the currently-active hints file; if there are differences,
-                  rotate the old one way and replace it with a new one.</t>
-        </list>
-      </t>
-
-            <t>This tool would not function unmodified when used in the
-  	    Root Server System, since the names of individual Root
-  	    Servers (e.g. A.ROOT-SERVERS.NET) are not signed. All
-  	    Yeti-Root Server names are signed, however, and hence
-  	    this tool functions as expected in that environment.</t>
-    </section>
 
     <section title="IPv6-only root operation">
 
@@ -1079,53 +1030,6 @@
       </section>
     </section>
 
-    <section title="Experience on capturing big DNS Messages">
-      <t>
-      Many DNS operators capture DNS packets for operational purposes, 
-      such as gathering statistics, tracking abuse, and so on. While in 
-      principle something designed for logging DNS like dnstap might be 
-      better, in practice capturing packets with an external tool and 
-      then storing them in pcap format is much more common. These tools 
-      may be something DNS-specific, like dnscap, or they may be a generic 
-      tool like tcpdump.
-      </t>
-      <t>
-      Yeti testbed captures DNS packets using dnscap to collect all packet 
-      information. The problem with fragmentation for pcap is that pcap 
-      files usually contain the IP fragments as separate packets, which 
-      means that the DNS message is split up and cannot be easily parsed 
-      or otherwise processed.  For DNS over TCP, it will be worse that a 
-      single message may be split over multiple TCP packets, or a single 
-      TCP packet may contain multiple messages. Since pcap is packet-oriented, 
-      it is difficult to get to the underlying DNS messages.
-      </t>
-      <t>
-      Since very few DNS messages are large enough to require fragmentation 
-      or truncation, a common approach is simply to ignore these messages 
-      when analyzing at pcap packet captures. However, in the Yeti testbed 
-      we have been using DNS configurations where our servers return large 
-      answers. This means that we have a lot of fragmented IP packets and TCP.
-      </t>
-      <t>
-      The approach that we took was to build a tool that takes a pcap input and:
-      1) Defragments any fragmented IP packets;2) Extracts any DNS messages that 
-      it finds in TCP streams. IP-format pcap was used, because that’s what is 
-      used in Yeti testbed. Ethernet framing information is not necessary, for 
-      example. The output of this tool is a pcap file without DNS in IP fragments 
-      or carried by TCP. Any non-DNS packets are copied across unchanged (this 
-      may be useful for looking at ICMP unreachable messages, for example). 
-      Any non-fragmented UDP DNS packets are also copied unchanged.
-      </t>
-      <t>
-      Most of the “heavy lifting” of this processing is done via Google’s 
-      gopacket library. This allows us to read and write pcap files, and 
-      also provides functionality for IPv4 defragmentation as well as TCP 
-      reassembly. The library did not support IPv6 defragmentation. We are 
-      pushing the changes upstream, so hopefully these will be a part of the 
-      base library soon.
-      </t>
-    </section>
-
     <section title="Experience on Multiple Signers">
 
       <t>
@@ -1213,60 +1117,12 @@
       </section>
     </section>
 
-    <section title="Root Label Compression in Knot">
-  	   <t><xref target="RFC1035"/> specifies that domain names can
-  	   be compressed when encoded in DNS messages, being represented
-  	   as one of
-          <list style="numbers">
-              <t>a sequence of labels ending in a zero octet;</t>
-
-              <t>a pointer; or</t>
-
-              <t>a sequence of labels ending with a pointer.</t>
-            </list>
-
-            The purpose of this flexibility is to reduce the size of
-            domain names encoded in DNS messages.</t>
-
-          <t>It was observed that Yeti-Root Servers running knot 2.0
-      	  would compress the zero-length label (the root domain,
-      	  often represented as ".") using a pointer to an earlier
-      	  example. Although legal, this encoding increases the
-      	  encoded size of the root label from one octet to two; it
-      	  was also found to break some client software, in particular
-      	  the Go DNS library. Bug reports were filed against both
-      	  knot and the Go DNS library, and both were resolved in
-      	  subsequent releases.</t>
-    </section>
-
-    <section title="Increased ZSK Key Size">
-          <t>The ZSK key size used in the Yeti-DNS Testbed was initially
-            1024 bits, consistent with the size of the ZSK used in the
-            Root Zone at the time the Yeti DNS Project was started. It
-            later became clear that the ZSK key size in the Root Zone
-            was to be increased.</t>
-
-          <t>The ZSK key size in the Yeti-Root zone was subsequently
-            increased in an attempt to identify any unexpected
-            operational effects of doing so.</t>
-
-          <t>XXX Note to reviewers: observations following that change
-            to be inserted here. XXX
-            DaveyNOte: There are some background in the discusion of 
-            inreasing the ZSK key Size. Calculate the increase of DNS response</t>
-
-
-          <t>The ZSK key size in the Root Zone was increased from
-            1024 bits to 2048 bits in October 2016.
-            <xref target="Verisign2016"/>.</t>
-    </section>
-
     <section title="KSK Rollover">
       <t>The Root Zone KSK is expected to undergo a
-      	  carefully-orchestrated rollover as described in <xref
-      	  target="ICANN2016"/>. ICANN has commissioned various tests
-      	  and has published an external test plan <xref
-      	  target="ICANN2017"/>. After some studies and discussions in the 
+          carefully-orchestrated rollover as described in <xref
+          target="ICANN2016"/>. ICANN has commissioned various tests
+          and has published an external test plan <xref
+          target="ICANN2017"/>. After some studies and discussions in the 
           community ICANN announced a postponing of the KSK rollover in 2017. 
       </t>
        
@@ -1274,7 +1130,7 @@
         the basic concept of KSK rollover in the beginning of this section. Or 
         should we put some concept introduction in the study areas?</t>
 
-    	<t>During the period, tests were performed on KSK rollover and the 
+      <t>During the period, tests were performed on KSK rollover and the 
         planned approach was also modelled in the live root Testbed.</t>
 
       <t>XXX Note to reviewers: observations about the KSK rollover
@@ -1343,6 +1199,171 @@
 
         <t>DaveyNote: A small conclusion?</t>
     </section>
+
+    <section title="Experience on capturing big DNS Messages">
+      <t>
+      Many DNS operators capture DNS packets for operational purposes, 
+      such as gathering statistics, tracking abuse, and so on. While in 
+      principle something designed for logging DNS like dnstap might be 
+      better, in practice capturing packets with an external tool and 
+      then storing them in pcap format is much more common. These tools 
+      may be something DNS-specific, like dnscap, or they may be a generic 
+      tool like tcpdump.
+      </t>
+      <t>
+      Yeti testbed captures DNS packets using dnscap to collect all packet 
+      information. The problem with fragmentation for pcap is that pcap 
+      files usually contain the IP fragments as separate packets, which 
+      means that the DNS message is split up and cannot be easily parsed 
+      or otherwise processed.  For DNS over TCP, it will be worse that a 
+      single message may be split over multiple TCP packets, or a single 
+      TCP packet may contain multiple messages. Since pcap is packet-oriented, 
+      it is difficult to get to the underlying DNS messages.
+      </t>
+      <t>
+      Since very few DNS messages are large enough to require fragmentation 
+      or truncation, a common approach is simply to ignore these messages 
+      when analyzing at pcap packet captures. However, in the Yeti testbed 
+      we have been using DNS configurations where our servers return large 
+      answers. This means that we have a lot of fragmented IP packets and TCP.
+      </t>
+      <t>
+      The approach that we took was to build a tool that takes a pcap input and:
+      1) Defragments any fragmented IP packets;2) Extracts any DNS messages that 
+      it finds in TCP streams. IP-format pcap was used, because that’s what is 
+      used in Yeti testbed. Ethernet framing information is not necessary, for 
+      example. The output of this tool is a pcap file without DNS in IP fragments 
+      or carried by TCP. Any non-DNS packets are copied across unchanged (this 
+      may be useful for looking at ICMP unreachable messages, for example). 
+      Any non-fragmented UDP DNS packets are also copied unchanged.
+      </t>
+      <t>
+      Most of the “heavy lifting” of this processing is done via Google’s 
+      gopacket library. This allows us to read and write pcap files, and 
+      also provides functionality for IPv4 defragmentation as well as TCP 
+      reassembly. The library did not support IPv6 defragmentation. We are 
+      pushing the changes upstream, so hopefully these will be a part of the 
+      base library soon.
+      </t>
+    </section>
+
+    <section title="Automated Hints File Maintenance">
+      <t>Renumbering events in the Root Server System are
+        relatively rare. Although each such event is accompanied
+        by the publication of an updated hints file in standard
+        locations, the task of updating local copies of that
+        file used by DNS resolvers is manual, and the process
+        has an observably-long tail: for example, in 2015 J-Root
+        was still receiving traffic at its old address some
+        thirteen years after renumbering <xref
+        target="Wessels2015"/>.</t>
+
+      <t>The observed impact of these old, deployed hints file
+        is minimal, likely due to the very low frequency of
+        such renumbering events. Even the oldest of hints file
+        would still contain some accurate root server addresses
+        from which priming responses could be obtained.</t>
+
+      <t>By contrast, due to the experimental nature of the
+        system and the fact that it is operated mainly by
+        volunteers, Yeti-Root Servers are added, removed and
+        renumbered with much greater frequency. A tool to
+        facilitate automatic maintenance of hints files was
+        therefore created, <xref target="hintUpdate"/>.</t>
+
+      <t>The automated procedure followed by the hintUpdate
+        tool is as follows.
+
+        <list style="numbers">
+          <t>Use the local resolver to obtain a response to the
+            query ./IN/NS;</t>
+
+          <t>Use the local resolver to obtain a set of IPv4 and
+            IPv6 addresses for each nameserver;</t>
+
+                <t>Validate all signatures obtained from the local
+                  resolvers, and confirm that all data is signed;</t>
+
+                <t>Compare the data obtained to that contained within
+                  the currently-active hints file; if there are differences,
+                  rotate the old one way and replace it with a new one.</t>
+        </list>
+      </t>
+
+            <t>This tool would not function unmodified when used in the
+        Root Server System, since the names of individual Root
+        Servers (e.g. A.ROOT-SERVERS.NET) are not signed. All
+        Yeti-Root Server names are signed, however, and hence
+        this tool functions as expected in that environment.</t>
+    </section>
+
+    <section title="Root Label Compression in Knot">
+  	   <t><xref target="RFC1035"/> specifies that domain names can
+  	   be compressed when encoded in DNS messages, being represented
+  	   as one of
+          <list style="numbers">
+              <t>a sequence of labels ending in a zero octet;</t>
+
+              <t>a pointer; or</t>
+
+              <t>a sequence of labels ending with a pointer.</t>
+            </list>
+
+            The purpose of this flexibility is to reduce the size of
+            domain names encoded in DNS messages.</t>
+
+          <t>It was observed that Yeti-Root Servers running knot 2.0
+      	  would compress the zero-length label (the root domain,
+      	  often represented as ".") using a pointer to an earlier
+      	  example. Although legal, this encoding increases the
+      	  encoded size of the root label from one octet to two; it
+      	  was also found to break some client software, in particular
+      	  the Go DNS library. Bug reports were filed against both
+      	  knot and the Go DNS library, and both were resolved in
+      	  subsequent releases.</t>
+    </section>
+
+    <section title="Increased ZSK Key Size">
+          <t>The ZSK key size used in the Yeti-DNS Testbed was initially
+            1024 bits, consistent with the size of the ZSK used in the
+            Root Zone at the time the Yeti DNS Project was started. It
+            later became clear that the ZSK key size in the Root Zone
+            was to be increased.</t>
+
+          <t>The ZSK key size in the Yeti-Root zone was subsequently
+            increased in an attempt to identify any unexpected
+            operational effects of doing so.</t>
+
+          <t>XXX Note to reviewers: observations following that change
+            to be inserted here. XXX
+            DaveyNOte: There are some background in the discusion of 
+            inreasing the ZSK key Size. Calculate the increase of DNS response</t>
+
+
+          <t>The ZSK key size in the Root Zone was increased from
+            1024 bits to 2048 bits in October 2016.
+            <xref target="Verisign2016"/>.</t>
+    </section>
+
+  </section>
+
+  <section title="conclusion">
+
+    <t>
+      IPv6-only Root operation
+    </t>
+
+    <t>
+      Multiple signer(share zone control)
+    </t>
+
+    <t>
+      Yeti's DNSSEC practice: KSK rollover and larger ZSK 
+    </t>
+
+    <t>
+     Alternative approach for Root Zone Distribution
+    </t>
 
   </section>
 <!-- deferred for 04
