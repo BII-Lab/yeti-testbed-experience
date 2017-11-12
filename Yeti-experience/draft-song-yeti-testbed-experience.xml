@@ -1358,10 +1358,10 @@
         The topics that the Yeti testbed was built to address includes 
         IPv6-only operation, DNSSEC key rollover, renumbering issues, 
         scalability issues and multiple zone file signers etc. Most of 
-        them are not well studied before Yeti DNS was setup. We are not 
-        saying that Yeti has answered all the issues, but it did give a 
-        clue from experience of running such testbed with structural 
-        changes to the root server system's infrastructure. As a conclusion, 
+        them are not well studied before Yeti DNS was setup. Yeti did 
+        not answered all the issues, but it did give a clue from experience 
+        of running such testbed with structural changes to the root server 
+        system's infrastructure. As a conclusion, 
         some experiences and recommendations are listed below.
         </t>
 
