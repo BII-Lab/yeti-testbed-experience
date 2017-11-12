@@ -790,8 +790,6 @@
 	  <c>yeti-dns01.dnsworkshop.org</c><c>dnsworkshop
 	    /informnis</c><c>Germany</c>
 
-          <c>yeti-ns.conit.co</c><c>CONIT S.A.S </c><c>Colombia</c>
-
           <c>dahu2.yeti.eu.org</c><c>Dahu Group</c><c>France</c>
 
           <c>yeti.aquaray.com</c><c>Aqua Ray SAS</c><c>France</c>
@@ -822,6 +820,8 @@
 	    Diensten</c><c>Netherlands</c>
 
           <c>yeti-ns.datev.net</c><c>DATEV</c><c>Germany</c>
+
+          <c>yeti.jhcloos.net.</c><c>jhcloos</c><c>USA</c>
         </texttable>
 
         <t>The current list of Yeti-Root server is made available
@@ -841,20 +841,21 @@
 	  only.</t>
 
         <t>Significant software diversity exists across the set of
-          Yeti-Root servers, as reported by their volunteer operators:
+          Yeti-Root servers, as reported by their volunteer operators 
+          at the time of recording:
 
           <list style="symbols">
-            <t>Platform: 20 of 25 Yeti-Root servers are implemented
+            <t>Platform: 18 of 25 Yeti-Root servers are implemented
               on a VPS rather than bare metal.</t>
 
-	    <t>Operating System: 6 Yeti-Root servers run on
-	      on Linux (Ubuntu, Debian, CentOS, and ArchLinux); 5
-	      run on FreeBSD and 1 on NetBSD.</t>
+	    <t>Operating System: 15 Yeti-Root servers run on
+	      on Linux (Ubuntu, Debian, CentOS, Rad hat and ArchLinux); 4
+	      run on FreeBSD , 1 on NetBSD and 1 in Windows server 2016.</t>
 
 	    <t>DNS software: 18 of 25 Yeti-Root servers use BIND9
-	      (versions varying between 9.9.7 and 9.10.3); four use
-	      NSD (4.10 and 4.15); two use Knot (2.0.1 and 2.1.0)
-	      and one uses Bundy (1.2.0).</t>
+	      (versions varying between 9.9.7 and 9.10.3); 4 use
+	      NSD (4.10 and 4.15); 2 use Knot (2.0.1 and 2.1.0)
+	      , 1 uses Bundy (1.2.0) and 1 use MS DNS (10.0.14300.1000).</t>
 	  </list>
 	</t>
       </section>
@@ -1117,29 +1118,24 @@
       </section>
     </section>
 
-    <section title="KSK Rollover">
-      <t>The Root Zone KSK is expected to undergo a
+    <section title="DNSSEC experiences in Yeti DNS">
+      <t> The Root Zone KSK is expected to undergo a
           carefully-orchestrated rollover as described in <xref
           target="ICANN2016"/>. ICANN has commissioned various tests
           and has published an external test plan <xref
-          target="ICANN2017"/>. After some studies and discussions in the 
-          community ICANN announced a postponing of the KSK rollover in 2017. 
+          target="ICANN2017"/>. After some studies and data analysis, ICANN 
+          announced a postponing of the KSK rollover at 27th September 2017 . 
       </t>
        
-      <t> DaveyNote: More background should be inserted here. Should we introduce 
+      <t> (DaveyNote: More background should be inserted here. Should we introduce 
         the basic concept of KSK rollover in the beginning of this section. Or 
-        should we put some concept introduction in the study areas?</t>
+        should we put some concept introduction in the study areas?)</t>
 
       <t>During the period, tests were performed on KSK rollover and the 
-        planned approach was also modeled in the live root Testbed.</t>
+        planned approach was also modeled in the live root Testbed. There are 
+        mainly three rollover tests on Yeti testbed. </t>
 
-      <t>XXX Note to reviewers: observations about the KSK rollover
-        in the Yeti-Root zone to be inserted here. XXX</t>
-
-      <t>
-        There are mainly three rollover tests on Yeti testbed. </t>
-
-      <t>The first Yeti KSK rollover (happened during 2015-xx-xx) was designed to simulate 
+      <t>The first Yeti KSK rollover (started at 2015-06-30) was designed to simulate 
         the worst case and to see how to recover. In RFC5011 there 
         is a 30-day hold-down timer before inactivate the old key but it was 
         deliberately ignored. The rollover between the two keys was made in 
@@ -1156,7 +1152,7 @@
         on resolvers, there are still many reasons causing the failure of KSK rollover.
       </t> 
 
-      <t>The second Yeti KSK rollover (happened during 2015-xx-xx) was design 
+      <t>The second Yeti KSK rollover (started at 2016-07-12) was design 
         for a simulation on the ICANN's KSK rollover. It waited 30 days after a new
             KSK is published in the root zone. Different from ICANN
             rollover plan, it revokes the old key once the new key
@@ -1180,14 +1176,14 @@
             works for this view.
           </t>
 
-        <t>This issue was reported in xxth DNS-OARC meeting to make it widely aware. 
+        <t>This issue was reported in 25th DNS-OARC meeting to make it widely aware. 
           We suggest currently BIND multiple-view operation needs extra 
           guidance for RFC5011. The manage-keys should be set carefully during 
           the KSK rollover for each view when the it is created. Afterwards ISC 
           published a report on this issue during KSK rollover for BIND users</t>
 
 
-        <t>The third KSK rollover is done in 2017-xx-xx after the ZSK is 
+        <t>The third KSK rollover is started in 2017-03-02 after the ZSK is 
           increased to 2048 bits. The focus was put on the monitoring and 
           impact analysis of large DNS response in Yeti testbed especially 
           for DNSKEY queries. As it is introduced in section 4.2.1, Yeti KSK 
@@ -1197,7 +1193,6 @@
           consider different transmit protocol for large DNS response, for example 
           the DNSKEY query during KSK rollover.</t>
 
-        <t>DaveyNote: A small conclusion?</t>
     </section>
 
     <section title="Experience on capturing big DNS Messages">
@@ -1229,7 +1224,7 @@
       </t>
       <t>
       The approach that we took was to build a tool that takes a pcap input and:
-      1) Defragments any fragmented IP packets;2) Extracts any DNS messages that 
+      1) Defragments any fragmented IP packets; 2) Extracts any DNS messages that 
       it finds in TCP streams. IP-format pcap was used, because that’s what is 
       used in Yeti testbed. Ethernet framing information is not necessary, for 
       example. The output of this tool is a pcap file without DNS in IP fragments 
@@ -1279,7 +1274,7 @@
             query ./IN/NS;</t>
 
           <t>Use the local resolver to obtain a set of IPv4 and
-            IPv6 addresses for each nameserver;</t>
+            IPv6 addresses for each name server;</t>
 
                 <t>Validate all signatures obtained from the local
                   resolvers, and confirm that all data is signed;</t>
@@ -1297,6 +1292,7 @@
         this tool functions as expected in that environment.</t>
     </section>
 
+<!-- Too trivial as an experience
     <section title="Root Label Compression in Knot">
   	   <t><xref target="RFC1035"/> specifies that domain names can
   	   be compressed when encoded in DNS messages, being represented
@@ -1344,7 +1340,7 @@
             1024 bits to 2048 bits in October 2016.
             <xref target="Verisign2016"/>.</t>
     </section>
-
+--> 
   </section>
 
   <section title="Conclusion">
@@ -1591,7 +1587,7 @@
           <date year="2015" />
         </front>
       </reference>
-
+<!--
       <reference anchor="Verisign2016"
         target="https://blog.verisign.com/security/increasing-the-strength-of-the-zone-signing-key-for-the-root-zone/">
         <front>
@@ -1602,7 +1598,6 @@
         </front>
       </reference>
 
-<!--
       <reference anchor="Root-Zone-Database"
         target="http://www.iana.org/domains/root/db">
         <front>
