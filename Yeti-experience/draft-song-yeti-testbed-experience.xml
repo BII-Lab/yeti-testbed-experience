@@ -34,6 +34,8 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7872.xml">
   <!ENTITY RFC5890 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
+  <!ENTITY RFC8109 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8109.xml">
 
 
 
@@ -47,8 +49,6 @@
     SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-andrews-tcp-and-ipv6-use-minmtu-04.xml">
   <!ENTITY I-D.bortzmeyer-dname-root SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-bortzmeyer-dname-root-00.xml">
-  <!ENTITY I-D.ietf-dnsop-resolver-priming SYSTEM
-    "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-dnsop-resolver-priming-07.xml">
     <!ENTITY I-D.taylor-v6ops-fragdrop SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-taylor-v6ops-fragdrop-02.xml">
     <!ENTITY I-D.song-atr-large-resp SYSTEM
@@ -201,7 +201,7 @@
       <t>The Yeti DNS testbed implementation includes various novel
 	and experimental components including IPv6-only transport,
 	independent, autonomous Zone Signing Key management, large
-	cryptographic keys and a large number of component Yeti-Root
+	cryptographic keys and a large number of Yeti-Root
 	Servers. These differences from the Root Server System have
 	operational consequences such as large responses to priming
 	queries and the coordination of a large pool of independent
@@ -257,7 +257,7 @@
         operational implications of such changes might be.</t>
 
       <t>The Yeti DNS Project was conceived in May 2015 to provide
-        a captive, non-production testbed upon which the technical
+        a non-production testbed upon which the technical
         community could propose and run experiments designed to
         answer these kinds of questions. Coordination for the project
         was provided by TISF, the WIDE Project and the
@@ -281,7 +281,8 @@
 
       <t>The Yeti DNS testbed serves a similar function to the Root
 	Server System in the sense that they both serve similar
-	zones (the Yeti-Root zone and the Root zone, respectively).
+	zones (the Yeti-Root zone and the IANA Root zone TODO editorial:
+	too many capitals ODOT, respectively).
 	However, the Yeti DNS testbed only serves clients that are
 	explicitly configured to participate in the experiment,
 	whereas the Root Server System serves the whole Internet.
@@ -296,12 +297,12 @@
      <section title="Implementation of a Root Server System-like Testbed">
        <t>
          <list style="symbols">
-           <t>How can a captive testbed be constructed and deployed
+           <t>How can a testbed be constructed and deployed
              on the Internet, allowing useful public participation
              without any risk of disruption of the Root Server System?</t>
 
 	   <t>How can representative traffic be introduced into
-	     such a captive testbed such that insights into the
+	     such a testbed such that insights into the
 	     impact of specific differences between the testbed and
 	     the Root Server System can be observed?</t>
          </list>
@@ -398,9 +399,8 @@
         </artwork>
       </figure>
 
-      <t>To use the Yeti DNS testbed, a stub resolver must be
-        explicitly configured to use recursive resolvers that
-        have themselves been configured to use the Yeti-Root
+      <t>To use the Yeti DNS testbed, a recursive resolver must be configured
+        to use the Yeti-Root
         servers.  On the resolvers, that configuration consists
         of a list of names and addresses for the Yeti-Root servers
         (often referred to as a "hints file") that replaces the
@@ -412,7 +412,9 @@
       <t>The need for a Yeti-specific trust anchor in the resolver
 	stems from the need to make minimal changes to the root
 	zone, as retrieved from the IANA, to transform it into the
-	Yeti-Root that can be used in the testbed.  Those changes
+	Yeti-Root that can be used in the testbed. Corresponding changes are
+	required in the Yeti-Root hints file
+        <xref target="yeti-hints"/>. Those changes
 	would be properly rejected by any validator using the
 	production Root Server System's root zone trust anchor set
 	as bogus.</t>
@@ -683,7 +685,7 @@
 	  changes to take place on all DMs. The Yeti-DNS Testbed
 	  is subject to more frequent changes than are observed in
 	  the Root Server System and includes substantially more
-	  Yeti-Root Servers than there are Root Servers, and hence
+	  Yeti-Root Servers than there are IANA Root Servers, and hence
 	  a manual change process in the Yeti Testbed would be more
 	  likely to suffer from human error. An automated process
 	  was consequently implemented.</t>
@@ -720,9 +722,10 @@
 
         <t>Priming responses from Yeti-Root Servers do not always
 	  include server addresses in the additional section, as
-	  is the case with priming responses from Root Servers. In
+	  is the case with priming responses from Root Servers. (In
 	  particular, Yeti-Root Servers running BIND9 return an
-	  empty additional section, forcing resolvers to complete
+	  empty additional section if the configuration parameter
+          minimum-responses is set , forcing resolvers to complete
 	  the priming process with a set of conventional recursive
 	  lookups in order to resolve addresses for each Yeti-Root
 	  server. Yeti-Root Servers running NSD return
@@ -733,8 +736,7 @@
 
           <list style="symbols">
             <t>Require use of DNS implementations that exhibit
-              the desired behaviour in the priming response (e.g.
-              NSD) in favour of BIND9;</t>
+              a desired behaviour in the priming response;</t>
 
             <t>Modification of BIND9 (and any other server with
               similar behaviour) for use by Yeti-Root Servers;</t>
@@ -749,8 +751,8 @@
 	</t>
 
         <t>The potential mitigation of renaming all Yeti-Root Servers
-          using a scheme that would allow their names to exist in the
-          balliwick of the root zone was not considered, since that
+          using a scheme that would allow their names to exist directly
+          in the root zone was not considered, since that
           approach implies the invention of new top-level labels not
           present in the Root Zone.</t>
 
@@ -835,7 +837,7 @@
           to a participating resolver first using a substitute
           hints file <xref target="yeti-hints"/> and subsequently
           by the usual resolver priming process
-          <xref target="I-D.ietf-dnsop-resolver-priming"/>. All
+          <xref target="RFC8109"/>. All
           Yeti-Root servers are IPv6-only, foreshadowing a future
           IPv6-only Internet, and hence the Yeti-Root hints file
           contains no IPv4 addresses and the Yeti-Root zone
@@ -855,8 +857,8 @@
             <t>Platform: 18 of 25 Yeti-Root servers are implemented
               on a VPS rather than bare metal.</t>
 
-	    <t>Operating System: 15 Yeti-Root servers run on
-	      on Linux (Ubuntu, Debian, CentOS, Rad hat and ArchLinux); 4
+	    <t>Operating System: 15 Yeti-Root servers run
+	      on Linux (Ubuntu, Debian, CentOS, Red Hat and ArchLinux); 4
 	      run on FreeBSD , 1 on NetBSD and 1 in Windows server 2016.</t>
 
 	    <t>DNS software: 18 of 25 Yeti-Root servers use BIND9
@@ -922,7 +924,7 @@
   	    this document were expected to trigger larger responses.
   	    For example, the choice of naming scheme for Yeti-Root
   	    Servers described in <xref target="naming"/> defeats
-  	    label compression the priming response which introduce 
+  	    label compression. It makes 
         a large priming response (up to 1754 octets with 25 NS 
         server and their glue) ; the Yeti-Root
   	    zone transformation approach described in <xref
@@ -934,7 +936,7 @@
   	     <t>The Yeti-DNS Testbed provides service on IPv6 only.
   	    IPv6 has a fragmentation model that is different from
   	    IPv4 -- in particular, fragmentation always takes place
-  	    on a sending end-host, and not on an intermediate router.</t>
+  	    on the sending host, and not on an intermediate router.</t>
 
   	     <t>Fragmentation may cause serious issues; if a single
   	    fragment is lost, it results in the loss of the entire
@@ -965,7 +967,7 @@
           1414 Bytes. </t>
 
         <t>Regarding the large DNS response via UDP, some existing 
-            root servers(A, B, G and J) truncating the response once 
+            root servers(A, B, G and J) truncate the response once 
             the large IPv6 packet surpasses 1280 octets. In Yeti DNS 
             Testbed, there are two proposals are discussed and 
             implemented in Yeti experiments.One proposal is called 
@@ -1094,9 +1096,8 @@
            One possible solutions is asking for development of RRSIG-aware IXFR 
            format in which the RRSIG is treated as a special and RRSIG RR should 
            always be transfered in full (like it does in AXFR). Another solution 
-           is adopting the behavior of NSD 4.1.7 as a improvement for IXFR protocol 
-           in which an IXFR client should fall back to AXFR automatically in the 
-           event of an IXFR incoherence error.
+           is to detect the issue, and to fall back to AXFR automatically in the 
+           event of an IXFR incoherence error. NSD does it.
         </t>
       </section>
       <section title="Latency of Root Zone update">
@@ -1117,10 +1118,14 @@
         some even with 40 min delay. One possible reason may be that the server 
         failed to pull the Zone on one DM due to network failure(for example IPv6 
         fragmentation issue introduce previously) and turn to another DM which introduces 
-        the delay. It is also observed that even in the same 20-minutes time frame, 
+        the delay. Another reason may be the NOTIFY was lost. A last
+	possible reason is that the root
+	name server had a wrong IP address in the ACL for NOTIFY
+	acceptation. It is also observed that even in the same 20-minutes time frame, 
         not all servers pull from a single DM. It is possible that some servers not 
         use FCFS strategy to pull the zone after they receive the notify. They may 
-        pull the zone based on other metrics like the rtt , or manual preference.
+        pull the zone based on other metrics like the rtt , or manual
+	preference. 
         </t>
       </section>
     </section>
@@ -1288,7 +1293,7 @@
 
                 <t>Compare the data obtained to that contained within
                   the currently-active hints file; if there are differences,
-                  rotate the old one way and replace it with a new one.</t>
+                  rotate the old one away and replace it with a new one.</t>
         </list>
       </t>
 
@@ -1353,7 +1358,7 @@
   <section title="Conclusion">
 
       <t>
-        Yeti DNS is designed as a live and captive root testbed. It serves 
+        Yeti DNS is designed as a live root testbed. It serves 
         the root zone published by the IANA with only those structural 
         modifications necessary to ensure its function as a testbed system. 
         After 2-years operation, Yeti DNS consists of 3 Distribution Master (DM), 
@@ -1557,12 +1562,12 @@
       &RFC6891;
       &RFC7720;
       &RFC7872;
+      &RFC8109;
       &I-D.muks-dns-message-fragments;
       <!-- &I-D.wkumari-dnsop-trust-management; -->
       &I-D.andrews-tcp-and-ipv6-use-minmtu;
       <!-- &I-D.wessels-edns-key-tag; -->
       <!-- &I-D.bortzmeyer-dname-root; -->
-      &I-D.ietf-dnsop-resolver-priming;
       &I-D.taylor-v6ops-fragdrop;
       &I-D.song-atr-large-resp;
 
