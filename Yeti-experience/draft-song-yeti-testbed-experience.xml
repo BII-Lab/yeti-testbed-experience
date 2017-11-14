@@ -797,8 +797,6 @@
 	  <c>yeti-dns01.dnsworkshop.org</c><c>dnsworkshop
 	    /informnis</c><c>Germany</c>
 
-          <c>yeti-ns.conit.co</c><c>CONIT S.A.S </c><c>Colombia</c>
-
           <c>dahu2.yeti.eu.org</c><c>Dahu Group</c><c>France</c>
 
           <c>yeti.aquaray.com</c><c>Aqua Ray SAS</c><c>France</c>
@@ -829,6 +827,8 @@
 	    Diensten</c><c>Netherlands</c>
 
           <c>yeti-ns.datev.net</c><c>DATEV</c><c>Germany</c>
+
+          <c>yeti.jhcloos.net.</c><c>jhcloos</c><c>USA</c>
         </texttable>
 
         <t>The current list of Yeti-Root server is made available
@@ -848,20 +848,21 @@
 	  only.</t>
 
         <t>Significant software diversity exists across the set of
-          Yeti-Root servers, as reported by their volunteer operators:
+          Yeti-Root servers, as reported by their volunteer operators 
+          at the time of recording:
 
           <list style="symbols">
-            <t>Platform: 20 of 25 Yeti-Root servers are implemented
+            <t>Platform: 18 of 25 Yeti-Root servers are implemented
               on a VPS rather than bare metal.</t>
 
-	    <t>Operating System: 6 Yeti-Root servers run on
-	      on Linux (Ubuntu, Debian, CentOS, and ArchLinux); 5
-	      run on FreeBSD and 1 on NetBSD.</t>
+	    <t>Operating System: 15 Yeti-Root servers run on
+	      on Linux (Ubuntu, Debian, CentOS, Rad hat and ArchLinux); 4
+	      run on FreeBSD , 1 on NetBSD and 1 in Windows server 2016.</t>
 
 	    <t>DNS software: 18 of 25 Yeti-Root servers use BIND9
-	      (versions varying between 9.9.7 and 9.10.3); four use
-	      NSD (4.10 and 4.15); two use Knot (2.0.1 and 2.1.0)
-	      and one uses Bundy (1.2.0).</t>
+	      (versions varying between 9.9.7 and 9.10.3); 4 use
+	      NSD (4.10 and 4.15); 2 use Knot (2.0.1 and 2.1.0)
+	      , 1 uses Bundy (1.2.0) and 1 use MS DNS (10.0.14300.1000).</t>
 	  </list>
 	</t>
       </section>
@@ -996,7 +997,7 @@
         TCP MSS to be 1220 (1280-ip6/tcp header)and advise it if 
         IPV6_USE_MINMTU=1. Yeti root from WIDE and SWITCH set this 
         during the test one year ago. Now at the time of writing, 
-        11 out of 25 change the MSS setting in Yeti DNS Testbed. 
+        3 out of 25 change the MSS setting in Yeti DNS Testbed. 
         </t>
       </section>
 
@@ -1124,36 +1125,31 @@
       </section>
     </section>
 
-    <section title="KSK Rollover">
-      <t>The Root Zone KSK is expected to undergo a
+    <section title="DNSSEC experiences in Yeti DNS">
+      <t> The Root Zone KSK is expected to undergo a
           carefully-orchestrated rollover as described in <xref
           target="ICANN2016"/>. ICANN has commissioned various tests
           and has published an external test plan <xref
-          target="ICANN2017"/>. After some studies and discussions in the 
-          community ICANN announced a postponing of the KSK rollover in 2017. 
+          target="ICANN2017"/>. After some studies and data analysis, ICANN 
+          announced a postponing of the KSK rollover at 27th September 2017 . 
       </t>
        
-      <t> DaveyNote: More background should be inserted here. Should we introduce 
+      <t> (DaveyNote: More background should be inserted here. Should we introduce 
         the basic concept of KSK rollover in the beginning of this section. Or 
-        should we put some concept introduction in the study areas?</t>
+        should we put some concept introduction in the study areas?)</t>
 
       <t>During the period, tests were performed on KSK rollover and the 
-        planned approach was also modelled in the live root Testbed.</t>
+        planned approach was also modeled in the live root Testbed. There are 
+        mainly three rollover tests on Yeti testbed. </t>
 
-      <t>XXX Note to reviewers: observations about the KSK rollover
-        in the Yeti-Root zone to be inserted here. XXX</t>
-
-      <t>
-        There are mainly three rollover tests on Yeti testbed. </t>
-
-      <t>The first Yeti KSK rollover (happened during 2015-xx-xx) was designed to simulate 
+      <t>The first Yeti KSK rollover (started at 2015-06-30) was designed to simulate 
         the worst case and to see how to recover. In RFC5011 there 
         is a 30-day hold-down timer before inactivate the old key but it was 
         deliberately ignored. The rollover between the two keys was made in 
         one week after new key created. And the old key was deleted in another week.  
         It is found that some clients (Unbound) receive SERVFAILs because the 
         new key was still in AddPend state when old key was inactive. To recover 
-        from failure，the trusted key should be reset on the affected resolvers 
+        from failure, the trusted key should be reset on the affected resolvers 
         manually by an alert administrator or by an out-of-band automatic recovery 
         process.  </t>
 
@@ -1163,7 +1159,7 @@
         on resolvers, there are still many reasons causing the failure of KSK rollover.
       </t> 
 
-      <t>The second Yeti KSK rollover (happened during 2015-xx-xx) was design 
+      <t>The second Yeti KSK rollover (started at 2016-07-12) was design 
         for a simulation on the ICANN's KSK rollover. It waited 30 days after a new
             KSK is published in the root zone. Different from ICANN
             rollover plan, it revokes the old key once the new key
@@ -1187,14 +1183,14 @@
             works for this view.
           </t>
 
-        <t>This issue was reported in xxth DNS-OARC meeting to make it widely aware. 
+        <t>This issue was reported in 25th DNS-OARC meeting to make it widely aware. 
           We suggest currently BIND multiple-view operation needs extra 
           guidance for RFC5011. The manage-keys should be set carefully during 
           the KSK rollover for each view when the it is created. Afterwards ISC 
           published a report on this issue during KSK rollover for BIND users</t>
 
 
-        <t>The third KSK rollover is done in 2017-xx-xx after the ZSK is 
+        <t>The third KSK rollover is started in 2017-03-02 after the ZSK is 
           increased to 2048 bits. The focus was put on the monitoring and 
           impact analysis of large DNS response in Yeti testbed especially 
           for DNSKEY queries. As it is introduced in section 4.2.1, Yeti KSK 
@@ -1204,7 +1200,6 @@
           consider different transmit protocol for large DNS response, for example 
           the DNSKEY query during KSK rollover.</t>
 
-        <t>DaveyNote: A small conclusion?</t>
     </section>
 
     <section title="Experience on capturing big DNS Messages">
@@ -1236,7 +1231,7 @@
       </t>
       <t>
       The approach that we took was to build a tool that takes a pcap input and:
-      1) Defragments any fragmented IP packets;2) Extracts any DNS messages that 
+      1) Defragments any fragmented IP packets; 2) Extracts any DNS messages that 
       it finds in TCP streams. IP-format pcap was used, because that’s what is 
       used in Yeti testbed. Ethernet framing information is not necessary, for 
       example. The output of this tool is a pcap file without DNS in IP fragments 
@@ -1286,7 +1281,7 @@
             query ./IN/NS;</t>
 
           <t>Use the local resolver to obtain a set of IPv4 and
-            IPv6 addresses for each nameserver;</t>
+            IPv6 addresses for each name server;</t>
 
                 <t>Validate all signatures obtained from the local
                   resolvers, and confirm that all data is signed;</t>
@@ -1304,6 +1299,7 @@
         this tool functions as expected in that environment.</t>
     </section>
 
+<!-- Too trivial as an experience
     <section title="Root Label Compression in Knot">
   	   <t><xref target="RFC1035"/> specifies that domain names can
   	   be compressed when encoded in DNS messages, being represented
@@ -1351,28 +1347,81 @@
             1024 bits to 2048 bits in October 2016.
             <xref target="Verisign2016"/>.</t>
     </section>
+--> 
+  </section>
+
+  <section title="Conclusion">
+
+      <t>
+        Yeti DNS is designed as a live and captive root testbed. It serves 
+        the root zone published by the IANA with only those structural 
+        modifications necessary to ensure its function as a testbed system. 
+        After 2-years operation, Yeti DNS consists of 3 Distribution Master (DM), 
+        25 root servers run by 16 operators, and around 3 thousands resolvers 
+        who contributed experimental traffic to Yeti DNS.  
+        </t>
+
+      <t>
+        The topics that the Yeti testbed was built to address includes 
+        IPv6-only operation, DNSSEC key rollover, renumbering issues, 
+        scalability issues and multiple zone file signers etc. Most of 
+        them are not well studied before Yeti DNS was setup. Yeti did 
+        not answered all the issues, but it did give a clue from experience 
+        of running such testbed with structural changes to the root server 
+        system's infrastructure. As a conclusion, 
+        some experiences and recommendations are listed below.
+        </t>
+
+      <t>
+      (1) The first one is that IPv6-only Root is operational feasible and 
+      reasonable, but necessary care should be taken to handle Large response.
+      As IPv6-only Internet is the future, Yeti DNS provides a place to 
+      "sunset" IPv4 in root-level DNS. From our experience the only requirement 
+      is that the resolver should be dual-stack. The risk for root system running 
+      in pure IPv6 network is that there is no IPv4 fallback if IPv6 DNS fails. 
+      However, from our experience the resolvers can survive and go though by 
+      falling back to TCP or retries to other root servers. It is not fatal but 
+      puts gloomy atmosphere for IPv6 transition and sunsetting IPv4 for DNS as 
+      an important Internet infrastructure.
+       </t>
+
+    <t>
+      (2) The Multiple signer is a good proof-of-concept implementation for 
+      the idea of "Share Zone Control". It successfully demonstrated the 
+      ability to add more signers(three in Yeti) to manage the root zone 
+      independently. It increases publicity,operational diversity and redundancy 
+      for root system. The only impact is that more ZSKs will be included in 
+      DNSKEY RRset which increases the size of response for DNSKEY query. Anyone 
+      who want to implement multiple signer in their DNS system, they should 
+      take care the fragmentation issues.  
+    </t>
+
+    <t>
+      (3) Yeti DNS proved the concept of "one name space, multiple circles"  
+      as an answer to scaling properties of root zone distribution. Now Yeti DNS 
+      runs 25 root servers by increasing the priming response. Before additional 
+      treatment adopted to handle large DNS response issue, it is not wise to 
+      increase the number of root server operator by adding more NS server to the 
+      base 13. On the contrary Yeti DNS serves a root zone which is slightly 
+      different from original one generated by IANA. It is technical and operational 
+      feasible maintain multiple versions of root zone signed by IANA's KSK. It will 
+      introduce more than one set of 13 or 25 root severs. 
+    </t>
+
+    <t>
+      (4) From Yeti experiences on renumbering issue and KSK rollover 
+      in Yeti, it is worth of doing out-of-bound automatic mechanisms 
+      to improve the rate at which clients of Yeti-Root servers are able 
+      to react to the events of both Root server renumbering and KSK 
+      rollover. For example for DNS implementations, additional threads or 
+      coroutines can be implemented coordinating with the main process of 
+      BIND and Unbound. Resource lists like hint file and KSK should be fixed and 
+      available as well. 
+    </t>
 
   </section>
 
-  <section title="conclusion">
 
-    <t>
-      IPv6-only Root operation
-    </t>
-
-    <t>
-      Multiple signer(share zone control)
-    </t>
-
-    <t>
-      Yeti's DNSSEC practice: KSK rollover and larger ZSK 
-    </t>
-
-    <t>
-     Alternative approach for Root Zone Distribution
-    </t>
-
-  </section>
 <!-- deferred for 04
 
       <section title="The KSK Rollover Experiment in Yeti">
@@ -1545,7 +1594,7 @@
           <date year="2015" />
         </front>
       </reference>
-
+<!--
       <reference anchor="Verisign2016"
         target="https://blog.verisign.com/security/increasing-the-strength-of-the-zone-signing-key-for-the-root-zone/">
         <front>
@@ -1556,7 +1605,6 @@
         </front>
       </reference>
 
-<!--
       <reference anchor="Root-Zone-Database"
         target="http://www.iana.org/domains/root/db">
         <front>
@@ -1817,10 +1865,10 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
     <section title="Tools developed for Yeti DNS testbed" anchor="Yeti_tools">
 
     <t>As part of Yeti DNS testbed, there are some tools developed 
-      especially to support the live testbed, including  YmmV，IPv6 
-      PcapParser, ATR and DNS fragment. There are some brief introduction 
-      and Github links via which the audiences who are interested can 
-      follow our work.
+      especially to support the live testbed, including YmmV, IPv6 
+      PcapParser, DNS fragment and DNS ATR. There are some brief 
+      introduction and GitHub links via which the audiences who are 
+      interested can follow our work.
     </t>
 
     <t>
@@ -1837,7 +1885,7 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
       PcapParser is a IPv6 defrager which is a module used by YmmV. As we 
       described in section xxx, we need a DNS capture tool to handle large 
       response. IPv6 defrager is a program aiming at defragment ip fragments 
-      and ressembling tcp of DNS packages in IPv6 environment. Now this 
+      and resembling tcp of DNS packages in IPv6 environment. Now this 
       program only reads PCAP file as input and output a PCAP file. 
       (https://github.com/RunxiaWan/PcapParser)</t>
 
@@ -1914,7 +1962,7 @@ yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
         prior to publication.</t>
 
       <section title="Venue">
-        <t>The authors propose that this document proceeed as an
+        <t>The authors propose that this document proceed as an
           Independent Submission, since it documents work that,
           although relevant to the IETF, has been carried out
           externally to any IETF working group. However, a suitable
