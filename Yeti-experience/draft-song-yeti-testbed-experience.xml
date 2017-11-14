@@ -96,7 +96,7 @@
 <?rfc comments="no" ?>
 <?rfc inline="yes" ?>
 
-<rfc category="info" docName="draft-song-yeti-testbed-experience-05"
+<rfc category="info" docName="draft-song-yeti-testbed-experience-06"
     ipr="trust200902">
 
   <front>
@@ -189,7 +189,7 @@
 	the critical infrastructure that serves the DNS root zone.</t>
 
       <t>Yeti DNS is an experimental, non-production testbed that
-        aims to provide an environment where technical and operational
+        provides an environment where technical and operational
         experiments can safely be performed without risk to production
         infrastructure.  This testbed has been used by a broad
         community of participants to perform experiments that aim
@@ -215,7 +215,7 @@
 	proposal for changing any aspect of its implementation or
 	operation. This document aims solely to document technical
         and operational findings following the deployment of a
-        system which is similar but different from the Root Server
+        system which is similar to but different from the Root Server
         System.</t>
     </abstract>
   </front>
@@ -225,13 +225,13 @@
       <t>The Domain Name System (DNS), as originally specified in
         <xref target="RFC1034"/> and <xref target="RFC1035"/>, has
         proved to be an enduring and important platform upon which
-        almost every user of Internet services relies. Despite its
+        almost every end-user of the Internet relies. Despite its
         longevity, extensions to the protocol, new implementations
         and refinements to DNS operations continue to emerge both
         inside and outside the IETF.</t>
 
       <t>The Root Server System in particular has seen technical
-        innovation and development in recent years, for example in
+        innovation and development, for example in
         the form of wide-scale anycast deployment, the mitigation
         of unwanted traffic on a global scale, the widespread
         deployment of Response Rate Limiting <xref target="RRL"/>,
@@ -253,7 +253,7 @@
         references, considered together, provide sufficient insight
         into the operations of the system as a whole that it is
         straightforward to imagine structural changes to the root
-        server system's infrastructure, and to wonder what the
+        server system's infrastructure and to wonder what the
         operational implications of such changes might be.</t>
 
       <t>The Yeti DNS Project was conceived in May 2015 to provide
@@ -275,7 +275,7 @@
 	Server system.  In particular, no delegation for any top-level
 	zone is changed, added or removed from the IANA-published
 	root zone to construct the root zone served by the Yeti
-	testbed system. In this document, for clarity, we refer to
+	testbed system and changes in the root zone are reflected in the testbed in near real-time. In this document, for clarity, we refer to
 	the zone derived from the IANA-published root zone as the
 	Yeti-Root zone.</t>
 
@@ -285,9 +285,7 @@
 	However, the Yeti DNS testbed only serves clients that are
 	explicitly configured to participate in the experiment,
 	whereas the Root Server System serves the whole Internet.
-	The known set of clients has allowed structural changes to
-	be deployed in the Yeti DNS testbed whose impact on clients
-	can be measured and analysed.</t>
+	Since the dependent end-users and systems of the Yeti DNS testbed are known and their operations well-coordinated with those of the Yeti project, it has been possible to deploy structural changes in the Yeti DNS testbed with effective measurement and analysis, something that is difficult or simply impractical in the production Root Server System.</t>
     </section>
 
     <section title="Areas of Study">
@@ -394,7 +392,7 @@
     `----------'        `-----------'        `------------'
        ^                   ^                    ^
        |  appropriate      |  Yeti-Root hints;  |  Yeti-Root zone
-       `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet,
+       `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet
           configured          anchor               signed by Yeti-KSK
 ]]>
         </artwork>
@@ -406,19 +404,18 @@
         servers.  On the resolvers, that configuration consists
         of a list of names and addresses for the Yeti-Root servers
         (often referred to as a "hints file") that replaces the
-        normal Internet DNS hints. Resolvers also need to be
+        corresponding hints used for the production Root Server System <xref target="yeti-hints"/>. Resolvers also need to be
         configured with a DNSSEC trust anchor that corresponds
         to a KSK used in the Yeti DNS Project, in place of the
-        normal trust anchor for the root zone.</t>
+        normal trust anchor set used for the root zone.</t>
 
       <t>The need for a Yeti-specific trust anchor in the resolver
 	stems from the need to make minimal changes to the root
 	zone, as retrieved from the IANA, to transform it into the
 	Yeti-Root that can be used in the testbed.  Those changes
-	would be properly rejected by any validator using an accurate
-	root zone trust anchor as bogus. Corresponding changes are
-	required in the Yeti-Root hints file
-        <xref target="yeti-hints"/>.</t>
+	would be properly rejected by any validator using the
+	production Root Server System's root zone trust anchor set
+	as bogus.</t>
 
       <t>The data flow from IANA to stub resolvers through the
         Yeti testbed is illustrated in <xref target="yeti-root"/>
@@ -459,10 +456,20 @@
       </figure>
 
       <section title="Root Zone Retrieval">
-        <t>Since Yeti DNS servers cannot receive DNS NOTIFY
+        <t>The Yeti-Root Zone is distributed within the
+          Yeti DNS testbed through a set of internal master
+          servers that are referred to as Distribution
+          Masters (DMs). These server elements distribute the
+          Yeti-Root zone to all Yeti-Root servers. The means
+          by which the Yeti DMs construct the Yeti-Root
+          zone for distribution is described below.</t>
+          
+        <t>Since Yeti DNS DMs do not receive DNS NOTIFY
           <xref target="RFC1996"/> messages from the Root Server
-	  System, a polling approach is used. Each Yeti Distribution
-	  Master (DM) requests the root zone SOA record from a
+	  System, a polling approach is used to determine when
+	  new revisions of the root zone is available from the
+	  production Root Server System. Each Yeti
+	  DM requests the root zone SOA record from a
 	  nameserver that permits unauthenticated zone transfers
 	  of the root zone, and performs a zone transfer from that
 	  server if the retrieved value of SOA.SERIAL is greater
@@ -511,14 +518,14 @@
 
         <t>A third approach has also been proposed, but not yet
           implemented. The motivations and changes implied by that
-          approach are also described in <xref target="trans3"/>.</t>
+          approach are described in <xref target="trans3"/>.</t>
 
         <section title="ZSK and KSK Key Sets Shared Between DMs"
           anchor="trans1">
 	  <t>The approach described here was the first to be
 	    implemented. It features entirely autonomous operation
 	    of each DM, but also requires secret key material (the
-	    private parts of all Yeti-Root KSK and ZSK key-pairs)
+	    private key in each of the Yeti-Root KSK and ZSK key-pairs)
 	    to be distributed and maintained on each DM in a
 	    coordinated way.</t>
 
@@ -553,7 +560,7 @@
 
               <t>The Yeti-Root Zone is signed: the NSEC chain is
                 regenerated; the Yeti KSK is used to
-                sign the DNSKEY RRSet, and the DM's local ZSK to generate
+                sign the DNSKEY RRSet, and the DM's local ZSK is used to sign
                 every other RRSet.</t>
             </list>
           </t>
@@ -661,7 +668,7 @@
 	  with more rigourous mechanisms (e.g. using Transaction
 	  Signatures (TSIG) <xref target="RFC2845"/>); this has not
 	  been done at the time of writing since the use of
-	  address-based controls avoid the need for the distribution
+	  address-based controls avoids the need for the distribution
 	  of shared secrets amongst the Yeti-Root Server Operators.</t>
 
         <t>Individual Yeti-Root Servers are configured with a full
@@ -669,7 +676,7 @@
           be sent in the conventional manner.</t>
       </section>
 
-      <section title="Synchronization of Service Metadata" anchor="synch">
+      <section title="Synchronisation of Service Metadata" anchor="synch">
         <t>Changes in the Yeti-DNS Testbed infrastructure such as
 	  the addition or removal of Yeti-Root servers, renumbering
 	  Yeti-Root Servers or DNSSEC key rollovers require coordinated
@@ -683,9 +690,9 @@
 
 	<t>A repository of all service metadata involved in the
 	  operation of each DM was implemented as a separate git
-	  repository hosted at github.com, since this provided a
-	  simple, transparent and familiar mechanism for participants
-	  to review. Requests to change the service metadata for a
+	  repository hosted at github.com, since this provided particpants with a
+	  simple, transparent and familiar mechanism.
+	  Requests to change the service metadata for a
 	  DM are submitted as pull requests from a fork of the
 	  corresponding repository; each DM operator reviews pull
 	  requests and merges them to indicate approval. Once merged,
@@ -699,8 +706,8 @@
 	  the domain ROOT-SERVERS.NET, as described in <xref
 	  target="RSSAC023"/>). The principal benefit of this naming
 	  scheme is that DNS label compression can be used to produce
-	  a priming response that will fit within 512 bytes, the
-	  maximum DNS message size using UDP transport without EDNS0
+	  a priming response that would fit within 512 bytes at the time it was introduced, 512 bytes being the
+	  maximum DNS message size using UDP transport without EDNS(0)
 	  <xref target="RFC6891"/>.</t>
 
         <t>Yeti-Root Servers do not use this optimisation, but rather
@@ -718,7 +725,7 @@
 	  empty additional section, forcing resolvers to complete
 	  the priming process with a set of conventional recursive
 	  lookups in order to resolve addresses for each Yeti-Root
-	  server. Yeti-Root Servers running NSD appeared to return
+	  server. Yeti-Root Servers running NSD return
           a fully-populated additional section.</t>
 
         <t>Various approaches to normalise the composition of the
@@ -771,7 +778,7 @@
 
           <c>bii.dns-lab.net</c><c>BII</c><c>CHINA</c>
 
-          <c>yet-ns.tsif.net</c><c>TSIF</c><c>USA</c>
+          <c>yeti-ns.tsif.net</c><c>TSIF</c><c>USA</c>
 
           <c>yeti-ns.wide.ad.jp</c><c>WIDE Project</c><c>Japan</c>
 
