@@ -403,15 +403,16 @@
         </artwork>
       </figure>
 
-      <t>To use the Yeti DNS testbed, a recursive resolver must be configured
-        to use the Yeti-Root servers.  On the resolvers, that
-        configuration consists of a list of names and addresses for
-        the Yeti-Root servers (often referred to as a "hints file")
-        that replaces the corresponding hints used for the production
-        Root Server System <xref target="yeti-hints"/>. Resolvers
-        also need to be configured with a DNSSEC trust anchor that
-        corresponds to a KSK used in the Yeti DNS Project, in place
-        of the normal trust anchor set used for the root zone.</t>
+      <t>To use the Yeti DNS testbed, a recursive resolver must be
+	configured to use the Yeti-Root servers.  On the resolvers,
+	that configuration consists of a list of names and addresses
+	for the Yeti-Root servers (often referred to as a "hints
+	file") that replaces the corresponding hints used for the
+	production Root Server System <xref target="yeti-hints"/>.
+	Resolvers also need to be configured with a DNSSEC trust
+	anchor that corresponds to a KSK used in the Yeti DNS
+	Project, in place of the normal trust anchor set used for
+	the root zone.</t>
 
       <t>The need for a Yeti-specific trust anchor in the resolver
         stems from the need to make minimal changes to the root
@@ -421,6 +422,10 @@
         target="yeti-hints"/>. Those changes would be properly
         rejected by any validator using the production Root Server
         System's root zone trust anchor set as bogus.</t>
+
+      <t>Stub resolvers become part of the Yeti DNS Testbed by their
+	use of recursive resolvers that are configured as described
+	above.</t>
 
       <t>The data flow from IANA to stub resolvers through the
         Yeti testbed is illustrated in <xref target="yeti-root"/>
