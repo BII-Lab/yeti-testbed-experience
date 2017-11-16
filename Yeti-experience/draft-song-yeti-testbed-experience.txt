@@ -221,9 +221,8 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 
-
 Song, et al.              Expires May 20, 2018                  [Page 4]
-
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -339,6 +338,9 @@ Song, et al.              Expires May 20, 2018                  [Page 6]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
+   Stub resolvers become part of the Yeti DNS Testbed by their use of
+   recursive resolvers that are configured as described above.
+
    The data flow from IANA to stub resolvers through the Yeti testbed is
    illustrated in Figure 2 and are described in more detail in the
    sections that follow.
@@ -384,9 +386,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    Since Yeti DNS DMs do not receive DNS NOTIFY [RFC1996] messages from
    the Root Server System, a polling approach is used to determine when
-   new revisions of the root zone is available from the production Root
-   Server System.  Each Yeti DM requests the root zone SOA record from a
-   nameserver that permits unauthenticated zone transfers of the root
 
 
 
@@ -395,6 +394,9 @@ Song, et al.              Expires May 20, 2018                  [Page 7]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
+   new revisions of the root zone is available from the production Root
+   Server System.  Each Yeti DM requests the root zone SOA record from a
+   nameserver that permits unauthenticated zone transfers of the root
    zone, and performs a zone transfer from that server if the retrieved
    value of SOA.SERIAL is greater than that of the last retrieved zone.
 
@@ -438,9 +440,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    A third approach has also been proposed, but not yet implemented.
    The motivations and changes implied by that approach are described in
    Section 3.2.3.
-
-
-
 
 
 
@@ -1622,7 +1621,7 @@ Appendix B.  Yeti-Root Server Priming Response
 
 
 
-Song, et al.              Expires May 18, 2018                 [Page 29]
+Song, et al.              Expires May 20, 2018                 [Page 29]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
@@ -1678,7 +1677,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 
-Song, et al.              Expires May 18, 2018                 [Page 30]
+Song, et al.              Expires May 20, 2018                 [Page 30]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
@@ -1703,13 +1702,6 @@ Appendix C.  Tools developed for Yeti DNS testbed
    easy and safe for a DNS administrator to copy their resolver IANA
    root DNS traffic to the Yeti root.  For each query and answer that
    the resolver has made to the IANA root servers, a version will be
-
-
-
-Song, et al.              Expires May 20, 2018                 [Page 29]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
    sent to the some Yeti root servers.The Yeti answer that is returned
    will be compared to the IANA answer, and if there is a difference
    this will be logged.  It is a open source in Github
@@ -1741,8 +1733,8 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 
-Song, et al.              Expires May 18, 2018                 [Page 31]
-
+Song, et al.              Expires May 20, 2018                 [Page 31]
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -1766,15 +1758,6 @@ Appendix D.  Controversy
    Yeti DNS Project to be an alternate root in this sense, since by
    design the namespace enabled by the Yeti-Root Zone is identical to
    that of the Root Zone.
-
-
-
-
-
-Song, et al.              Expires May 20, 2018                 [Page 30]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
 
    Some commentators have expressed concern that the Yeti DNS Project
    seeks to influence or subvert administrative policy relating to the
@@ -1806,8 +1789,8 @@ Appendix E.  About This Document
 
 
 
-Song, et al.              Expires May 18, 2018                 [Page 32]
-
+Song, et al.              Expires May 20, 2018                 [Page 32]
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -1826,22 +1809,7 @@ E.1.  Venue
    This document is maintained in GitHub at <https://github.com/BII-Lab/
    yeti-testbed-experience>.
 
-
-D.2.  Revision History
-
-
-
-
-
-
-
-Song, et al.              Expires May 20, 2018                 [Page 31]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
 E.2.  Revision History
-
 
 E.2.1.  draft-song-yeti-testbed-experience-00 through -03
 
@@ -1877,7 +1845,7 @@ E.2.2.  draft-song-yeti-testbed-experience-04
 
 
 
-Song, et al.              Expires May 18, 2018                 [Page 33]
+Song, et al.              Expires May 20, 2018                 [Page 33]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
@@ -1892,20 +1860,6 @@ Authors' Addresses
 
    Email: songlinjian@gmail.com
    URI:   http://www.biigroup.com/
-
-
-
-
-
-
-
-
-
-
-
-Song, et al.              Expires May 20, 2018                 [Page 32]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
 
 
    Dong Liu (editor)
@@ -1947,17 +1901,4 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Song, et al.              Expires May 20, 2018                 [Page 33]
-
+Song, et al.              Expires May 20, 2018                 [Page 34]
