@@ -1069,17 +1069,16 @@
           <xref target="trans2"/>).</t>
 
         <t>Incremental Zone Transfer (IXFR), as described in
-          <xref target="RFC1995"/>, is a viable mechanism to use for
-          zone synchronisation between any Yeti-Root server and
-	  a consistent, single DM. However, if that DM ever became
-	  unavailable and the Yeti-Root server was obliged to
-	  transfer a new zone from a differernt DM, IXFR would no
-	  longer be a safe mechanism; structural changes between
-	  the incongruent zones on different DMs would not be
-	  included in any transferred delta and the result would
-	  be a zone that was not self-consistent.  For this reason
-	  the first transfer after a change of DM would require
-	  AXFR, not IXFR.</t>
+	  <xref target="RFC1995"/>, is a viable mechanism to use
+	  for zone synchronisation between any Yeti-Root server and
+	  a consistent, single DM. However, if that Yeti-Root server
+	  ever selected a different DM, IXFR would no longer be a
+	  safe mechanism; structural changes between the incongruent
+	  zones on different DMs would not be included in any
+	  transferred delta and the result would be a zone that was
+	  not internally self-consistent.  For this reason the first
+	  transfer after a change of DM would require AXFR, not
+	  IXFR.</t>
   
         <t>None of the DNS software in use on Yeti-Root Servers
 	  supports this mixture of IXFR/AXFR according to the master
@@ -1089,7 +1088,7 @@
 	  zones that are congruent between all nodes.  For this
 	  reason, all Yeti-Root servers are configured to use AXFR
 	  at all times, and never IXFR, to ensure that zones being
-	  served are reliably self-consistent.</t>
+	  served are internally self-consistent.</t>
       </section>
 
       <section title="Latency of Root Zone update">
