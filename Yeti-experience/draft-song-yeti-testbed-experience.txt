@@ -133,14 +133,15 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
    Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  28
-   Appendix B.  Tools developed for Yeti DNS testbed . . . . . . . .  29
-   Appendix C.  Controversy  . . . . . . . . . . . . . . . . . . . .  30
-   Appendix D.  About This Document  . . . . . . . . . . . . . . . .  31
-     D.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  31
-     D.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  31
-       D.2.1.  draft-song-yeti-testbed-experience-00 through -03 . .  32
-       D.2.2.  draft-song-yeti-testbed-experience-04 . . . . . . . .  32
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  32
+   Appendix B.  Yeti-Root Server Priming Response  . . . . . . . . .  29
+   Appendix C.  Tools developed for Yeti DNS testbed . . . . . . . .  31
+   Appendix D.  Controversy  . . . . . . . . . . . . . . . . . . . .  32
+   Appendix E.  About This Document  . . . . . . . . . . . . . . . .  32
+     E.1.  Venue . . . . . . . . . . . . . . . . . . . . . . . . . .  33
+     E.2.  Revision History  . . . . . . . . . . . . . . . . . . . .  33
+       E.2.1.  draft-song-yeti-testbed-experience-00 through -03 . .  33
+       E.2.2.  draft-song-yeti-testbed-experience-04 . . . . . . . .  33
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
 
 1.  Introduction
 
@@ -161,7 +162,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    imply tremendous operational change, all the more impressive when
    considered the necessary caution when managing Internet critical
    infrastructure, and the context of the adjacent administrative
-   changes involved in root zone management and the (relatively
 
 
 
@@ -170,6 +170,7 @@ Song, et al.              Expires May 20, 2018                  [Page 3]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
+   changes involved in root zone management and the (relatively
    speaking) massive increase in the the number of delegations in the
    root zone itself.
 
@@ -222,7 +223,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 Song, et al.              Expires May 20, 2018                  [Page 4]
-
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -578,7 +579,7 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    cryptographically-verifiable confidence that no owner name in the
    root zone had been changed in the process of producing the Yeti-Root
    zone from the Root Zone, addressing one of the concerns described in
-   Appendix C in a way that can be verified automatically.
+   Appendix D in a way that can be verified automatically.
 
 3.3.  Yeti-Root Zone Distribution
 
@@ -1606,7 +1607,91 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 
 
-Appendix B.  Tools developed for Yeti DNS testbed
+Appendix B.  Yeti-Root Server Priming Response
+
+   Here is the reply of a Yeti root name server to a priming request.
+   The authoritative server runs NSD.
+
+
+   ...
+   ;; Got answer:
+   ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62391
+   ;; flags: qr aa rd; QUERY: 1, ANSWER: 26, AUTHORITY: 0, ADDITIONAL: 7
+   ;; WARNING: recursion requested but not available
+
+
+
+
+Song, et al.              Expires May 18, 2018                 [Page 29]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+   ;; OPT PSEUDOSECTION:
+   ; EDNS: version: 0, flags: do; udp: 1460
+   ;; QUESTION SECTION:
+   ;.                      IN NS
+
+   ;; ANSWER SECTION:
+   .            86400 IN NS bii.dns-lab.net.
+   .            86400 IN NS yeti.bofh.priv.at.
+   .            86400 IN NS yeti.ipv6.ernet.in.
+   .            86400 IN NS yeti.aquaray.com.
+   .            86400 IN NS yeti.jhcloos.net.
+   .            86400 IN NS yeti.mind-dns.nl.
+   .            86400 IN NS dahu1.yeti.eu.org.
+   .            86400 IN NS dahu2.yeti.eu.org.
+   .            86400 IN NS yeti1.ipv6.ernet.in.
+   .            86400 IN NS ns-yeti.bondis.org.
+   .            86400 IN NS yeti-ns.ix.ru.
+   .            86400 IN NS yeti-ns.lab.nic.cl.
+   .            86400 IN NS yeti-ns.tisf.net.
+   .            86400 IN NS yeti-ns.wide.ad.jp.
+   .            86400 IN NS yeti-ns.datev.net.
+   .            86400 IN NS yeti-ns.switch.ch.
+   .            86400 IN NS yeti-ns.as59715.net.
+   .            86400 IN NS yeti-ns1.dns-lab.net.
+   .            86400 IN NS yeti-ns2.dns-lab.net.
+   .            86400 IN NS yeti-ns3.dns-lab.net.
+   .            86400 IN NS xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c.
+   .            86400 IN NS yeti-dns01.dnsworkshop.org.
+   .            86400 IN NS yeti-dns02.dnsworkshop.org.
+   .            86400 IN NS 3f79bb7b435b05321651daefd374cd.yeti-dns.net.
+   .            86400 IN NS ca978112ca1bbdcafac231b39a23dc.yeti-dns.net.
+   .            86400 IN RRSIG NS 8 0 86400 (
+                            20171121050105 20171114050105 26253 .
+                            FUvezvZgKtlLzQx2WKyg+D6dw/pITcbuZhzStZfg+LNa
+                            DjLJ9oGIBTU1BuqTujKHdxQn0DcdFh9QE68EPs+93bZr
+                            VlplkmObj8f0B7zTQgGWBkI/K4Tn6bZ1I7QJ0Zwnk1mS
+                            BmEPkWmvo0kkaTQbcID+tMTodL6wPAgW1AdwQUInfy21
+                            p+31GGm3+SU6SJsgeHOzPUQW+dUVWmdj6uvWCnUkzW9p
+                            +5en4+85jBfEOf+qiyvaQwUUe98xZ1TOiSwYvk5s/qiv
+                            AMjG6nY+xndwJUwhcJAXBVmGgrtbiR8GiGZfGqt748VX
+                            4esLNtD8vdypucffem6n0T0eV1c+7j/eIA== )
+
+   ;; ADDITIONAL SECTION:
+   bii.dns-lab.net.        86400 IN AAAA 240c:f:1:22::6
+   yeti.bofh.priv.at.      86400 IN AAAA 2a01:4f8:161:6106:1::10
+   yeti.ipv6.ernet.in.     86400 IN AAAA 2001:e30:1c1e:1::333
+   yeti.aquaray.com.       86400 IN AAAA 2a02:ec0:200::1
+   yeti.jhcloos.net.       86400 IN AAAA 2001:19f0:5401:1c3::53
+
+
+
+Song, et al.              Expires May 18, 2018                 [Page 30]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+   yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
+
+   ;; Query time: 163 msec
+   ;; SERVER: 2001:4b98:dc2:45:216:3eff:fe4b:8c5b#53
+   ;; WHEN: Tue Nov 14 16:45:37 +08 2017
+   ;; MSG SIZE  rcvd: 1222
+
+
+Appendix C.  Tools developed for Yeti DNS testbed
 
    As part of Yeti DNS testbed, there are some tools developed
    especially to support the live testbed, including YmmV, IPv6
@@ -1622,9 +1707,8 @@ Appendix B.  Tools developed for Yeti DNS testbed
 
 
 Song, et al.              Expires May 20, 2018                 [Page 29]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
 
+Internet-Draft              Yeti DNS Testbed               November 2017
 
    sent to the some Yeti root servers.The Yeti answer that is returned
    will be compared to the IANA answer, and if there is a difference
@@ -1653,7 +1737,16 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    reply additional truncated response just after the normal large
    response.  (https://github.com/songlinjian/DNS_ATR)
 
-Appendix C.  Controversy
+
+
+
+
+Song, et al.              Expires May 18, 2018                 [Page 31]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+Appendix D.  Controversy
 
    The Yeti DNS Project, its infrastructure and the various experiments
    that have been carried out using that infrastructure, have been
@@ -1677,8 +1770,9 @@ Appendix C.  Controversy
 
 
 
+
 Song, et al.              Expires May 20, 2018                 [Page 30]
-
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -1704,13 +1798,20 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    about the decision-making process to participate in those venues and
    review their archives directly.
 
-Appendix D.  About This Document
+Appendix E.  About This Document
 
    This section (and sub-sections) has been included as an aid to
    reviewers of this document, and should be removed prior to
    publication.
 
-D.1.  Venue
+
+
+Song, et al.              Expires May 18, 2018                 [Page 32]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
+E.1.  Venue
 
    The authors propose that this document proceed as an Independent
    Submission, since it documents work that, although relevant to the
@@ -1725,6 +1826,7 @@ D.1.  Venue
    This document is maintained in GitHub at <https://github.com/BII-Lab/
    yeti-testbed-experience>.
 
+
 D.2.  Revision History
 
 
@@ -1734,17 +1836,20 @@ D.2.  Revision History
 
 
 Song, et al.              Expires May 20, 2018                 [Page 31]
-
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-D.2.1.  draft-song-yeti-testbed-experience-00 through -03
+E.2.  Revision History
+
+
+E.2.1.  draft-song-yeti-testbed-experience-00 through -03
 
    Change history is available in the public GitHub repository where
    this document is maintained: <https://github.com/BII-Lab/yeti-
    testbed-experience>.
 
-D.2.2.  draft-song-yeti-testbed-experience-04
+E.2.2.  draft-song-yeti-testbed-experience-04
 
    Substantial editorial review and rearrangement of text by Joe Abley
    at request of BII.
@@ -1769,6 +1874,14 @@ D.2.2.  draft-song-yeti-testbed-experience-04
    indicative level of detail, focus and flow which it is hoped will be
    helpful to reviewers.
 
+
+
+
+Song, et al.              Expires May 18, 2018                 [Page 33]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
 Authors' Addresses
 
    Linjian Song (editor)
@@ -1789,8 +1902,9 @@ Authors' Addresses
 
 
 
+
 Song, et al.              Expires May 20, 2018                 [Page 32]
-
+
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
@@ -1846,3 +1960,4 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 Song, et al.              Expires May 20, 2018                 [Page 33]
+
