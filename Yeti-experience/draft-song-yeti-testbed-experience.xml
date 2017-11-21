@@ -403,15 +403,16 @@
         </artwork>
       </figure>
 
-      <t>To use the Yeti DNS testbed, a recursive resolver must be configured
-        to use the Yeti-Root servers.  On the resolvers, that
-        configuration consists of a list of names and addresses for
-        the Yeti-Root servers (often referred to as a "hints file")
-        that replaces the corresponding hints used for the production
-        Root Server System <xref target="yeti-hints"/>. Resolvers
-        also need to be configured with a DNSSEC trust anchor that
-        corresponds to a KSK used in the Yeti DNS Project, in place
-        of the normal trust anchor set used for the root zone.</t>
+      <t>To use the Yeti DNS testbed, a recursive resolver must be
+	configured to use the Yeti-Root servers.  On the resolvers,
+	that configuration consists of a list of names and addresses
+	for the Yeti-Root servers (often referred to as a "hints
+	file") that replaces the corresponding hints used for the
+	production Root Server System <xref target="yeti-hints"/>.
+	Resolvers also need to be configured with a DNSSEC trust
+	anchor that corresponds to a KSK used in the Yeti DNS
+	Project, in place of the normal trust anchor set used for
+	the root zone.</t>
 
       <t>The need for a Yeti-specific trust anchor in the resolver
         stems from the need to make minimal changes to the root
@@ -421,6 +422,10 @@
         target="yeti-hints"/>. Those changes would be properly
         rejected by any validator using the production Root Server
         System's root zone trust anchor set as bogus.</t>
+
+      <t>Stub resolvers become part of the Yeti DNS Testbed by their
+	use of recursive resolvers that are configured as described
+	above.</t>
 
       <t>The data flow from IANA to stub resolvers through the
         Yeti testbed is illustrated in <xref target="yeti-root"/>
@@ -665,7 +670,7 @@
         </section>
       </section>
 
-      <section title="Yeti-Root Zone Distribution">
+      <section title="Yeti-Root Zone Distribution" anchor="distr">
         <t>Each Yeti DM is configured with a full list of Yeti-Root
           Server addresses to send NOTIFY messages to, and to form
           the basis for an address-based access-control list for
@@ -1047,54 +1052,43 @@
 	over the Yeti root zone. This section will describe some
 	findings and experiences on its operation.</t>
 
-      <section title="IXFR fallback to AXFR">
-	<t>In DNS specifications authoritative name server uses
-	  full zone transfer (AXFR) <xref target="RFC5936"/>,
-	  incremental Zone Transfer (IXFR)<xref target="RFC1995"/>,
-	  and NOTIFY <xref target="RFC1996"/> to achieve coherency
-	  of the zone contents.  IXFR is an optimization for large
-	  DNS zone transfer, which allows server only transfer the
-	  changed portion(s) to client. AXFR fallback usually happens
-	  at server side by simply returning IXFR client the entire
-	  new zone in condition that IXFR server cannot fulfill the
-	  given delta-update request.</t>
+      <section title="Zone Transfers">
+        <t>Yeti-Root Servers are configured to serve the Yeti-Root
+          zone as slaves. Each slave has all DMs configured as
+          masters, providing redundancy in zone sychronisation.</t>
 
-	<t>One experiment in Yeti is designed to test multiple
-	  signers with Multiple ZSKs (MZSK). It is required that
-	  all public ZSKs used by DMs are included in the zone as
-	  a key set; and resolver can validate the message by picking
-	  one key from the key set. From DNSSEC point of view, it
-	  is technically workable.  However, different signers do
-	  produce different RRSIG RR which introduces zone inconsistency
-	  from beginning in this case. In current setting of Yeti
-	  experiment, it is possible that one client does AXFR/IXFR
-	  from one server and later asks for IXFR from another
-	  server.</t>
+	<t>Each DM in the Yeti testbed serves a Yeti-Root zone
+	  which is functionally equivalent but not congruent to
+	  that served by every other DM (see <xref target="distr"/>).
+          The differences include variations in particular fields in
+          the apex SOA RDATA and, more critically, in the RRSIGs
+          for everything other than the apex DNSKEY RRSet, since
+          signatures for all other RRSets are generated using a private
+          key that is only available to the DM serving its particular
+          variant of the zone (see <xref target="transformation"/>,
+          <xref target="trans2"/>).</t>
 
-        <t>It is observed that when the IXFR client switched from
-	  one IXFR server to another, it received a IXFR response
-	  deleting RRSIG record that does not exist. One IXFR client
-	  running NSD 4.1.7 rejected IXFR response, made a log
-	  indicating a bad data and then asked for full zone transfer.
-	  Luckily, Yeti root zone is relatively small (691K), so
-	  the fallback to AXFR does not cause significant performance
-	  degeneration.  But if operator does host big zone with
-	  MZSK model, it will cause problem based on current IXFR.</t>
-
-        <t>Another observation is that another IXFR client running
-	  Knot 2.1.0 in similar situation just accepts the IXFR
-	  response, ignores the differences and generates a merged
-	  zone with two RRSIG RRs. It not only produces larger
-	  response, but also causes DNSSEC failure when a new zone
-	  is generated given that old RRSIG is the signature of old
-	  zone RRs.</t>
-
-	<t>One possible solutions is asking for development of
-	  RRSIG-aware IXFR format in which the RRSIG is treated as
-	  a special and RRSIG RR should always be transfered in
-	  full (like it does in AXFR). Another solution is to detect
-	  the issue, and to fall back to AXFR automatically in the
-	  event of an IXFR incoherence error. NSD does it.</t>
+        <t>Incremental Zone Transfer (IXFR), as described in
+	  <xref target="RFC1995"/>, is a viable mechanism to use
+	  for zone synchronisation between any Yeti-Root server and
+	  a consistent, single DM. However, if that Yeti-Root server
+	  ever selected a different DM, IXFR would no longer be a
+	  safe mechanism; structural changes between the incongruent
+	  zones on different DMs would not be included in any
+	  transferred delta and the result would be a zone that was
+	  not internally self-consistent.  For this reason the first
+	  transfer after a change of DM would require AXFR, not
+	  IXFR.</t>
+  
+        <t>None of the DNS software in use on Yeti-Root Servers
+	  supports this mixture of IXFR/AXFR according to the master
+	  server in use. This is unsurprising, given that the
+	  environment described above in the Yeti-Root system is
+	  idiosyncratic; conventional zone transfer graphs involve
+	  zones that are congruent between all nodes.  For this
+	  reason, all Yeti-Root servers are configured to use AXFR
+	  at all times, and never IXFR, to ensure that zones being
+	  served are internally self-consistent.</t>
       </section>
 
       <section title="Latency of Root Zone update">
