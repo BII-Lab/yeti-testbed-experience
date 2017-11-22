@@ -543,7 +543,7 @@
             Yeti-Root Zone. This transformation is carried out
             autonomously on each Yeti DNS Project DM. Each DM carries
             an authentic copy of the current set of Yeti KSK and
-            ZSK key pairs, synchronised between all DMs (see <xref
+            ZSK key pairs, synchronized between all DMs (see <xref
             target="synch"/>).</t>
 
           <t>
@@ -701,7 +701,7 @@
         <t>A repository of all service metadata involved in the
           operation of each DM was implemented as a separate git
           repository hosted at github.com, since this provided
-          particpants with a simple, transparent and familiar
+          participants with a simple, transparent and familiar
           mechanism.  Requests to change the service metadata for
           a DM are submitted as pull requests from a fork of the
           corresponding repository; each DM operator reviews pull
@@ -721,9 +721,9 @@
           message size using UDP transport without EDNS(0) <xref
           target="RFC6891"/>.</t>
 
-        <t>Yeti-Root Servers do not use this optimisation, but rather
+        <t>Yeti-Root Servers do not use this optimization, but rather
           use free-form nameserver names chosen by their respective
-          operators -- in other words, no attempt is made to minimise
+          operators -- in other words, no attempt is made to minimize
           the size of the priming response through the use of label
           compression. This approach aims to challenge the need for
           a minimally-sized priming response in a modern DNS ecosystem
@@ -740,7 +740,7 @@
           server. Yeti-Root Servers running NSD return
           a fully-populated additional section.</t>
 
-        <t>Various approaches to normalise the composition of the
+        <t>Various approaches to normalize the composition of the
           priming response were considered, including:
 
           <list style="symbols">
@@ -878,6 +878,26 @@
         </t>
       </section>
 
+      <section title="Yeti resolvers and Experimental Traffic">
+        <t>In Yeti testbed, volunteers are called for participation. 
+          As described, resolvers who are willing to join Yeti or become 
+          Yeti resolvers must be configured to use the Yeti-Root servers.
+          It was reported in 2016 Yeti Seoul workshop that the number of 
+          ::/128 prefix, ::/64 prefix and ::/32 prefix observed sending 
+          queries to Yeti root are 2391, 1509 and 716 respectively. 
+          The active IPv6 prefixes are listed in appendix xx. 
+        </t>
+        <t>
+          To introduce desired volume of experiment traffic, Yeti Project 
+          adopts two alternative ways to increase the experimental traffic 
+          in the Yeti testbed and check the functionality of Yeti root system. 
+          One approach is to mirror the real DNS query to IANA root system by 
+          off-path method and replay it into Yeti testbed; this is implemented 
+          by some Yeti root server operators.  Another approach is to use 
+          traffic generating tool such as RIPE Atlas probes to generate 
+          specific queries against Yeti servers.  
+        </t>
+      </section>
       <section title="Traffic Capture and Analysis">
         <t>Query and response traffic capture is available in the
           testbed in both Yeti resolvers and Yeti-Root servers in
@@ -1055,7 +1075,7 @@
       <section title="Zone Transfers">
         <t>Yeti-Root Servers are configured to serve the Yeti-Root
           zone as slaves. Each slave has all DMs configured as
-          masters, providing redundancy in zone sychronisation.</t>
+          masters, providing redundancy in zone synchronization.</t>
 
 	<t>Each DM in the Yeti testbed serves a Yeti-Root zone
 	  which is functionally equivalent but not congruent to
@@ -1070,7 +1090,7 @@
 
         <t>Incremental Zone Transfer (IXFR), as described in
 	  <xref target="RFC1995"/>, is a viable mechanism to use
-	  for zone synchronisation between any Yeti-Root server and
+	  for zone synchronization between any Yeti-Root server and
 	  a consistent, single DM. However, if that Yeti-Root server
 	  ever selected a different DM, IXFR would no longer be a
 	  safe mechanism; structural changes between the incongruent
@@ -1442,22 +1462,50 @@
   </section>
 
   <section title="Conclusion">
+
+
     <t>Yeti DNS is designed as a live root testbed. It serves the
       root zone published by the IANA with only those structural
       modifications necessary to ensure its function as a testbed
-      system. After 2-years operation, Yeti DNS consists of 3
-      Distribution Master (DM), 25 root servers run by 16 operators,
-      and around 3 thousands resolvers who contributed experimental
-      traffic to Yeti DNS.</t>
+      system. There are a list of questions and issues in the beginning 
+      of Yeti DNS testbed was built up. The experience of Yeti DNS did 
+      not answered all the issues, but it did give a clue from running 
+      such testbed with structural changes to the root server system's 
+      infrastructure.</t>
 
-    <t>The topics that the Yeti testbed was built to address includes
+
+      <t>
+      At the time of writing, Yeti DNS has been running in 
+      IPv6-only environment for two years. It is composed with 3 root 
+      zone Signers and 25 root servers. ZSK is increased to 2048 bits 
+      long and the KSK were rolled three times to test against RFC5011. 
+      In addition, more inherent dynamics was observed due to its feature 
+      as a testbed. Though there are some issues and bug reported, 
+      we did not discover any serious issues blocking Yeti down. The credit 
+      should be given to the redundancy and diversity of DNS system, which 
+      can be extended in an alternative way. It shows the ability to run 
+      new experiments and ideas without breaking current production 
+      system. It also shows a ability of Yeti-style locally signed 
+      root zone for pervasively distribution of signed root zone. 
+      </t>
+
+      <t>
+      As to the specific issues shown in Yeti DNS more study should be done
+      in these area. For example, evidence shows that IPv6 fragmentation seems 
+      not gonna to work, especially for DNS. It will be urgent when more and 
+      more networks and applications are mitigating from IPv4 to Dual-stack 
+      network,and than IPv6-only. 
+      </t>
+
+<!--
+      <t>Yeti testbed was built to address includes
       IPv6-only operation, DNSSEC key rollover, renumbering issues,
       scalability issues and multiple zone file signers etc. Most
       of them are not well studied before Yeti DNS was setup. Yeti
       did not answered all the issues, but it did give a clue from
       experience of running such testbed with structural changes
       to the root server system's infrastructure. As a conclusion,
-      some experiences and recommendations are listed below.
+      some experiences and recommendations are listed below.</t>
 
       <list style="numbers">
         <t>The first one is that IPv6-only Root is operational feasible
@@ -1508,6 +1556,8 @@
 	  BIND and Unbound. Resource lists like hint file and KSK
 	  should be fixed and available as well.</t>
       </list></t>
+-->
+
     </section>
 
     <section title="IANA Considerations">
@@ -1937,6 +1987,51 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
       </figure>
     </section>
     
+    <section title = "Active IPv6 prefixes in Yeti DNS testbed">
+
+       <texttable>
+          <ttcol>Prefix</ttcol><ttcol>AS operator</ttcol><ttcol>Location</ttcol>
+
+          <c>240c::/28</c><c>BII</c><c>CN</c>
+
+          <c>2001:6d0:6d06::/48</c><c>MSK-IX</c><c>RU</c>
+
+          <c>2001:1488::/32</c><c>CZ.NIC</c><c>CZ</c>
+
+          <c>2001:620::/32</c><c>SWITCH</c><c>CH</c>
+
+          <c>2001:470::/32</c><c>Hurricane Electric, Inc.</c><c>US</c>
+
+          <c>2001:0DA8:0202::/48</c><c>BUPT6-CERNET2</c><c>CN</c>
+
+          <c>2001:19f0:6c00::/38</c><c>Choopa, LLC</c><c>US</c>
+
+          <c>2001:da8:205::/48</c><c>BJTU6-CERNET2</c><c>CN</c>
+
+          <c>2001:62a::/31</c><c>Vienna University Computer Center</c><c>AT</c>
+
+          <c>2a02:2478::/32</c><c>Profitbricks GmbH</c><c>DE</c>
+
+          <c>2001:1398:4::/48</c><c>BII</c><c>CN</c>
+
+          <c>240c::/28</c><c>NIC Chile</c><c>CL</c>
+
+          <c>2001:4490:dc4c::/46</c><c>NIB (National Internet Backbone)</c><c>IN</c>
+
+          <c>2a02:aa8:0:2000::/52</c><c>T-Systems-Eltec</c><c>ES</c>
+
+          <c>2a03:b240::/32</c><c>Netskin GmbH</c><c>CH</c>
+
+          <c>2801:1a0::/42</c><c>Universidad de Ibague</c><c>CO</c>
+
+          <c>2a00:1cc8::/40</c><c>ICT Valle Umbra s.r.l.</c><c>IT</c>
+
+          <c>2a02:cdc0::/29</c><c>ORG-CdSB1-RIPE</c><c>IT</c>
+
+        </texttable>
+
+    </section>
+
     <section title="Tools developed for Yeti DNS testbed" anchor="Yeti_tools">
 
     <t>As part of Yeti DNS testbed, there are some tools developed 
@@ -1957,9 +2052,9 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
     </t>
 
     <t>
-      PcapParser is a IPv6 defrager which is a module used by YmmV. As we 
-      described in section xxx, we need a DNS capture tool to handle large 
-      response. IPv6 defrager is a program aiming at defragment ip fragments 
+      PcapParser is a IPv6 defrager which is a module used by YmmV. We 
+      need a DNS capture tool to handle large response. IPv6 defrager 
+      is a program aiming at defragment ip fragments 
       and resembling tcp of DNS packages in IPv6 environment. Now this 
       program only reads PCAP file as input and output a PCAP file. 
       (https://github.com/RunxiaWan/PcapParser)</t>
