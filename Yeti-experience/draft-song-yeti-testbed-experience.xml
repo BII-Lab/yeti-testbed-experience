@@ -923,22 +923,40 @@
       <t>The following sections provide commentary on the operation
         and impact analyses of the Yeti-DNS Testbed described in
         <xref target="testbed"/>.  More detailed descriptions of
-        observed phenomena are available in Yeti DNS mailing list
-        archives and on the Yeti DNS blog.</t>
+	observed phenomena are available in Yeti DNS mailing list
+	archives <eref
+	target="http://lists.yeti-dns.org/pipermail/discuss/"/> and
+	on the Yeti DNS blog <eref
+	target="https://yeti-dns.org/blog.html"/>.</t>
 
-      <section title="IPv6-only root operation">
-	<t>Yeti DNS testbed was designed to explore whether it can
-	  survive in pure IPv6 environment or not. So every root
-	  server required to run only with non-EUI64 IPv6 addressed.
-	  There are mainly two questions in designers' mind when
-	  constructing this testbed: 1) is there any gap between
-	  IPv6-only Root and IPv4 Root to provide full function of
-	  root server. 2) is it possible that IPv6-only root can
-	  serve the Internet, even part of which still only speak
-	  IPv4.  There are some findings and impacts which IPv6-only
-	  property bring to Root system.</t>
+      <section title="Viability of IPv6-Only Operation">
+	<t>All Yeti-Root servers were deployed with IPv6 connectivity,
+	  and no IPv4 addresses for any Yeti-Root server were made
+	  available (e.g. in the Yeti hints file). This implementation
+          decision constrained the Yeti-Root system to be v6-only.</t>
 
-        <section title="Impact of IPv6 fragmentation">
+	<t>DNS implementations are generally adept at using both
+	  IPv4 and IPv6 when both are available. Servers that cannot
+	  be reliably reached over one protocol might be better
+	  queried over the other, to the benefit of end-users in
+	  the common case where DNS resolution is on the critical
+	  path for end-users' perception of performance. However,
+	  this optimisation also means that systemic problems with
+	  one protocol can be masked by the other. By forcing all
+	  traffic to be carried over IPv6, the Yeti DNS testbed
+	  aimed to expose any such problems and make them easier
+	  to identify and understand. Several examples of IPv6-specific
+	  phenomena observed during the operation of the testbed
+	  are described in the sections that follow.</t>
+
+	<t>Although the Yeti-Root servers themselves were only
+	  reachable using IPv6, real-world end-users often have no
+	  IPv6 connectivity. The testbed was also able to explore
+	  the degree to which IPv6-only Yeti-Root servers were able
+	  to serve single-stack, IPv4-only end-user populations
+	  through the use of dual-stack Yeti resolvers.</t>
+
+        <section title="IPv6 Fragmentation">
 	  <t>In the Root Server System, structural changes with the
 	    potential to increase response sizes (and hence
 	    fragmentation, fallback to TCP transport or both) have
