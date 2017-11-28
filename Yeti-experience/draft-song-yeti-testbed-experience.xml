@@ -464,7 +464,7 @@
         </artwork>
       </figure>
 
-      <section title="Root Zone Retrieval">
+      <section title="Root Zone Retrieval" anchor="retrieval">
         <t>The Yeti-Root Zone is distributed within the
           Yeti DNS testbed through a set of internal master
           servers that are referred to as Distribution
@@ -1055,27 +1055,30 @@
 	</section>
       </section>
 
-      <section title="Experience on Multiple Signers">
-	<t>In <xref target="testbed"/> it is introduced how three
-	  Distributor Masters (DM) works and how they share the
-	  control over the Yeti root zone. This section will describe
-	  some findings and experiences on its operation.</t>
+      <section title="Zone Distribution">
+	<t>The Yeti DNS testbed makes use of multiple DMs to
+	  distribute the Yeti-Root zone, an approach that would
+	  allow the number of Yeti-Root servers to scale to a higher
+	  number than could be supported by a single distribution
+	  source and which provided redundancy. The use of multiple
+	  DMs introduced some operational challenges, however, which
+	  are described in the following sections.</t>
 
         <section title="Zone Transfers">
-          <t>Yeti-Root Servers are configured to serve the Yeti-Root
-            zone as slaves. Each slave has all DMs configured as
-            masters, providing redundancy in zone synchronization.</t>
+          <t>Yeti-Root Servers were configured to serve the Yeti-Root
+            zone as slaves. Each slave had all DMs configured as
+            masters, providing redundancy in zone synchronisation.</t>
 
-	  <t>Each DM in the Yeti testbed serves a Yeti-Root zone
+	  <t>Each DM in the Yeti testbed served a Yeti-Root zone
 	    which is functionally equivalent but not congruent to
 	    that served by every other DM (see <xref target="distr"/>).
-            The differences include variations in particular fields in
-            the apex SOA RDATA and, more critically, in the RRSIGs
-            for everything other than the apex DNSKEY RRSet, since
-            signatures for all other RRSets are generated using a private
-            key that is only available to the DM serving its particular
-            variant of the zone (see <xref target="transformation"/>,
-            <xref target="trans2"/>).</t>
+	    The differences included variations in the SOA.MNAME
+	    field and, more critically, in the RRSIGs for everything
+	    other than the apex DNSKEY RRSet, since signatures for
+	    all other RRSets are generated using a private key that
+	    is only available to the DM serving its particular
+	    variant of the zone (see <xref target="transformation"/>,
+	    <xref target="trans2"/>).</t>
 
           <t>Incremental Zone Transfer (IXFR), as described in
 	    <xref target="RFC1995"/>, is a viable mechanism to use
@@ -1100,33 +1103,42 @@
 	    served are internally self-consistent.</t>
         </section>
 
-        <section title="Latency of Root Zone update">
-	  <t>Regarding the timing of Root Zone fetch and soa update,
-	    Each Yeti DM checks the root zone serial hourly (in 20
-	    minutes interval) to see if the IANA root zone has
-	    changed.  A new version of the Yeti root zone is generated
-	    if the IANA root zone has changed. In this model, root
-	    servers is expected pull the zone from one DM for each
-	    new update, because 20 min is expected to be enough for
-	    root zone publication.  But it is not the true in Yeti
-	    testbed in a monitoring test.</t>
+        <section title="Delays in Yeti-Root Zone Distribution">
+          <t>Each Yeti DM polled the Root Server System for a new revision
+            of the root zone on an interleaved schedule, as described in
+	    <xref target="retrieval"/>. Consequently, different DMs
+	    were expected to retrieve each revision of the root
+	    zone, and make a corresponding revision of the Yeti-Root
+	    zone available, at different times. The availability
+	    of a new revision of the Yeti-Root zone on the first
+	    DM would typically precede that of the last by 40
+	    minutes.</t>
 
-	  <t>It once was reported that one server running on Bundy
-	    1.2.0 on FreeBSD 10.2-RELEASE had some bugs on SOA update
-	    with more than 10 hours delay.  Besides that server, half
-	    of Yeti servers has more than 20 min delay, some even
-	    with 40 min delay. One possible reason may be that the
-	    server failed to pull the Zone on one DM due to network
-	    failure (for example IPv6 fragmentation issue introduce
-	    previously) and turn to another DM which introduces the
-	    delay. Another reason may be the NOTIFY was lost. A last
-	    possible reason is that the root name server had a wrong
-	    IP address in the ACL for NOTIFY acceptation. It is also
-	    observed that even in the same 20-minutes time frame, not
-	    all servers pull from a single DM. It is possible that
-	    some servers not use FCFS strategy to pull the zone after
-	    they receive the notify.  They may pull the zone based
-	    on other metrics like the rtt, or manual preference.</t>
+	  <t>It might be expected given this distribution mechanism
+	    that the maximum latency between the publication of a
+	    new revision of the root zone and the availability of the
+            corresponding Yeti-Root zone on any Yeti-Root server would
+            be 20 minutes, since in normal operation at least one DM
+            should serve that Yeti-Zone within 20 minutes of root zone
+            publication. In practice, this was not observed.</t>
+
+          <t>In one case a Yeti-Root server running Bundy 1.2.0 on
+	    FreeBSD 10.2-RELEASE was found to lag root zone publication
+	    by as much as ten hours, which upon investigation was
+	    due to software defects that were subsequently
+	    corrected.</t>
+
+          <t>More generally, Yeti-Root servers were observed routinely
+            to lag root zone publication by more than 20 minutes, and
+	    relatively often by more than 40 minutes. Whilst in
+	    some cases this might be assumed to be a result of
+	    connectivity problems, perhaps suppressing the delivery
+	    of NOTIFY messages, it was also observed that Yeti-Root
+	    servers receiving a NOTIFY from one DM would often send
+	    SOA queries and AXFR requests to a different DM. If
+	    that DM was not yet serving the new revision of the
+	    Yeti-Root zone, a delay in updating the Yeti-Root server
+            would naturally result.</t>
         </section>
       </section>
 
