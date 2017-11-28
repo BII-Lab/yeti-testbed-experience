@@ -133,9 +133,9 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
    7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
-   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  28
+   Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  27
    Appendix B.  Yeti-Root Server Priming Response  . . . . . . . . .  29
-   Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed . . . . . .  31
+   Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed . . . . . .  30
    Appendix D.  Tools developed for Yeti DNS testbed . . . . . . . .  31
    Appendix E.  Controversy  . . . . . . . . . . . . . . . . . . . .  32
    Appendix F.  About This Document  . . . . . . . . . . . . . . . .  33
@@ -1436,10 +1436,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               RFC 5890, DOI 10.17487/RFC5890, August 2010,
               <https://www.rfc-editor.org/info/rfc5890>.
 
-   [RFC5936]  Lewis, E. and A. Hoenes, Ed., "DNS Zone Transfer Protocol
-              (AXFR)", RFC 5936, DOI 10.17487/RFC5936, June 2010,
-              <https://www.rfc-editor.org/info/rfc5936>.
-
    [RFC6219]  Li, X., Bao, C., Chen, M., Zhang, H., and J. Wu, "The
               China Education and Research Network (CERNET) IVI
               Translation Design and Deployment for the IPv4/IPv6
@@ -1447,6 +1443,10 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               DOI 10.17487/RFC6219, May 2011,
               <https://www.rfc-editor.org/info/rfc6219>.
 
+   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
+              for DNS (EDNS(0))", STD 75, RFC 6891,
+              DOI 10.17487/RFC6891, April 2013,
+              <https://www.rfc-editor.org/info/rfc6891>.
 
 
 
@@ -1457,11 +1457,6 @@ Song, et al.              Expires June 1, 2018                 [Page 26]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-   [RFC6891]  Damas, J., Graff, M., and P. Vixie, "Extension Mechanisms
-              for DNS (EDNS(0))", STD 75, RFC 6891,
-              DOI 10.17487/RFC6891, April 2013,
-              <https://www.rfc-editor.org/info/rfc6891>.
 
    [RFC7720]  Blanchet, M. and L-J. Liman, "DNS Root Name Service
               Protocol and Deployment Requirements", BCP 40, RFC 7720,
@@ -1504,7 +1499,12 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               oarc.net/event/24/session/10/contribution/10/material/
               slides/0.pdf>.
 
+Appendix A.  Yeti-Root Hints File
 
+   The following hints file (complete and accurate at the time of
+   writing) causes a DNS resolver to use the Yeti DNS testbed in place
+   of the production Root Server System and hence participate in
+   experiments running on the testbed.
 
 
 
@@ -1513,13 +1513,6 @@ Song, et al.              Expires June 1, 2018                 [Page 27]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-Appendix A.  Yeti-Root Hints File
-
-   The following hints file (complete and accurate at the time of
-   writing) causes a DNS resolver to use the Yeti DNS testbed in place
-   of the production Root Server System and hence participate in
-   experiments running on the testbed.
 
    Note that some lines have been wrapped in the text that follows in
    order to fit within the production constraints of this document.
@@ -1562,6 +1555,13 @@ Appendix A.  Yeti-Root Hints File
    .                     3600000  IN   NS     yeti-ns.lab.nic.cl
    yeti-ns.lab.nic.cl    3600000  IN   AAAA   2001:1398:1:21::8001
    .                     3600000  IN   NS     yeti-ns1.dns-lab.net
+   yeti-ns1.dns-lab.net  3600000  IN   AAAA   2001:da8:a3:a027::6
+   .                     3600000  IN   NS     yeti-ns2.dns-lab.net
+   yeti-ns2.dns-lab.net  3600000  IN   AAAA   2001:da8:268:4200::6
+   .                     3600000  IN   NS     yeti-ns3.dns-lab.net
+   yeti-ns3.dns-lab.net  3600000  IN   AAAA   2400:a980:30ff::6
+   .                     3600000  IN   NS     \
+                           ca978112ca1bbdcafac231b39a23dc.yeti-dns.net
 
 
 
@@ -1570,13 +1570,6 @@ Song, et al.              Expires June 1, 2018                 [Page 28]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-   yeti-ns1.dns-lab.net  3600000  IN   AAAA   2001:da8:a3:a027::6
-   .                     3600000  IN   NS     yeti-ns2.dns-lab.net
-   yeti-ns2.dns-lab.net  3600000  IN   AAAA   2001:da8:268:4200::6
-   .                     3600000  IN   NS     yeti-ns3.dns-lab.net
-   yeti-ns3.dns-lab.net  3600000  IN   AAAA   2400:a980:30ff::6
-   .                     3600000  IN   NS     \
-                           ca978112ca1bbdcafac231b39a23dc.yeti-dns.net
    ca978112ca1bbdcafac231b39a23dc.yeti-dns.net \
                          3600000  IN   AAAA   2c0f:f530::6
    .                     3600000  IN   NS     \
@@ -1618,6 +1611,13 @@ Appendix B.  Yeti-Root Server Priming Response
    ;.                      IN NS
 
    ;; ANSWER SECTION:
+   .            86400 IN NS bii.dns-lab.net.
+   .            86400 IN NS yeti.bofh.priv.at.
+   .            86400 IN NS yeti.ipv6.ernet.in.
+   .            86400 IN NS yeti.aquaray.com.
+   .            86400 IN NS yeti.jhcloos.net.
+   .            86400 IN NS yeti.mind-dns.nl.
+   .            86400 IN NS dahu1.yeti.eu.org.
 
 
 
@@ -1626,13 +1626,6 @@ Song, et al.              Expires June 1, 2018                 [Page 29]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-   .            86400 IN NS bii.dns-lab.net.
-   .            86400 IN NS yeti.bofh.priv.at.
-   .            86400 IN NS yeti.ipv6.ernet.in.
-   .            86400 IN NS yeti.aquaray.com.
-   .            86400 IN NS yeti.jhcloos.net.
-   .            86400 IN NS yeti.mind-dns.nl.
-   .            86400 IN NS dahu1.yeti.eu.org.
    .            86400 IN NS dahu2.yeti.eu.org.
    .            86400 IN NS yeti1.ipv6.ernet.in.
    .            86400 IN NS ns-yeti.bondis.org.
@@ -1676,13 +1669,18 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    ;; MSG SIZE  rcvd: 1222
 
 
+Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed
+
+
+
+
+
+
 
 Song, et al.              Expires June 1, 2018                 [Page 30]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed
 
    +----------------------+---------------------------------+----------+
    | Prefix               | Originator                      | Location |
@@ -1730,6 +1728,8 @@ Appendix D.  Tools developed for Yeti DNS testbed
    need a DNS capture tool to handle large response.  IPv6 defrager is a
    program aiming at defragment ip fragments and resembling tcp of DNS
    packages in IPv6 environment.  Now this program only reads PCAP file
+   as input and output a PCAP file.  (https://github.com/RunxiaWan/
+   PcapParser)
 
 
 
@@ -1737,9 +1737,6 @@ Song, et al.              Expires June 1, 2018                 [Page 31]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-   as input and output a PCAP file.  (https://github.com/RunxiaWan/
-   PcapParser)
 
    DNS layer fragmentation is a code which implements proxies for DNS
    application-level fragmentation, based on a IETF draft DNS fragments
@@ -1785,6 +1782,9 @@ Appendix E.  Controversy
    operating a Root Server.  The coordinators of the Yeti-Root project
    observe that their mandate is entirely technical and has no ambition
    to influence policy directly; they do hope, however, that technical
+   findings from the Yeti DNS Project might act as a useful resource for
+   the wider technical community.
+
 
 
 
@@ -1793,9 +1793,6 @@ Song, et al.              Expires June 1, 2018                 [Page 32]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-   findings from the Yeti DNS Project might act as a useful resource for
-   the wider technical community.
 
    Finally, some concern has been expressed about the possible
    applications of the Yeti DNS Project to the governments of countries
@@ -1842,6 +1839,9 @@ F.2.2.  draft-song-yeti-testbed-experience-04
    Substantial editorial review and rearrangement of text by Joe Abley
    at request of BII.
 
+   Added what is intended to be a balanced assessment of the controversy
+   that has arisen around the Yeti DNS Project, at the request of the
+   Independent Submissions Editorial Board.
 
 
 
@@ -1849,10 +1849,6 @@ Song, et al.              Expires June 1, 2018                 [Page 33]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-   Added what is intended to be a balanced assessment of the controversy
-   that has arisen around the Yeti DNS Project, at the request of the
-   Independent Submissions Editorial Board.
 
    Changed the focus of the document from the description of individual
    experiments on a Root-like testbed to the construction and
@@ -1892,20 +1888,6 @@ Authors' Addresses
    URI:   http://www.biigroup.com/
 
 
-
-
-
-
-
-
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 34]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    Paul Vixie (editor)
    TISF
    11400 La Honda Road
@@ -1914,6 +1896,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    Email: vixie@tisf.net
    URI:   http://www.redbarn.org/
+
+
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 34]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
 
 
    Akira Kato (editor)
@@ -1932,6 +1922,16 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    NL
 
    Email: shane@time-travellers.org
+
+
+
+
+
+
+
+
+
+
 
 
 
