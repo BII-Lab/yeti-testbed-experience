@@ -878,25 +878,27 @@
         </t>
       </section>
 
-      <section title="Yeti Resolvers and Experimental Traffic">
-	<t>In Yeti testbed, volunteers are called for participation.
-	  As described, resolvers who are willing to join Yeti or
-	  become Yeti resolvers must be configured to use the
-	  Yeti-Root servers.  It was reported in 2016 Yeti Seoul
-	  workshop that the number of ::/128 prefix, ::/64 prefix
-	  and ::/32 prefix observed sending queries to Yeti root
-	  are 2391, 1509 and 716 respectively.  The active IPv6
-	  prefixes are listed in <xref target="activev6"/>.</t>
+      <section title="Experimental Traffic">
+        <t>For the Yeti DNS Testbed to be useful as a platform for
+	  experimentation, it needs to carry statistically
+	  representative traffic. Several approaches have been taken
+	  to load the system with traffic, including both real-world
+	  traffic triggered by end-users and synthetic traffic.</t>
 
-	<t>To introduce desired volume of experiment traffic, Yeti
-	  Project adopts two alternative ways to increase the
-	  experimental traffic in the Yeti testbed and check the
-	  functionality of Yeti root system.  One approach is to
-	  mirror the real DNS query to IANA root system by off-path
-	  method and replay it into Yeti testbed; this is implemented
-	  by some Yeti root server operators.  Another approach is
-	  to use traffic generating tool such as RIPE Atlas probes
-	  to generate specific queries against Yeti servers.</t>
+	<t>Resolvers that have been explicitly configured to
+	  participate in the testbed, as described in <xref
+	  target="testbed"/>, are a source of real-world, end-user
+	  traffic. Sustained levels of traffic have been observed
+          from a variety of sources, as summarised in
+          <xref target="activev6"/>.</t>
+
+        <t>Synthetic traffic has been introduced to the system from
+          time to time in order to increase traffic loads. Approaches
+          include the use of distributed measurement platforms such
+          as RIPE ATLAS to send DNS queries to Yeti-Root servers,
+          and the capture of traffic sent from non-Yeti resolvers
+          to the Root Server System which was subsequently modified
+          and replayed towards Yeti-Root servers.</t>
       </section>
 
       <section title="Traffic Capture and Analysis">
