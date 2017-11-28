@@ -122,16 +122,16 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    4.  Operational Experience with Yeti DNS Testbed  . . . . . . . .  16
      4.1.  Viability of IPv6-Only Operation  . . . . . . . . . . . .  16
        4.1.1.  IPv6 Fragmentation  . . . . . . . . . . . . . . . . .  16
-       4.1.2.  How IPv6-only Root serve IPv4 users?  . . . . . . . .  18
+       4.1.2.  Serving IPv4-only End-Users . . . . . . . . . . . . .  18
      4.2.  Experience on Multiple Signers  . . . . . . . . . . . . .  18
        4.2.1.  Zone Transfers  . . . . . . . . . . . . . . . . . . .  18
        4.2.2.  Latency of Root Zone update . . . . . . . . . . . . .  19
-     4.3.  DNSSEC experiences in Yeti DNS  . . . . . . . . . . . . .  20
+     4.3.  DNSSEC experiences in Yeti DNS  . . . . . . . . . . . . .  19
      4.4.  Experience on capturing big DNS Messages  . . . . . . . .  21
      4.5.  Automated Hints File Maintenance  . . . . . . . . . . . .  22
    5.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  23
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
-   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  24
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+   7.  Acknowledgments . . . . . . . . . . . . . . . . . . . . . . .  23
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
    Appendix A.  Yeti-Root Hints File . . . . . . . . . . . . . . . .  27
    Appendix B.  Yeti-Root Server Priming Response  . . . . . . . . .  29
@@ -954,35 +954,27 @@ Song, et al.              Expires June 1, 2018                 [Page 17]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-4.1.2.  How IPv6-only Root serve IPv4 users?
+4.1.2.  Serving IPv4-only End-Users
 
-   Although It is straightforward to setup the IPv6-only root, but it is
-   unknown if it is practical for IPv6-only root to serve the production
-   networks which are still largely speak only in IPv4.  In Yeti DNS
-   Testbed it is demonstrated that IPv6-only root can serve the Internet
-   in a incremental approach, even for IPv4 network and users.
+   Yeti resolvers have been successfully used by real-world end-users
+   for general name resolution within a number of participant
+   organisations, including resolution of names to IPv4 addresses and
+   resolution by IPv4-only end-user devices.
 
-   It is intuitive to propose to update the resolver to dual-stack and
-   configured it with hint file including IPv6 glues.  The dual-stack
-   resolver connects IPv6 root with IPv4-only or dual-stack end users.
-   However, when we approached some partners who agreed to try IPv6-only
-   root in experimental network, they normally do not want to give up
-   the IPv4 root for redundancy reason due to unstable IPv6 network
-   performance.  So it is adopted in campuses that one IPv4 resolver
-   address (using current IPv4 addresses of A-M root) and one IPv6
-   resolver address (using Yeti root) are configured for their customer
-   via DHCPv4 and DHCPv6 respectively.  The end users can choose which
-   DNS they use (normally IPv6 first or using Happy eyeballs).  Ideally,
-   the end users DNS traffic will largely be sent to the resolver
-   consuming IPv6-only root when IPv6 is widely deployed.
+   Some participants, recognising the operational importance of
+   reliability in resolver infrastructure and concerned about the
+   stability of their IPv6 connectivity, chose to deploy Yeti resolvers
+   in parallel to conventional resolvers, making both available to end-
+   users.  While the viability of this approach provides a useful data
+   point, end-users using Yeti resolvers exclusively provided a better
+   opportunity to identify and understand any failures in the Yeti DNS
+   testbed infrastructure.
 
-   For resolvers who resident in IPv4 only networks, they can forward
-   the query to dual stack resolvers they have trust in.  Or they can
-   configure the resolver with a hint file containing a set of IPv4
-   addresses which are mapped to IPv6 addresses of root in a IPv4/IPv6
-   translation devices.  The query will be routed to the translation
-   devices and forward in IPv6 to IPv6-only root.  It is designed and
-   going to be implemented in CERNET2 using IVI [RFC6219] technology.
+   Resolvers deployed in IPv4-only environments were able to join the
+   Yeti DNS testbed by way of upstream, dual-stack Yeti resolvers, or in
+   one case, in CERNET2, by assigning IPv4 addresses to Yeti-Root
+   servers and mapping them in dual-stack IVI translation devices
+   [RFC6219].
 
 4.2.  Experience on Multiple Signers
 
@@ -1002,14 +994,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    particular fields in the apex SOA RDATA and, more critically, in the
    RRSIGs for everything other than the apex DNSKEY RRSet, since
    signatures for all other RRSets are generated using a private key
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 18]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    that is only available to the DM serving its particular variant of
    the zone (see Section 3.2, Section 3.2.2).
 
@@ -1018,6 +1002,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    Root server and a consistent, single DM.  However, if that Yeti-Root
    server ever selected a different DM, IXFR would no longer be a safe
    mechanism; structural changes between the incongruent zones on
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 18]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    different DMs would not be included in any transferred delta and the
    result would be a zone that was not internally self-consistent.  For
    this reason the first transfer after a change of DM would require
@@ -1057,6 +1049,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    They may pull the zone based on other metrics like the rtt, or manual
    preference.
 
+4.3.  DNSSEC experiences in Yeti DNS
+
+   The Root Zone KSK is expected to undergo a carefully-orchestrated
+   rollover as described in [ICANN2016].  ICANN has commissioned various
+   tests and has published an external test plan [ICANN2017].  After
+   some studies and data analysis, ICANN announced a postponing of the
+   KSK rollover at 27th September 2017.
+
 
 
 
@@ -1065,14 +1065,6 @@ Song, et al.              Expires June 1, 2018                 [Page 19]
 
 Internet-Draft              Yeti DNS Testbed               November 2017
 
-
-4.3.  DNSSEC experiences in Yeti DNS
-
-   The Root Zone KSK is expected to undergo a carefully-orchestrated
-   rollover as described in [ICANN2016].  ICANN has commissioned various
-   tests and has published an external test plan [ICANN2017].  After
-   some studies and data analysis, ICANN announced a postponing of the
-   KSK rollover at 27th September 2017.
 
    (DaveyNote: More background should be inserted here.  Should we
    introduce the basic concept of KSK rollover in the beginning of this
@@ -1114,14 +1106,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    new users after rolling the key.  It is very likely to happen for
    new-hands to operate their resolvers who may intuitively all the
    views can be inhered the managed key during KSK rollover.  In
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 20]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    addition, by checking the manual of BIND9.10.4-P2, it is said that
    unlike trusted-keys, managed-keys may only be set at the top level of
    named.conf, not within a view.  It gives an assumption that for each
@@ -1129,6 +1113,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    for senior engineers they may also encounter this problem.  After
    setting the managed-keys of new views, the DNSSEC validation works
    for this view.
+
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 20]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    This issue was reported in 25th DNS-OARC meeting to make it widely
    aware.  We suggest currently BIND multiple-view operation needs extra
@@ -1170,14 +1162,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    or truncation, a common approach is simply to ignore these messages
    when analyzing at pcap packet captures.  However, in the Yeti testbed
    we have been using DNS configurations where our servers return large
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 21]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    answers.  This means that we have a lot of fragmented IP packets and
    TCP.
 
@@ -1185,6 +1169,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    and:
 
    1.  Defragments any fragmented IP packets; and
+
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 21]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    2.  Extracts any DNS messages that it finds in TCP streams.
 
@@ -1227,13 +1219,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    The automated procedure followed by the hintUpdate tool is as
    follows.
 
-
-
-Song, et al.              Expires June 1, 2018                 [Page 22]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    1.  Use the local resolver to obtain a response to the query ./IN/NS;
 
    2.  Use the local resolver to obtain a set of IPv4 and IPv6 addresses
@@ -1241,6 +1226,13 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    3.  Validate all signatures obtained from the local resolvers, and
        confirm that all data is signed;
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 22]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    4.  Compare the data obtained to that contained within the currently-
        active hints file; if there are differences, rotate the old one
@@ -1281,6 +1273,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    more and more networks and applications are mitigating from IPv4 to
    Dual-stack network,and than IPv6-only.
 
+6.  IANA Considerations
+
+   This document requests no action of the IANA.
+
+7.  Acknowledgments
+
+   The editors would like to acknowledge the contributions of the
+   various and many subscribers to the Yeti DNS Project mailing lists,
 
 
 
@@ -1290,14 +1290,6 @@ Song, et al.              Expires June 1, 2018                 [Page 23]
 Internet-Draft              Yeti DNS Testbed               November 2017
 
 
-6.  IANA Considerations
-
-   This document requests no action of the IANA.
-
-7.  Acknowledgments
-
-   The editors would like to acknowledge the contributions of the
-   various and many subscribers to the Yeti DNS Project mailing lists,
    including the following people who were involved in the
    implementation and operation of the Yeti DNS testbed itself:
 
@@ -1334,18 +1326,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               DNS Response", draft-song-atr-large-resp-00 (work in
               progress), September 2017.
 
-
-
-
-
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 24]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    [I-D.taylor-v6ops-fragdrop]
               Jaeggli, J., Colitti, L., Kumari, W., Vyncke, E., Kaeo,
               M., and T. Taylor, "Why Operators Filter Fragments and
@@ -1357,6 +1337,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               May 2010, <http://www.root-dnssec.org/wp-
               content/uploads/2010/05/
               draft-icann-dnssec-keymgmt-01.txt>.
+
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 24]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    [ICANN2016]
               "Root Zone KSK Rollover Plan", 2016,
@@ -1395,13 +1383,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
               November 1987, <https://www.rfc-editor.org/info/rfc1035>.
 
-
-
-Song, et al.              Expires June 1, 2018                 [Page 25]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    [RFC1995]  Ohta, M., "Incremental Zone Transfer in DNS", RFC 1995,
               DOI 10.17487/RFC1995, August 1996,
               <https://www.rfc-editor.org/info/rfc1995>.
@@ -1413,6 +1394,13 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    [RFC2826]  Internet Architecture Board, "IAB Technical Comment on the
               Unique DNS Root", RFC 2826, DOI 10.17487/RFC2826, May
               2000, <https://www.rfc-editor.org/info/rfc2826>.
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 25]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    [RFC2845]  Vixie, P., Gudmundsson, O., Eastlake 3rd, D., and B.
               Wellington, "Secret Key Transaction Authentication for DNS
@@ -1451,13 +1439,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
               DOI 10.17487/RFC7872, June 2016,
               <https://www.rfc-editor.org/info/rfc7872>.
 
-
-
-Song, et al.              Expires June 1, 2018                 [Page 26]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    [RFC8109]  Koch, P., Larson, M., and P. Hoffman, "Initializing a DNS
               Resolver with Priming Queries", BCP 209, RFC 8109,
               DOI 10.17487/RFC8109, March 2017,
@@ -1465,6 +1446,17 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
    [RRL]      Vixie, P. and V. Schryver, "Response Rate Limiting (RRL)",
               June 2012, <http://www.redbarn.org/dns/ratelimits>.
+
+
+
+
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 26]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
 
    [RSSAC001]
               "Service Expectations of Root Servers", December 2015,
@@ -1506,14 +1498,6 @@ Appendix A.  Yeti-Root Hints File
    .                     3600000  IN   NS     yeti-ns.tisf.net
    yeti-ns.tisf.net      3600000  IN   AAAA   2001:559:8000::6
    .                     3600000  IN   NS     yeti-ns.wide.ad.jp
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 27]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    yeti-ns.wide.ad.jp    3600000  IN   AAAA   2001:200:1d9::35
    .                     3600000  IN   NS     yeti-ns.as59715.net
    yeti-ns.as59715.net   3600000  IN   AAAA   \
@@ -1522,6 +1506,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    dahu1.yeti.eu.org     3600000  IN   AAAA   \
                               2001:4b98:dc2:45:216:3eff:fe4b:8c5b
    .                     3600000  IN   NS     ns-yeti.bondis.org
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 27]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    ns-yeti.bondis.org    3600000  IN   AAAA   2a02:2810:0:405::250
    .                     3600000  IN   NS     yeti-ns.ix.ru
    yeti-ns.ix.ru         3600000  IN   AAAA   2001:6d0:6d06::53
@@ -1562,14 +1554,6 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    3f79bb7b435b05321651daefd374cd.yeti-dns.net \
                          3600000  IN   AAAA   2401:c900:1401:3b:c::6
    .                     3600000  IN   NS     \
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 28]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
                            xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c
    xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c \
                          3600000  IN   AAAA   2001:e30:1c1e:10::333
@@ -1578,6 +1562,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    .                     3600000  IN   NS     yeti-dns02.dnsworkshop.org
    yeti-dns02.dnsworkshop.org \
                          3600000  IN   AAAA   2001:19f0:0:1133::53
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 28]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
    .                     3600000  IN   NS     yeti.mind-dns.nl
    yeti.mind-dns.nl      3600000  IN   AAAA   2a02:990:100:b01::53:0
 
@@ -1618,14 +1610,6 @@ Appendix B.  Yeti-Root Server Priming Response
    .            86400 IN NS yeti-ns.switch.ch.
    .            86400 IN NS yeti-ns.as59715.net.
    .            86400 IN NS yeti-ns1.dns-lab.net.
-
-
-
-Song, et al.              Expires June 1, 2018                 [Page 29]
-
-Internet-Draft              Yeti DNS Testbed               November 2017
-
-
    .            86400 IN NS yeti-ns2.dns-lab.net.
    .            86400 IN NS yeti-ns3.dns-lab.net.
    .            86400 IN NS xn--r2bi1c.xn--h2bv6c0a.xn--h2brj9c.
@@ -1634,6 +1618,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    .            86400 IN NS 3f79bb7b435b05321651daefd374cd.yeti-dns.net.
    .            86400 IN NS ca978112ca1bbdcafac231b39a23dc.yeti-dns.net.
    .            86400 IN RRSIG NS 8 0 86400 (
+
+
+
+Song, et al.              Expires June 1, 2018                 [Page 29]
+
+Internet-Draft              Yeti DNS Testbed               November 2017
+
+
                             20171121050105 20171114050105 26253 .
                             FUvezvZgKtlLzQx2WKyg+D6dw/pITcbuZhzStZfg+LNa
                             DjLJ9oGIBTU1BuqTujKHdxQn0DcdFh9QE68EPs+93bZr
@@ -1659,6 +1651,14 @@ Internet-Draft              Yeti DNS Testbed               November 2017
 
 
 Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed
+
+
+
+
+
+
+
+
 
 
 

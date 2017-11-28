@@ -1029,41 +1029,29 @@
 	    mitigation.</t>
 	</section>
 
-        <section title="How IPv6-only Root serve IPv4 users?">
-	  <t>Although It is straightforward to setup the IPv6-only
-	    root, but it is unknown if it is practical for IPv6-only
-	    root to serve the production networks which are still
-	    largely speak only in IPv4. In Yeti DNS Testbed it is
-	    demonstrated that IPv6-only root can serve the Internet
-	    in a incremental approach, even for IPv4 network and
-	    users.</t>
+        <section title="Serving IPv4-only End-Users">
+          <t>Yeti resolvers have been successfully used by real-world
+            end-users for general name resolution within a number of
+            participant organisations, including resolution of names
+            to IPv4 addresses and resolution by IPv4-only end-user
+            devices.</t>
 
-          <t>It is intuitive to propose to update the resolver to
-	    dual-stack and configured it with hint file including
-	    IPv6 glues. The dual-stack resolver connects IPv6 root
-	    with IPv4-only or dual-stack end users. However, when
-	    we approached some partners who agreed to try IPv6-only
-	    root in experimental network, they normally do not want
-	    to give up the IPv4 root for redundancy reason due to
-	    unstable IPv6 network performance.  So it is adopted
-	    in campuses that one IPv4 resolver address (using current
-	    IPv4 addresses of A-M root) and one IPv6 resolver address
-	    (using Yeti root) are configured for their customer via
-	    DHCPv4 and DHCPv6 respectively. The end users can choose
-	    which DNS they use (normally IPv6 first or using Happy
-	    eyeballs). Ideally, the end users DNS traffic will
-	    largely be sent to the resolver consuming IPv6-only
-	    root when IPv6 is widely deployed.</t>
+          <t>Some participants, recognising the operational importance
+	    of reliability in resolver infrastructure and concerned
+	    about the stability of their IPv6 connectivity, chose
+	    to deploy Yeti resolvers in parallel to conventional
+	    resolvers, making both available to end-users. While
+	    the viability of this approach provides a useful data
+	    point, end-users using Yeti resolvers exclusively
+	    provided a better opportunity to identify and understand
+	    any failures in the Yeti DNS testbed infrastructure.</t>
 
-	  <t>For resolvers who resident in IPv4 only networks, they
-	    can forward the query to dual stack resolvers they have
-	    trust in.  Or they can configure the resolver with a
-	    hint file containing a set of IPv4 addresses which are
-	    mapped to IPv6 addresses of root in a IPv4/IPv6 translation
-	    devices. The query will be routed to the translation
-	    devices and forward in IPv6 to IPv6-only root. It is
-	    designed and going to be implemented in CERNET2 using
-	    IVI <xref target="RFC6219"/> technology.</t>
+          <t>Resolvers deployed in IPv4-only environments were
+	    able to join the Yeti DNS testbed by way of upstream,
+	    dual-stack Yeti resolvers, or in one case, in CERNET2,
+	    by assigning IPv4 addresses to Yeti-Root servers and
+	    mapping them in dual-stack IVI translation devices <xref
+	    target="RFC6219"/>.</t>
 	</section>
       </section>
 
