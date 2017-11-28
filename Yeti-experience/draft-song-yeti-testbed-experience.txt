@@ -1071,8 +1071,8 @@ Internet-Draft              Yeti DNS Testbed               November 2017
    The Root Zone KSK is expected to undergo a carefully-orchestrated
    rollover as described in [ICANN2016].  ICANN has commissioned various
    tests and has published an external test plan [ICANN2017].  After
-   some studies and data analysis, ICANN announced a postponing of the
-   KSK rollover at 27th September 2017.
+   some studies and data analysis, ICANN announced a postponement of the
+   KSK rollover on 27 September 2017.
 
    (DaveyNote: More background should be inserted here.  Should we
    introduce the basic concept of KSK rollover in the beginning of this
