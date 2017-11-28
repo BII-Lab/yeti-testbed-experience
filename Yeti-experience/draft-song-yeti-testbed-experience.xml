@@ -997,55 +997,36 @@
 	    that 37% of endpoints using IPv6-capable DNS resolver
 	    cannot receive a fragmented IPv6 response over UDP.</t>
 
-	  <t>To study the impact, RIPE Atlas probes are used to
-	    spot failures like timeout for DNSKEY queries via UDP.
-	    For each Yeti server, a Atlas measurement was setup
-	    asking for 100 IPv6-enabled probes from 5 regions, in
-	    each 2 hours sending DNS query for DNSKEY via UDP with
-	    DO bit set. An monitoring report during Yeti KSK rollover
-	    shows that statistically large packets will trigger
-	    higher failure rate (up to 7%) due to IPv6 fragmentation
-	    issues, which accordingly increase probability of retries
-	    and TCP fallback.  Even within 1500 bytes, when response
-	    size reaches 1414 bytes, the failure rate reaches around
-	    2%. Note that ICANN KSK rollover will produce packets
-	    exceeding 1414 Bytes.</t>
-
-	  <t>Regarding the large DNS response via UDP, some existing
-	    root servers (A, B, G and J) truncate the response once
-	    the large IPv6 packet surpasses 1280 octets. In Yeti
-	    DNS Testbed, there are two proposals are discussed and
-	    implemented in Yeti experiments.One proposal is called
-	    DNS fragments <xref target="I-D.muks-dns-message-fragments"/>
-	    which is to fragment the large response in DNS level.
-	    Another proposal is called DNS ATR <xref
-	    target="I-D.song-atr-large-resp"/> which introduces an
-	    simple improvement on authoritative server by replying
-	    additional truncated response just after the normal
-	    large response.</t>
+	  <t>To study the impact, RIPE Atlas probes were used.
+	    For each Yeti-Root server, an Atlas measurement was
+	    setup using 100 IPv6-enabled probes from five regions,
+	    sending a DNS query for ./IN/DNSKEY using UDP transport
+	    with DO=1. This measurement, when carried out concurrently
+	    with a Yeti KSK rollover, further exacerbating the
+	    potential for fragmentation, identified a 7% failure
+	    rate compared with a non-fragmented control. A failure
+	    rate of 2% was observed with response sizes of 1414
+	    octets, which was surprising given the expected prevalence
+	    of 1500-octet (Ethernet-framed) MTUs.</t>
 
 	  <t>The consequences of fragmentation were not limited to
-	    DNS Using UDP transport. There are two cases reported
-	    where some Yeti root servers failed to transfer the
-	    Yeti-Root zone from a DM. When checking the DM log file,
-	    it is found that some root servers experienced " socket
-	    is not connected" errors when they pulled the zone file.
-	    Further experimentation revealed that combinations of
-	    NetBSD 6.1, NetBSD 7.0RC1, FreeBSD 10.0, Debian 3.2 and
-	    VMWare ESXI 5.5 resulted in a high TCP MSS value of
-	    1440 octets being negotiated between client and server
-	    despite the presence of the IPV6_USE_MIN_MTU socket
-	    option, as described in <xref
+	    failures in delivering DNS responses over UDP transport.
+	    There were two cases where a Yeti-Root server
+	    failed to transfer the Yeti-Root zone from a DM. DM log
+            files revealed "socket is not connected" errors corresponding
+            to zone transfer requests. Further experimentation
+	    revealed that combinations of NetBSD 6.1, NetBSD 7.0RC1,
+	    FreeBSD 10.0, Debian 3.2 and VMWare ESXI 5.5 resulted
+	    in a high TCP MSS value of 1440 octets being negotiated
+	    between client and server despite the presence of the
+	    IPV6_USE_MIN_MTU socket option, as described in <xref
 	    target="I-D.andrews-tcp-and-ipv6-use-minmtu"/>. The
 	    mismatch appears to cause outbound segments greater in
-	    size than 1280 octets to be dropped before sending.</t>
-
-	  <t>One proposal to handle this issue is to change the
-	    Local TCP MSS to be 1220 (1280-ip6/tcp header)and advise
-	    it if IPV6_USE_MINMTU=1. Yeti root from WIDE and SWITCH
-	    set this during the test one year ago. Now at the time
-	    of writing, 3 out of 25 change the MSS setting in Yeti
-	    DNS Testbed.</t>
+	    size than 1280 octets to be dropped before sending.
+	    Setting the local TCP MSS to 1220 octets (chosen as
+	    1280-60, the size of the IPv6/TCP header with no other
+	    extension headers) was observed to be a pragmatic
+	    mitigation.</t>
 	</section>
 
         <section title="How IPv6-only Root serve IPv4 users?">
