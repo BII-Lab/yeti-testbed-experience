@@ -115,7 +115,7 @@
       </address>
     </author>
 
-    <author fullname="Dong Liu" initials="D." surname="Liu" role="editor">
+    <author fullname="Dong Liu" initials="D." surname="Liu">
       <organization>Beijing Internet Institute</organization>
       <address>
         <postal>
@@ -131,7 +131,7 @@
     </author>
 
 
-    <author fullname="Paul Vixie" initials="P." surname="Vixie" role="editor">
+    <author fullname="Paul Vixie" initials="P." surname="Vixie" >
       <organization>TISF</organization>
       <address>
         <postal>
@@ -146,7 +146,7 @@
       </address>
     </author>
 
-    <author fullname="Akira Kato" initials="" surname="Kato" role="editor">
+    <author fullname="Akira Kato" initials="" surname="Kato" >
       <organization>Keio University/WIDE Project</organization>
       <address>
         <postal>
@@ -161,7 +161,7 @@
       </address>
     </author>
 
-    <author fullname="Shane Kerr" initials="S." surname="Kerr" role="editor">
+    <author fullname="Shane Kerr" initials="S." surname="Kerr">
       <address>
         <postal>
           <street>Antoon Coolenlaan 41</street>
@@ -1201,7 +1201,7 @@
 
         <t>It is proved the worth of doing with a recovery mechanism
           out of band.  The experience during ICANN KSK rollover
-          and the final desiccation of postponing is due to a fact.
+          and the final decision of postponing is due to a fact.
           The fact is that even RFC5011 is implemented on resolvers,
           there are still many reasons causing the failure of KSK
           rollover.</t>
@@ -1517,7 +1517,7 @@
       </section>
 -->
     </section>
-
+<!--
     <section title="XXX Question for Davey XXX">
       <t>This conclusion doesn't seem to say anything that wasn't
         already described in greater detail in the document; I
@@ -1548,38 +1548,111 @@
         </list>
       </t>
     </section>
-
+-->
     <section title="Conclusion">
-      <t>Yeti DNS is designed as a live root testbed. It serves the
+            <t>Yeti DNS is designed as a live root testbed. It serves the
         root zone published by the IANA with only those structural
         modifications necessary to ensure its function as a testbed
         system. There are a list of questions and issues in the
         beginning of Yeti DNS testbed was built up. The experience
         of Yeti DNS did not answered all the issues, but it did
         give a clue from running such testbed with structural changes
-        to the root server system's infrastructure.</t>
+        to the root server system's infrastructure. </t>
 
-      <t>At the time of writing, Yeti DNS has been running in 
-        IPv6-only environment for two years. It is composed with 3
-        root zone Signers and 25 root servers. ZSK is increased to
-        2048 bits long and the KSK were rolled three times to test
-        against RFC5011.  In addition, more inherent dynamics was
-        observed due to its feature as a testbed. Though there are
-        some issues and bug reported, we did not discover any serious
-        issues blocking Yeti down. The credit should be given to
-        the redundancy and diversity of DNS system, which can be
-        extended in an alternative way. It shows the ability to run
+        <t>The feature of testbed and findings are listed briefly 
+        in the below:
+        <list style="symbols">
+            <t>Yeti DNS has been running in IPv6-only environment. Around 7% 
+              packets drop rate were observed due to large DNS response. No 
+              notable failures reported. </t>
+
+              <t>
+              There are two cases in Yeti testbed reported that some Yeti 
+              root servers failed to pull the zone during to the IPv6 fragments 
+              of large TCP segment. The TCP MSS for both DM and root server is 
+              1220 octets.
+              </t>
+
+             <t>Yeti DNS is composed with 3 root zone Signers and 25 root 
+              servers. Due to the weakness of IXFR in multiple Signers model. 
+              IXFR is turned off in 3 DMs. </t>
+
+            <t>
+              ZSK is increased to 2048 bits long and the KSK were rolled 
+              three times promptly to test against RFC5011. It is only 
+              founded that new views added in BIND9 during the rollover 
+              without configure the new KSK will be affected.</t>
+              
+            <t>
+              Yeti use normal domains for root servers. One finding is called
+              BIND9 glue issues. BIND9 server responses to priming queries 
+              doesn't give addresses for all of the servers in the additional 
+              section. It is not technically necessary, but resolvers expect 
+              this information to save additional queries. 
+            </t>
+            <t>
+              It is found that Knot 2.0 server perform the message compression 
+              on root. It means in a DNS message the name of root (a zero octet) 
+              is replaced by a pointer of 2 octets. 
+            </t>
+            <t>
+              Some tools are developed to fit the requirement of Yeti testbed: DNS 
+              fragment and DNS ATR for large DNS response issue, BIND9 Patch for 
+              glue issues, YmmV and IPv6 defrag for capturing and mirroring 
+              traffic. In addition a tool to facilitate automatic maintenance of 
+              hints files was created.
+            </t>
+        </list>
+      </t>
+
+
+      <t>Though there are some issues and bug reported, no serious issues 
+        are discovered blocking Yeti down. It shows the ability to run
         new experiments and ideas without breaking current production
         system. It also shows a ability of Yeti-style locally signed
-        root zone for pervasively distribution of signed root
-        zone.</t>
+        root zone for pervasively distribution of signed root zone. 
+      </t>
+      <t>
+        There are some areas listed below which is worth of future study 
+        base on the experience of Yeti testbed: 
+      <list style="symbols">
+        <t>
+        Priming Truncation and TCP-only Root. To measure the worst-possible case for priming  truncation by truncating all priming query answers. This should also give some insight into the usefulness of TCP-only DNS in general.
+        </t>
 
-      <t>As to the specific issues shown in Yeti DNS more study
-        should be done in these area. For example, evidence shows
-        that IPv6 fragmentation seems not gonna to work, especially
-        for DNS.  It will be urgent when more and more networks and
-        applications are mitigating from IPv4 to Dual-stack network,and
-        than IPv6-only.</t>
+        <t>
+         KSK ECDSA Roll. One possible way to reduce packet sizes is to change to an ecliptic curve for signing. ECDSA is a standard way of doing that in DNSSEC. While in principle this can be done separately for the KSK and the ZSK, the RIPE NCC has done research recently and discovered that some resolvers require that both KSK and ZSK use the same algorithm. This means that an algorithm roll also involves a KSK roll. Performing an algorithm roll at the root is an interesting challenge.
+        </t>
+
+        <t>
+         Sticky Notify for zone transfer.The IXFR issue in Yeti testbed stems 
+         from the fact that the slave has no preference and view each DM functional 
+         equivalent. The slave will pull the zone from whichever it receives 
+         the notify. To make IXFR workable for multiple signer case, it is more 
+         desirable that slave always sticky to one master until the zone transfer fail.  
+        </t>
+
+        <t>
+          Signature for Notify message. One security consideration mentioned in 
+          RFC1996 is that a NOTIFY request with a forged IP/UDP source address 
+          can cause a denial of service to the Master. It also true that the 
+          slave is also compromised during on-path attack without TSIG or any 
+          validation process for that notify. The master can encounter this 
+          issues by signing the Notify message to authenticate itself. 
+        </t>
+
+        <t>
+          Secure distribution of TSIG Key. TSIG uses shared secret keys and 
+          one-way hashing to provide authenticating DNS zone update. If more 
+          slaves added into the DNS system, there are more likely leakage of 
+          TSIG key to make the system weak. So some secure distribution of TSIG 
+          Key is worth of study and consideration for more open root system 
+          with more slaves.
+        </t>
+
+      </list>
+    </t>
+
 
 <!--
       <t>Yeti testbed was built to address includes IPv6-only
