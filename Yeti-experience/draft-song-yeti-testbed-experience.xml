@@ -1563,7 +1563,7 @@
         in the below:
         <list style="symbols">
             <t>Yeti DNS has been running in IPv6-only environment. Around 7% 
-              Packets drop rate were observed due to large DNS response. No 
+              packets drop rate were observed due to large DNS response. No 
               notable failures reported. </t>
 
               <t>
@@ -1594,16 +1594,6 @@
               It is found that Knot 2.0 server perform the message compression 
               on root. It means in a DNS message the name of root (a zero octet) 
               is replaced by a pointer of 2 octets. 
-            </t>
-            <t>
-              It is observed one server on Yeti testbed have some bugs on SOA 
-              update with more than 10 hours delay. It is running on Bundy 1.2.0
-              on FreeBSD 10.2-RELEASE.
-            </t>
-            <t>
-              In Yeti more dynamics was observed due to its feature as a testbed. 
-              A tool to facilitate automatic maintenance of hints files was therefore
-              created 
             </t>
             <t>
               Some tools are developed to fit the requirement of Yeti testbed: DNS 
