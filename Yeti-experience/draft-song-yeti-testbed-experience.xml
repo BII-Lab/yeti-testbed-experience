@@ -1201,7 +1201,7 @@
 
         <t>It is proved the worth of doing with a recovery mechanism
           out of band.  The experience during ICANN KSK rollover
-          and the final desiccation of postponing is due to a fact.
+          and the final decision of postponing is due to a fact.
           The fact is that even RFC5011 is implemented on resolvers,
           there are still many reasons causing the failure of KSK
           rollover.</t>
