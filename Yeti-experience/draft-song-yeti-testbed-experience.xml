@@ -1142,7 +1142,7 @@
         </section>
       </section>
 
-      <section title="XXX Question for Davey XXX">
+<!--      <section title="XXX Question for Davey XXX">
         <t>I need some help understanding what this next section
           is trying to say. As written right now, it looks like
           this section says:
@@ -1166,7 +1166,7 @@
           perhaps it is better to remove this whole section? There
           is not much substance here.</t>
       </section>
-
+-->
       <section title="DNSSEC experiences in Yeti DNS">
         <t>The Root Zone KSK is expected to undergo a
           carefully-orchestrated rollover as described in <xref
@@ -1176,49 +1176,43 @@
           ICANN announced a postponement of the KSK rollover on 27
           September 2017.</t>
 
-        <t>(DaveyNote: More background should be inserted here.
-          Should we introduce the basic concept of KSK rollover in
-          the beginning of this section. Or should we put some
-          concept introduction in the study areas?)</t>
-
         <t>During the period, tests were performed on KSK rollover
           and the planned approach was also modeled in the live
-          root Testbed.  There are mainly three rollover tests on
-          Yeti testbed.</t>
+          root Testbed. 
+        </t>
 
-        <t>The first Yeti KSK rollover (started at 2015-06-30) was
-          designed to simulate the worst case and to see how to
-          recover. In RFC5011 there is a 30-day hold-down timer
+        <t>Firstly a failure-case KSK rollover was performed. 
+          In RFC5011 there is a 30-day hold-down timer
           before inactivate the old key but it was deliberately
-          ignored. The rollover between the two keys was made in
-          one week after new key created. And the old key was deleted
-          in another week.  It is found that some clients (Unbound)
-          receive SERVFAILs because the new key was still in AddPend
-          state when old key was inactive.  To recover from failure,
-          the trusted key should be reset on the affected resolvers
-          manually by an alert administrator or by an out-of-band
-          automatic recovery process.</t>
+          ignored in the first rollover. It is found that some 
+          clients receive SERVFAILs. It is discussed that even 
+          RFC5011 is implemented on resolvers,there are still many 
+          reasons causing the failure of KSK rollover. To recover 
+          from failure, the trusted key should be reset on the 
+          affected resolvers manually by an alert administrator 
+          or by an out-of-band automatic recovery process.</t>
 
-        <t>It is proved the worth of doing with a recovery mechanism
-          out of band.  The experience during ICANN KSK rollover
-          and the final decision of postponing is due to a fact.
-          The fact is that even RFC5011 is implemented on resolvers,
-          there are still many reasons causing the failure of KSK
-          rollover.</t>
+        <t>The second Yeti KSK rollover was design with a similar 
+          phases to the ICANN's KSK rollover roll, although with 
+          different timings so that we can finish the roll faster and 
+          because we do not have the same strict timing constraints 
+          that ICANN does. Our "slot" will be 10 days long, and 
+          look like this:</t>
 
-        <t>The second Yeti KSK rollover (started at 2016-07-12) was
-          design for a simulation on the ICANN's KSK rollover. It
-          waited 30 days after a new KSK is published in the root
-          zone. Different from ICANN rollover plan, it revokes the
-          old key once the new key become active.  We don't want
-          to wait too long, so we shorten the time for key publish
-          and delete in server side.</t>
+        <texttable>
+          <ttcol> </ttcol><ttcol>19444</ttcol><ttcol>New Key</ttcol>
+          <c>slot 1</c><c>pub+sign</c><c> </c>
+          <c>slot 2,3,4,5</c><c>pub+sign</c><c>pub</c>
+          <c>slot 6,7</c><c>pub</c><c>pub+sign</c>
+          <c>slot 8</c><c>revoke</c><c>pub+sign</c>
+          <c>slot 9</c><c> </c><c>pub+sign</c>
+        </texttable>
 
-        <t>During the second KSK rolling test one bug was <xref
+        <t>During the second KSK rolling test one issue was <xref
           target="KROLL-ISSUE"/> spotted on one Yeti resolver (using
           BIND 9.10.4-p2). An resolver is used to configured with
           multiple views for different subnets before the KSK
-          rollover.  DNSSEC failures are reported once we added new
+          rollover. DNSSEC failures are reported once we added new
           view for new users after rolling the key. It is very
           likely to happen for new-hands to operate their resolvers
           who may intuitively all the views can be inhered the
@@ -1233,25 +1227,39 @@
           for this view.</t>
 
         <t>This issue was reported in 25th DNS-OARC meeting to make
-          it widely aware.  We suggest currently BIND multiple-view
+          it widely aware. We suggest currently BIND multiple-view
           operation needs extra guidance for RFC5011. The manage-keys
           should be set carefully during the KSK rollover for each
           view when the it is created. Afterwards ISC published a
-          report on this issue during KSK rollover for BIND users.</t>
+          report on this issue during KSK rollover for BIND users. (https://www.isc.org/blogs/2017-root-key-rollover-what-does-it-mean-for-bind-users/)</t>
 
-        <t>The third KSK rollover is started in 2017-03-02 after
-          the ZSK is increased to 2048 bits. The focus was put on
-          the monitoring and impact analysis of large DNS response
-          in Yeti testbed especially for DNSKEY queries. As it is
-          introduced in section 4.2.1, Yeti KSK rollover has issue
-          when large DNS response is generated and transmitted via
-          IPv6. A gloomy atmosphere in the community is observed
-          for DNS in IPv6-only environment.  In the authors' opinion
-          maybe it is time to consider different transmit protocol
-          for large DNS response, for example the DNSKEY query
-          during KSK rollover.</t>
+        <t>In addition large DNS response for DNSKEY query is generated 
+          and transmitted via IPv6. Although in theory there can be 8 keys 
+          (6 ZSK and 2 KSK) in DNSKEY RRset and many possible combinations, 
+          during KSK rollover experiment we actually observed 3 cases. 
+          <list style="symbols">
+          <t>3 ZSK and 2 KSK which produces DNSKEY response of 1975 octets;</t>
+          <t>3 ZSK and 1 KSK which produces DNSKEY response of 1414 octets;</t>
+          <t>2 ZSK and 1 KSK which produces DNSKEY response of 1139 octets;</t>
+        </list>
+        </t>
+        <t>It is because Three DMs roll their key independently. WIDE rolls 
+          its ZSK every month, TISF reuse WIDE ZSK and only BII rolled its key 
+          during Yeti KSK rollover. </t>
+
+          <t>As introduce in section 4.1.1, we use RIPE NCC Atlas probes to 
+            send queries(for DNSEKY RR). We counted the number of failures and 
+            number of total queries which are categorized according to the 
+            packets size. The statistic is shown as following table.</t>
+        <texttable>
+          <ttcol>Packet size</ttcol><ttcol>failures</ttcol><ttcol>total queries</ttcol><ttcol>Failure rate</ttcol>
+          <c>1139</c><c>274</c><c>64252</c><c>0.0042</c>
+          <c>1414</c><c>3141</c><c>126951</c><c>0.0247</c>
+          <c>1975</c><c>2920</c><c>42529</c><c> 0.0687</c>
+        </texttable>
       </section>
 
+<!--
       <section title="XXX Question for Davey XXX">
         <t>With reference to the following section on capture of
           large messages:</t>
@@ -1277,39 +1285,30 @@
           Yeti infrastructure that makes it more important to
           capture responses, perhaps that should be spelt out?</t>
       </section>
-
-      <section title="Capture of Large DNS Messages">
+-->
+      <section title="Capture of Large DNS Response">
 
         <t>Many DNS operators capture DNS packets for operational
           purposes, such as gathering statistics, tracking abuse,
-          and so on.  While in principle something designed for
-          logging DNS like dnstap might be better, in practice
-          capturing packets with an external tool and then storing
-          them in pcap format is much more common. These tools may
-          be something DNS-specific, like dnscap, or they may be a
-          generic tool like tcpdump.</t>
+          and so on. Most of them capture DNS queries, not responses.
+          While in Yeti testbed, responses are captured and processing 
+          by compared with responses from IANA (tool YmmV in Appendix D). </t>
+          
+          <t> 
+          DNSCAP is used to capture query and response in Yeti but pcap 
+          files usually contain the IP fragments as separate packets 
+          for large DNS response (Yeti DNS deliberately does that), which 
+          means that the DNS message is split up and cannot be easily 
+          parsed or otherwise processed. For DNS over 
+          TCP, it will be worse that a single message may be split over 
+          multiple TCP packets, or a single TCP packet may contain 
+          multiple messages. Since pcap is packet-oriented, it is 
+          difficult to get to the underlying DNS messages.</t>
 
-        <t>Yeti testbed captures DNS packets using dnscap to collect
-          all packet information. The problem with fragmentation
-          for pcap is that pcap files usually contain the IP fragments
-          as separate packets, which means that the DNS message is
-          split up and cannot be easily parsed or otherwise processed.
-          For DNS over TCP, it will be worse that a single message
-          may be split over multiple TCP packets, or a single TCP
-          packet may contain multiple messages. Since pcap is
-          packet-oriented, it is difficult to get to the underlying
-          DNS messages.</t>
 
-        <t>Since very few DNS messages are large enough to require
-          fragmentation or truncation, a common approach is simply
-          to ignore these messages when analyzing at pcap packet
-          captures. However, in the Yeti testbed we have been using
-          DNS configurations where our servers return large answers.
-          This means that we have a lot of fragmented IP packets
-          and TCP.</t>
-
-        <t>The approach that we took was to build a tool that takes
-          a pcap input and:
+          <t>To solve the problem, a tools called PcapParser was developed 
+            to reassembles fragmented UDP responses and recovers DNS messages 
+            from TCP streams.The approach that we took was to take a pcap input and:
 
           <list style="numbers">
             <t>Defragments any fragmented IP packets; and</t>
