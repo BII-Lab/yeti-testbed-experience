@@ -1259,49 +1259,33 @@
       </section>
 
       <section title="Capture of Large DNS Response">
+        <t>Packet capture is a common approach in production DNS
+	  systems where operators require fine-grained insight into
+	  traffic in order to understand production traffic. For
+	  authoritative servers, capture of inbound query traffic
+	  is often sufficient, since responses can be synthesised
+	  with knowledge of the zones being served at the time the
+	  query was received. Queries are generally small enough
+	  not to be fragmented, and even with TCP transport are
+	  generally packed within a single segment.</t>
 
-        <t>Many DNS operators capture DNS packets for operational
-          purposes, such as gathering statistics, tracking abuse,
-          and so on. Most of them capture DNS queries, not responses.
-          While in Yeti testbed, responses are captured and processing 
-          by compared with responses from IANA (tool YmmV in Appendix D). </t>
-          
-          <t> 
-          DNSCAP is used to capture query and response in Yeti but pcap 
-          files usually contain the IP fragments as separate packets 
-          for large DNS response (Yeti DNS deliberately does that), which 
-          means that the DNS message is split up and cannot be easily 
-          parsed or otherwise processed. For DNS over 
-          TCP, it will be worse that a single message may be split over 
-          multiple TCP packets, or a single TCP packet may contain 
-          multiple messages. Since pcap is packet-oriented, it is 
-          difficult to get to the underlying DNS messages.</t>
+        <t>The Yeti DNS testbed has different requirements; in
+          particular there is a desire to compare responses obtained
+          from the Yeti infrastructure with those received from the
+          Root Server System in response to a single query stream
+          (e.g. using YmmV as described in <xref target="Yeti_tools"/>).
+          Some Yeti-Root servers were capable of recovering complete DNS
+          messages from within nameservers, e.g. using dnstap; however,
+          not all servers provided that functionality and a consistent
+          approach was desirable.</t>
 
-
-          <t>To solve the problem, a tools called PcapParser was developed 
-            to reassembles fragmented UDP responses and recovers DNS messages 
-            from TCP streams.The approach that we took was to take a pcap input and:
-
-          <list style="numbers">
-            <t>Defragments any fragmented IP packets; and</t>
-            <t>Extracts any DNS messages that it finds in TCP streams.</t>
-          </list>
-
-          IP-format pcap was used, because that's what is used in
-          Yeti testbed. Ethernet framing information is not necessary,
-          for example. The output of this tool is a pcap file without
-          DNS in IP fragments or carried by TCP. Any non-DNS packets
-          are copied across unchanged (this may be useful for looking
-          at ICMP unreachable messages, for example). Any non-fragmented
-          UDP DNS packets are also copied unchanged.</t>
-
-        <t>Most of the "heavy lifting" of this processing is done
-          via Google's gopacket library. This allows us to read and
-          write pcap files, and also provides functionality for
-          IPv4 defragmentation as well as TCP reassembly. The library
-          did not support IPv6 defragmentation. We are pushing the
-          changes upstream, so hopefully these will be a part of
-          the base library soon.</t>
+	<t>The requirement passive capture of responses from the wire
+	  together with experiments that were expected (and in some
+	  cases designed) to trigger fragmentation and use of TCP
+	  transport led to the development of a new tool, PcapParser,
+	  to perform fragment and TCP stream reassembly from raw
+	  packet capture data. A brief description of PcapParser
+          is included in <xref target="Yeti_tools"/>.</t>
       </section>
 
       <section title="Automated Hints File Maintenance">
