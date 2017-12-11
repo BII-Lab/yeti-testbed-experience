@@ -293,7 +293,7 @@
         Server System.</t>
     </section>
 
-    <section title="Areas of Study">
+    <section title="Areas of Study" anchor="areas_of_study">
      <t>Examples of topics that the Yeti DNS Testbed was built to
        address are included below, each illustrated with indicative
        questions.</t>
@@ -919,7 +919,7 @@
       </section>
     </section>
 
-    <section title="Operational Experience with Yeti DNS Testbed">
+    <section title="Operational Experience with the Yeti DNS Testbed">
       <t>The following sections provide commentary on the operation
         and impact analyses of the Yeti-DNS Testbed described in
         <xref target="testbed"/>.  More detailed descriptions of
@@ -956,7 +956,7 @@
           to serve single-stack, IPv4-only end-user populations
           through the use of dual-stack Yeti resolvers.</t>
 
-        <section title="IPv6 Fragmentation">
+        <section title="IPv6 Fragmentation" anchor="v6frag">
           <t>In the Root Server System, structural changes with the
             potential to increase response sizes (and hence
             fragmentation, fallback to TCP transport or both) have
@@ -1055,7 +1055,7 @@
         </section>
       </section>
 
-      <section title="Zone Distribution">
+      <section title="Zone Distribution" anchor="zone_dist">
         <t>The Yeti DNS testbed makes use of multiple DMs to
           distribute the Yeti-Root zone, an approach that would
           allow the number of Yeti-Root servers to scale to a higher
@@ -1142,194 +1142,150 @@
         </section>
       </section>
 
-<!--      <section title="XXX Question for Davey XXX">
-        <t>I need some help understanding what this next section
-          is trying to say. As written right now, it looks like
-          this section says:
+      <section title="DNSSEC KSK Rollover" anchor="ksk_rollover">
+	<t>At the time of writing, the Root Zone KSK is expected
+	  to undergo a carefully-orchestrated rollover as described
+	  in <xref target="ICANN2016"/>. ICANN has commissioned
+	  various tests and has published an external test plan
+	  <xref target="ICANN2017"/>.</t>
 
-          <list style="numbers">
-            <t>A mistake was made with an RFC 5011 rollover, which
-              caused relying parties to break. The mistake was
-              identified and fixed.</t>
+        <t>Three related DNSSEC KSK rollover exercises were carried
+	  out on the Yeti DNS testbed, somewhat conncurrent with
+	  the planning and execution of the rollover in the root zone.
+          Brief descriptions of these exercises are included below.</t>
 
-            <t>A second KSK rollover was performed. Some relying
-              parties were badly configured and broke. They were
-              fixed.</t>
+        <section title="Failure-Case KSK Rollover">
+	  <t>The first KSK rollover that was executed on the Yeti
+	    DNS testbed deliberately ignored the 30-day hold-down
+	    timer specified in <xref target="RFC5011"/> before
+	    retiring the outgoing KSK.</t>
 
-            <t>A third KSK rollover was performed. We don't
-              describe what happened, but we imagine that large
-              responses were triggered during the process, which
-              might be a problem, maybe.</t>
-          </list>
+	  <t>It was confirmed that clients of some (but not all)
+	    validating Yeti resolvers experienced resolution failures
+	    (received SERVFAIL responses) following this change.
+	    Those resolvers required administrator intervention to
+	    install a functional trust anchor before resolution was
+	    restored.</t>
+        </section>
 
-          If that's all we have to say about DNSSEC in the testbed,
-          perhaps it is better to remove this whole section? There
-          is not much substance here.</t>
+        <section title="KSK Rollover vs. BIND9 Views">
+	  <t>The second Yeti KSK rollover was designed with similar
+	    phases to the ICANN's KSK rollover roll, although with
+	    modified timings to reduce the time required to complete
+	    the process. The "slot" used in this rollover was ten
+	    days long, as follows:</t>
+
+          <texttable>
+            <ttcol> </ttcol><ttcol>19444</ttcol><ttcol>New Key</ttcol>
+            <c>slot 1</c><c>pub+sign</c><c> </c>
+            <c>slot 2,3,4,5</c><c>pub+sign</c><c>pub</c>
+            <c>slot 6,7</c><c>pub</c><c>pub+sign</c>
+            <c>slot 8</c><c>revoke</c><c>pub+sign</c>
+            <c>slot 9</c><c> </c><c>pub+sign</c>
+          </texttable>
+
+          <t>During this rollover exercise, a problem was observed on
+	    one Yeti resolver that was running BIND 9.10.4-p2 <xref
+	    target="KROLL-ISSUE"/>. That resolver was configured
+	    with multiple views serving clients in different subnets
+	    at the time that the KSK rollover began. DNSSEC validation
+	    failures were observed following the completion of the
+	    KSK rollover, triggered by the addition of a new view,
+            intended to serve clients from a new subnet.</t>
+
+          <t>BIND 9.10 requires "managed-keys" configuration to be
+            specified in every view, a detail that was apparently not
+	    obvious to the operator in this case and which was
+	    subsequently highlighted by ISC in their general advice
+	    relating to KSK rollover in the root zone to users of
+	    BIND 9 <eref
+	    target="https://www.isc.org/blogs/2017-root-key-rollover-what-does-it-mean-for-bind-users/"/>.
+	    When the "managed-keys" configuration is present in
+	    every view that is configured to perform validation,
+	    trust anchors for all views are updated during a KSK
+	    rollover.</t>
+        </section>
+
+        <section title="Large Responses during KSK Rollover">
+	  <t>Since a KSK rollover necessarily involves the publication
+	    of outgoing and incoming public keys simultaneously,
+	    an increase in the size of DNSKEY responses is expected.
+	    The third KSK rollover carried out on the Yeti DNS
+	    testbed was accompanied by a concerted effort to observe
+	    response sizes and their impact on end-users.</t>
+
+	  <t>As described in <xref target="trans2"/>, in the Yeti
+	    DNS testbed each DM can maintain control of its own set
+	    of ZSKs, which can undergo rollover independently.
+	    During a KSK rollover where concurrent ZSK rollovers
+	    are executed by each of three DMs the maximum number
+	    of apex DNSKEY RRs present is eight (incoming and
+	    outcoming KSK, plus incoming and outgoing of each of
+	    three ZSKs).  In practice, however, such concurrency
+	    did not occur; only the BII ZSK was rolled during the
+	    KSK rollover, and hence only three DNSKEY RRSet
+	    configurations were observed:
+
+            <list style="symbols">
+              <t>3 ZSK and 2 KSK, DNSKEY response of 1975 octets;</t>
+              <t>3 ZSK and 1 KSK, DNSKEY response of 1414 octets; and</t>
+              <t>2 ZSK and 1 KSK, DNSKEY response of 1139 octets.</t>
+            </list>
+          </t>
+
+	  <t>RIPE Atlast probes were used as described in <xref
+	    target="v6frag"/> to send DNSKEY queries directly to
+	    Yeti-Root servers. The numbers of queries and failures
+	    were recorded and categorised according to the response
+	    sizes at the time the queries were sent. A summary of
+	    the results is as follows:</t>
+
+          <texttable>
+	    <ttcol>Response Size</ttcol><ttcol>Failures</ttcol><ttcol>Total
+	      Queries</ttcol><ttcol>Failure rate</ttcol>
+            <c>1139</c><c>274</c><c>64252</c><c>0.0042</c>
+            <c>1414</c><c>3141</c><c>126951</c><c>0.0247</c>
+            <c>1975</c><c>2920</c><c>42529</c><c> 0.0687</c>
+          </texttable>
+
+	  <t>The general approach illustrated briefly here provides
+	    a useful example of how the design of the Yeti DNS
+	    testbed, separate from the Root Server System but
+	    constructed as a live testbed on the Internet, facilitates
+	    the use of general-purpose active measurement facilities
+	    such as RIPE Atlas probes as well as internal passive
+	    measurement such as packet capture.</t>
+	</section>
       </section>
--->
-      <section title="DNSSEC experiences in Yeti DNS">
-        <t>The Root Zone KSK is expected to undergo a
-          carefully-orchestrated rollover as described in <xref
-          target="ICANN2016"/>. ICANN has commissioned various tests
-          and has published an external test plan <xref
-          target="ICANN2017"/>.  After some studies and data analysis,
-          ICANN announced a postponement of the KSK rollover on 27
-          September 2017.</t>
 
-        <t>During the period, tests were performed on KSK rollover
-          and the planned approach was also modeled in the live
-          root Testbed. 
-        </t>
-
-        <t>Firstly a failure-case KSK rollover was performed. 
-          In RFC5011 there is a 30-day hold-down timer
-          before inactivate the old key but it was deliberately
-          ignored in the first rollover. It is found that some 
-          clients receive SERVFAILs. It is discussed that even 
-          RFC5011 is implemented on resolvers,there are still many 
-          reasons causing the failure of KSK rollover. To recover 
-          from failure, the trusted key should be reset on the 
-          affected resolvers manually by an alert administrator 
-          or by an out-of-band automatic recovery process.</t>
-
-        <t>The second Yeti KSK rollover was design with a similar 
-          phases to the ICANN's KSK rollover roll, although with 
-          different timings so that we can finish the roll faster and 
-          because we do not have the same strict timing constraints 
-          that ICANN does. Our "slot" will be 10 days long, and 
-          look like this:</t>
-
-        <texttable>
-          <ttcol> </ttcol><ttcol>19444</ttcol><ttcol>New Key</ttcol>
-          <c>slot 1</c><c>pub+sign</c><c> </c>
-          <c>slot 2,3,4,5</c><c>pub+sign</c><c>pub</c>
-          <c>slot 6,7</c><c>pub</c><c>pub+sign</c>
-          <c>slot 8</c><c>revoke</c><c>pub+sign</c>
-          <c>slot 9</c><c> </c><c>pub+sign</c>
-        </texttable>
-
-        <t>During the second KSK rolling test one issue was <xref
-          target="KROLL-ISSUE"/> spotted on one Yeti resolver (using
-          BIND 9.10.4-p2). An resolver is used to configured with
-          multiple views for different subnets before the KSK
-          rollover. DNSSEC failures are reported once we added new
-          view for new users after rolling the key. It is very
-          likely to happen for new-hands to operate their resolvers
-          who may intuitively all the views can be inhered the
-          managed key during KSK rollover.  In addition, by checking
-          the manual of BIND9.10.4-P2, it is said that unlike
-          trusted-keys, managed-keys may only be set at the top
-          level of named.conf, not within a view.  It gives an
-          assumption that for each view, managed-key can not be set
-          per view in BIND. So it may happen for senior engineers
-          they may also encounter this problem. After setting the
-          managed-keys of new views, the DNSSEC validation works
-          for this view.</t>
-
-        <t>This issue was reported in 25th DNS-OARC meeting to make
-          it widely aware. We suggest currently BIND multiple-view
-          operation needs extra guidance for RFC5011. The manage-keys
-          should be set carefully during the KSK rollover for each
-          view when the it is created. Afterwards ISC published a
-          report on this issue during KSK rollover for BIND users. (https://www.isc.org/blogs/2017-root-key-rollover-what-does-it-mean-for-bind-users/)</t>
-
-        <t>In addition large DNS response for DNSKEY query is generated 
-          and transmitted via IPv6. Although in theory there can be 8 keys 
-          (6 ZSK and 2 KSK) in DNSKEY RRset and many possible combinations, 
-          during KSK rollover experiment we actually observed 3 cases. 
-          <list style="symbols">
-          <t>3 ZSK and 2 KSK which produces DNSKEY response of 1975 octets;</t>
-          <t>3 ZSK and 1 KSK which produces DNSKEY response of 1414 octets;</t>
-          <t>2 ZSK and 1 KSK which produces DNSKEY response of 1139 octets;</t>
-        </list>
-        </t>
-        <t>It is because Three DMs roll their key independently. WIDE rolls 
-          its ZSK every month, TISF reuse WIDE ZSK and only BII rolled its key 
-          during Yeti KSK rollover. </t>
-
-          <t>As introduce in section 4.1.1, we use RIPE NCC Atlas probes to 
-            send queries(for DNSEKY RR). We counted the number of failures and 
-            number of total queries which are categorized according to the 
-            packets size. The statistic is shown as following table.</t>
-        <texttable>
-          <ttcol>Packet size</ttcol><ttcol>failures</ttcol><ttcol>total queries</ttcol><ttcol>Failure rate</ttcol>
-          <c>1139</c><c>274</c><c>64252</c><c>0.0042</c>
-          <c>1414</c><c>3141</c><c>126951</c><c>0.0247</c>
-          <c>1975</c><c>2920</c><c>42529</c><c> 0.0687</c>
-        </texttable>
-      </section>
-
-<!--
-      <section title="XXX Question for Davey XXX">
-        <t>With reference to the following section on capture of
-          large messages:</t>
-
-        <t>The main reason operators are able to use generic packet
-          capture to sample or record active traffic without worrying
-          about fragmentation or TCP reassembly is that they capture
-          DNS queries, not responses. It is very unusual for a query
-          to be so big that it can't fit in a small DNS message,
-          and although there are various aspects of the Yeti project
-          that make large responses more prevalent, there is nothing
-          that would inflate queries.</t>
-
-        <t>I think it's entirely reasonable to mention the tool
-          written by BII that reassembles fragmented UDP responses
-          and recovers DNS messages from TCP streams, but I don't
-          see that the description belongs in the parent section
-          that discusses operational experiences. Perhaps recast
-          this as a description of a tool in <xref
-          target="Yeti_tools"/>?</t>
-
-        <t>On the other hand if there's something novel about the
-          Yeti infrastructure that makes it more important to
-          capture responses, perhaps that should be spelt out?</t>
-      </section>
--->
       <section title="Capture of Large DNS Response">
+        <t>Packet capture is a common approach in production DNS
+	  systems where operators require fine-grained insight into
+	  traffic in order to understand production traffic. For
+	  authoritative servers, capture of inbound query traffic
+	  is often sufficient, since responses can be synthesised
+	  with knowledge of the zones being served at the time the
+	  query was received. Queries are generally small enough
+	  not to be fragmented, and even with TCP transport are
+	  generally packed within a single segment.</t>
 
-        <t>Many DNS operators capture DNS packets for operational
-          purposes, such as gathering statistics, tracking abuse,
-          and so on. Most of them capture DNS queries, not responses.
-          While in Yeti testbed, responses are captured and processing 
-          by compared with responses from IANA (tool YmmV in Appendix D). </t>
-          
-          <t> 
-          DNSCAP is used to capture query and response in Yeti but pcap 
-          files usually contain the IP fragments as separate packets 
-          for large DNS response (Yeti DNS deliberately does that), which 
-          means that the DNS message is split up and cannot be easily 
-          parsed or otherwise processed. For DNS over 
-          TCP, it will be worse that a single message may be split over 
-          multiple TCP packets, or a single TCP packet may contain 
-          multiple messages. Since pcap is packet-oriented, it is 
-          difficult to get to the underlying DNS messages.</t>
+        <t>The Yeti DNS testbed has different requirements; in
+          particular there is a desire to compare responses obtained
+          from the Yeti infrastructure with those received from the
+          Root Server System in response to a single query stream
+          (e.g. using YmmV as described in <xref target="Yeti_tools"/>).
+          Some Yeti-Root servers were capable of recovering complete DNS
+          messages from within nameservers, e.g. using dnstap; however,
+          not all servers provided that functionality and a consistent
+          approach was desirable.</t>
 
-
-          <t>To solve the problem, a tools called PcapParser was developed 
-            to reassembles fragmented UDP responses and recovers DNS messages 
-            from TCP streams.The approach that we took was to take a pcap input and:
-
-          <list style="numbers">
-            <t>Defragments any fragmented IP packets; and</t>
-            <t>Extracts any DNS messages that it finds in TCP streams.</t>
-          </list>
-
-          IP-format pcap was used, because that's what is used in
-          Yeti testbed. Ethernet framing information is not necessary,
-          for example. The output of this tool is a pcap file without
-          DNS in IP fragments or carried by TCP. Any non-DNS packets
-          are copied across unchanged (this may be useful for looking
-          at ICMP unreachable messages, for example). Any non-fragmented
-          UDP DNS packets are also copied unchanged.</t>
-
-        <t>Most of the "heavy lifting" of this processing is done
-          via Google's gopacket library. This allows us to read and
-          write pcap files, and also provides functionality for
-          IPv4 defragmentation as well as TCP reassembly. The library
-          did not support IPv6 defragmentation. We are pushing the
-          changes upstream, so hopefully these will be a part of
-          the base library soon.</t>
+	<t>The requirement passive capture of responses from the wire
+	  together with experiments that were expected (and in some
+	  cases designed) to trigger fragmentation and use of TCP
+	  transport led to the development of a new tool, PcapParser,
+	  to perform fragment and TCP stream reassembly from raw
+	  packet capture data. A brief description of PcapParser
+          is included in <xref target="Yeti_tools"/>.</t>
       </section>
 
       <section title="Automated Hints File Maintenance">
@@ -1382,11 +1338,10 @@
           this tool functions as expected in that environment.</t>
       </section>
 
-<!-- Too trivial as an experience
-      <section title="Root Label Compression in Knot">
-        <t><xref target="RFC1035"/> specifies that domain names can
-          be compressed when encoded in DNS messages, being represented
-          as one of
+      <section title="Root Label Compression in Knot" anchor="knot_label">
+	<t><xref target="RFC1035"/> specifies that domain names can
+	  be compressed when encoded in DNS messages, being represented
+	  as one of
 
           <list style="numbers">
             <t>a sequence of labels ending in a zero octet;</t>
@@ -1399,7 +1354,7 @@
           The purpose of this flexibility is to reduce the size of
           domain names encoded in DNS messages.</t>
 
-        <t>It was observed that Yeti-Root Servers running knot 2.0
+        <t>It was observed that Yeti-Root Servers running Knot 2.0
           would compress the zero-length label (the root domain, often
           represented as ".") using a pointer to an earlier example.
           Although legal, this encoding increases the encoded size
@@ -1410,8 +1365,9 @@
           releases.</t>
       </section>
 
-      <section title="Increased ZSK Key Size">
-        <t>The ZSK key size used in the Yeti-DNS Testbed was initially
+<!--
+      <section title="Increased ZSK Key Size" anchor="zsk_size">
+        <t>The ZSK key size used in the Yeti-DNS testbed was initially
           1024 bits, consistent with the size of the ZSK used in
           the Root Zone at the time the Yeti DNS Project was started.
           It later became clear that the ZSK key size in the Root
@@ -1516,142 +1472,121 @@
       </section>
 -->
     </section>
-<!--
-    <section title="XXX Question for Davey XXX">
-      <t>This conclusion doesn't seem to say anything that wasn't
-        already described in greater detail in the document; I
-        don't see any actual conclusions here; it's more like a
-        repeat of the abstract.</t>
 
-      <t>If we are going to include a conclusion section I think
-        it would make sense to identify some more concrete
-        conclusions. Perhaps
+    <section title="Conclusions">
+      <t>Yeti DNS was designed and implemented as a live DNS root
+	system testbed. It serves a root zone ("Yeti-Root" in this
+	document) derived from the root zone root zone published
+	by the IANA with only those structural modifications necessary
+	to ensure its function in the testbed system. The Yeti DNS
+	testbed has proven to be a useful platform to address many
+	questions that would be challenging to answer using the
+	production Root Server System, such as those included in
+	<xref target="areas_of_study"/>.</t>
+
+      <t>Indicative findings following from the construction and
+        operation of the Yeti DNS testbed include:
 
         <list style="symbols">
-          <t>commentary on the practicalities of building a testbed
-            across the Internet, as an alternative to building a
-            captive environment within a segregated lab;</t>
+          <t>Operation in a pure IPv6-only environment; confirmation
+	    of a significant failure rate in the transmission of
+	    large responses (~7%), but no other persistent failures
+	    observed. Two cases in which Yeti-Root servers failed
+	    to retrieve the Yeti-Root zone due to fragmentation of
+	    TCP segments; mitigated by setting a TCP MSS of 1220
+	    octets (see <xref target="v6frag"/>).</t>
 
-          <t>observations about the way that the many participants
-            were coordinated across organisational boundaries and
-            time zones, the mechanisms that work and those that
-            did not;</t>
+          <t>Successful operation with three autonomous Yeti-Root zone
+	    signers and 25 Yeti-Root servers, and confirmation that
+	    IXFR is not an appropriate transfer mechanism of zones
+	    that are structurally incongruent across different
+	    transfer paths (see <xref target="zone_dist"/>).</t>
 
-          <t>any findings that are applicable to the real root
-            server system, and which might plausibly provide
-            useful data to future efforts to modify it;</t>
+	  <t>ZSK size increased to 2048 bits and multiple KSK
+	    rollovers executed to exercise RFC 5011 support in
+	    validating resolvers; identification of pitfalls relating
+	    to views in BIND9 when configured with "managed-keys"
+	    (see <xref target="ksk_rollover"/>).</t>
 
-          <t>any areas of future study prompted by experiences
-            with the Yeti testbed that might be worthy of
-            investigation.</t>
-        </list>
+	  <t>Use of natural (non-normalised) names for Yeti-Root
+	    servers exposed some differences between implementations
+            in the inclusion of additional-section glue in responses
+            to priming queries; however, despite this inefficiency,
+            Yeti resolvers were observed to function adequately
+            (see <xref target="naming"/>).</t>
+
+          <t>It was observed that Knot 2.0 performed label compression
+            on the root (empty) label. This results in an increased
+            encoding size for references to the root label, since a
+	    pointer is encoded as two octets whilst the root label
+	    itself only requires one (see <xref target="knot_label"/>).</t>
+
+	  <t>Some tools were developed in response to the operational
+	    experience of running and using the Yeti DNS testbed:
+	    DNS fragment and DNS ATR for large DNS responses, a
+	    BIND9 patch for additional section glue, YmmV and
+	    IPv6 defrag for capturing and mirroring traffic. In
+	    addition a tool to facilitate automatic maintenance
+	    of hints files was created (see <xref
+	    target="Yeti_tools"/>).</t>
+	</list>
       </t>
-    </section>
--->
-    <section title="Conclusion">
-            <t>Yeti DNS is designed as a live root testbed. It serves the
-        root zone published by the IANA with only those structural
-        modifications necessary to ensure its function as a testbed
-        system. There are a list of questions and issues in the
-        beginning of Yeti DNS testbed was built up. The experience
-        of Yeti DNS did not answered all the issues, but it did
-        give a clue from running such testbed with structural changes
-        to the root server system's infrastructure. </t>
 
-        <t>The feature of testbed and findings are listed briefly 
-        in the below:
+      <t>The Yeti DNS testbed was used only by end-users whose local
+        infrastructure providers had made the conscious decision to
+	do so, as is appropriate for an experimental, non-production
+        system. However, the service quality reported from end-users
+	of the system was high, in the main case indistinguishable
+	from that of the production Root Server System.</t>
+
+      <t>The experience gained during the operation of the Yeti DNS
+        testbed suggested several topics worthy of further study:
+
         <list style="symbols">
-            <t>Yeti DNS has been running in IPv6-only environment. Around 7% 
-              packets drop rate were observed due to large DNS response. No 
-              notable failures reported. </t>
+	  <t>Priming Truncation and TCP-only Yeti-Root servers:
+	    observe and measure the worst-possible case for priming
+	    truncation by responding with TC=1 to all priming queries
+	    received over UDP transport, forcing clients to retry
+	    using TCP. This should also give some insight into the
+	    usefulness of TCP-only DNS in general.</t>
 
-              <t>
-              There are two cases in Yeti testbed reported that some Yeti 
-              root servers failed to pull the zone during to the IPv6 fragments 
-              of large TCP segment. The TCP MSS for both DM and root server is 
-              1220 octets.
-              </t>
+	  <t>KSK ECDSA Rollover: one possible way to reduce DNSKEY
+	    response sizes is to change to an ecliptic curve signing
+	    algorithm. While in principle this can be done separately
+	    for the KSK and the ZSK, the RIPE NCC has done research
+	    recently and discovered that some resolvers require
+	    that both KSK and ZSK use the same algorithm. This means
+	    that an algorithm roll also involves a KSK roll.
+	    Performing an algorithm roll at the root would be an
+	    interesting challenge.</t>
 
-             <t>Yeti DNS is composed with 3 root zone Signers and 25 root 
-              servers. Due to the weakness of IXFR in multiple Signers model. 
-              IXFR is turned off in 3 DMs. </t>
+	  <t>Sticky Notify for zone transfer: the non-applicability of
+            IXFR as a zone transfer mechanism in the Yeti DNS testbed
+            could be mitigated by the implementation of a sticky
+            preference for master server for each slave, such that
+            an initial AXFR response could be followed up with IXFR
+	    requests without compromising zone integrity in the
+	    case (as with Yeti) that equivalent but incongruent
+	    versions of a zone are served by different masters.</t>
 
-            <t>
-              ZSK is increased to 2048 bits long and the KSK were rolled 
-              three times promptly to test against RFC5011. It is only 
-              founded that new views added in BIND9 during the rollover 
-              without configure the new KSK will be affected.</t>
-              
-            <t>
-              Yeti use normal domains for root servers. One finding is called
-              BIND9 glue issues. BIND9 server responses to priming queries 
-              doesn't give addresses for all of the servers in the additional 
-              section. It is not technically necessary, but resolvers expect 
-              this information to save additional queries. 
-            </t>
-            <t>
-              It is found that Knot 2.0 server perform the message compression 
-              on root. It means in a DNS message the name of root (a zero octet) 
-              is replaced by a pointer of 2 octets. 
-            </t>
-            <t>
-              Some tools are developed to fit the requirement of Yeti testbed: DNS 
-              fragment and DNS ATR for large DNS response issue, BIND9 Patch for 
-              glue issues, YmmV and IPv6 defrag for capturing and mirroring 
-              traffic. In addition a tool to facilitate automatic maintenance of 
-              hints files was created.
-            </t>
+	  <t>Signature for Notify message. One security consideration
+	    mentioned in RFC1996 is that a NOTIFY request with a
+	    forged IP/UDP source address can cause a denial of
+	    service to the Master. It also true that the slave is
+	    also compromised during on-path attack without TSIG or
+	    any validation process for that notify. The master can
+	    encounter this issues by signing the Notify message to
+	    authenticate itself. Such a facility could be implemented
+            and tested.</t>
+
+	  <t>Key distribution for zone transfer credentials: the use
+	    of a shared secret between slave and master requires
+            key distribution and management whose scaling properties
+            are not ideally suited to systems with large numbers of
+            transfer clients. Other approaches for key distribution
+            and authentication could be considered.</t>
         </list>
       </t>
-
-
-      <t>Though there are some issues and bug reported, no serious issues 
-        are discovered blocking Yeti down. It shows the ability to run
-        new experiments and ideas without breaking current production
-        system. It also shows a ability of Yeti-style locally signed
-        root zone for pervasively distribution of signed root zone. 
-      </t>
-      <t>
-        There are some areas listed below which is worth of future study 
-        base on the experience of Yeti testbed: 
-      <list style="symbols">
-        <t>
-        Priming Truncation and TCP-only Root. To measure the worst-possible case for priming  truncation by truncating all priming query answers. This should also give some insight into the usefulness of TCP-only DNS in general.
-        </t>
-
-        <t>
-         KSK ECDSA Roll. One possible way to reduce packet sizes is to change to an ecliptic curve for signing. ECDSA is a standard way of doing that in DNSSEC. While in principle this can be done separately for the KSK and the ZSK, the RIPE NCC has done research recently and discovered that some resolvers require that both KSK and ZSK use the same algorithm. This means that an algorithm roll also involves a KSK roll. Performing an algorithm roll at the root is an interesting challenge.
-        </t>
-
-        <t>
-         Sticky Notify for zone transfer.The IXFR issue in Yeti testbed stems 
-         from the fact that the slave has no preference and view each DM functional 
-         equivalent. The slave will pull the zone from whichever it receives 
-         the notify. To make IXFR workable for multiple signer case, it is more 
-         desirable that slave always sticky to one master until the zone transfer fail.  
-        </t>
-
-        <t>
-          Signature for Notify message. One security consideration mentioned in 
-          RFC1996 is that a NOTIFY request with a forged IP/UDP source address 
-          can cause a denial of service to the Master. It also true that the 
-          slave is also compromised during on-path attack without TSIG or any 
-          validation process for that notify. The master can encounter this 
-          issues by signing the Notify message to authenticate itself. 
-        </t>
-
-        <t>
-          Secure distribution of TSIG Key. TSIG uses shared secret keys and 
-          one-way hashing to provide authenticating DNS zone update. If more 
-          slaves added into the DNS system, there are more likely leakage of 
-          TSIG key to make the system weak. So some secure distribution of TSIG 
-          Key is worth of study and consideration for more open root system 
-          with more slaves.
-        </t>
-
-      </list>
-    </t>
-
 
 <!--
       <t>Yeti testbed was built to address includes IPv6-only
