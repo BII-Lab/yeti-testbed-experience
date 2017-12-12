@@ -738,7 +738,8 @@
           the priming process with a set of conventional recursive
           lookups in order to resolve addresses for each Yeti-Root
           server. The Yeti-Root Servers running NSD were observed
-          to return a fully-populated additional section.</t>
+          to return a fully-populated additional section (depending of
+	  course of the EDNS buffer size in use).</t>
 
         <t>Various approaches to normalize the composition of the
           priming response were considered, including:
@@ -932,8 +933,9 @@
       <section title="Viability of IPv6-Only Operation">
         <t>All Yeti-Root servers were deployed with IPv6 connectivity,
           and no IPv4 addresses for any Yeti-Root server were made
-          available (e.g. in the Yeti hints file). This implementation
-          decision constrained the Yeti-Root system to be v6-only.</t>
+          available (e.g. in the Yeti hints file, or in the DNS itself).
+          This implementation decision constrained the Yeti-Root system
+          to be v6-only.</t>
 
         <t>DNS implementations are generally adept at using both
           IPv4 and IPv6 when both are available. Servers that cannot
@@ -1150,7 +1152,7 @@
 	  <xref target="ICANN2017"/>.</t>
 
         <t>Three related DNSSEC KSK rollover exercises were carried
-	  out on the Yeti DNS testbed, somewhat conncurrent with
+	  out on the Yeti DNS testbed, somewhat concurrent with
 	  the planning and execution of the rollover in the root zone.
           Brief descriptions of these exercises are included below.</t>
 
@@ -1551,7 +1553,7 @@
 	    usefulness of TCP-only DNS in general.</t>
 
 	  <t>KSK ECDSA Rollover: one possible way to reduce DNSKEY
-	    response sizes is to change to an ecliptic curve signing
+	    response sizes is to change to an elliptic curve signing
 	    algorithm. While in principle this can be done separately
 	    for the KSK and the ZSK, the RIPE NCC has done research
 	    recently and discovered that some resolvers require
@@ -2103,11 +2105,13 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
         <c>2001:19f0:6c00::/38</c><c>Choopa, LLC</c><c>US</c>
         <c>2001:da8:205::/48</c><c>BJTU6-CERNET2</c><c>CN</c>
         <c>2001:62a::/31</c><c>Vienna University Computer Center</c><c>AT</c>
+        <c>2001:67c:217c::/48</c><c>AFNIC</c><c>FR</c>
         <c>2a02:2478::/32</c><c>Profitbricks GmbH</c><c>DE</c>
         <c>2001:1398:4::/48</c><c>BII</c><c>CN</c>
         <c>240c::/28</c><c>NIC Chile</c><c>CL</c>
         <c>2001:4490:dc4c::/46</c><c>NIB (National Internet Backbone)</c>
           <c>IN</c>
+        <c>2001:4b98::/32</c><c>Gandi</c><c>FR</c> 
         <c>2a02:aa8:0:2000::/52</c><c>T-Systems-Eltec</c><c>ES</c>
         <c>2a03:b240::/32</c><c>Netskin GmbH</c><c>CH</c>
         <c>2801:1a0::/42</c><c>Universidad de Ibague</c><c>CO</c>
