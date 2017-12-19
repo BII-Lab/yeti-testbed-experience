@@ -608,7 +608,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
    Changes in the Yeti-DNS Testbed infrastructure such as the addition
    or removal of Yeti-Root servers, renumbering Yeti-Root Servers or
-   DNSSEC key rollovers require coordinated changes to take place on all
+   DNSSEC key rollovers require coordinated actions to take place on all
    DMs.  The Yeti-DNS Testbed is subject to more frequent changes than
 
 
@@ -626,7 +626,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
    A repository of all service metadata involved in the operation of
    each DM was implemented as a dedicated git repository hosted at
-   github.com, a mechanism chosen since it was simple, transparent and
+   github.com, a mechanism chosen since it is simple, transparent and
    familiar to participants.  Requests to change the service metadata
    for a DM were submitted as pull requests from a fork of the
    corresponding repository; each DM operator reviewed pull requests and
@@ -766,12 +766,12 @@ Internet-Draft              Yeti DNS Testbed               December 2017
    | yeti.jhcloos.net.                   | jhcloos       | USA         |
    +-------------------------------------+---------------+-------------+
 
-   The current list of Yeti-Root server is made available to a
+   The current list of Yeti-Root servers is made available to a
    participating resolver first using a substitute hints file Appendix A
    and subsequently by the usual resolver priming process [RFC8109].
    All Yeti-Root servers are IPv6-only, foreshadowing a future IPv6-only
    Internet, and hence the Yeti-Root hints file contains no IPv4
-   addresses and the Yeti-Root zone contains no IPv4 glue.
+   addresses and the Yeti-Root zone contains no IPv4 glue records.
 
    At the time of writing, all root servers within the Root Server
    System serve the ROOT-SERVERS.NET zone in addition to the root zone,
@@ -916,7 +916,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
    was a part, and in the DNS frequently triggers a timeout.  It is
    known at this moment that only a limited number of security middle-
    box implementations support IPv6 fragments.  Some public measurements
-   and reports [I-D.taylor-v6ops-fragdrop] [RFC7872] shows that there is
+   and reports [I-D.taylor-v6ops-fragdrop] [RFC7872] show that there is
    notable packets drop rate due to the mistreatment of middle-box on
    IPv6 fragment.  One APNIC study [IPv6-frag-DNS] reported that 37% of
    endpoints using IPv6-capable DNS resolver cannot receive a fragmented
@@ -1155,7 +1155,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
    o  2 ZSK and 1 KSK, DNSKEY response of 1139 octets.
 
-   RIPE Atlast probes were used as described in Section 4.1.1 to send
+   RIPE Atlas probes were used as described in Section 4.1.1 to send
    DNSKEY queries directly to Yeti-Root servers.  The numbers of queries
    and failures were recorded and categorised according to the response
    sizes at the time the queries were sent.  A summary of the results is
@@ -1850,7 +1850,7 @@ Song, et al.              Expires June 15, 2018                [Page 33]
 Internet-Draft              Yeti DNS Testbed               December 2017
 
 
-   not by fragmented by the IP layer.  See <https://github.com/BII-Lab/
+   not be fragmented by the IP layer.  See <https://github.com/BII-Lab/
    DNS-layer-Fragmentation>.
 
    DNS_ATR is an implementation of DNS ATR, as described in
