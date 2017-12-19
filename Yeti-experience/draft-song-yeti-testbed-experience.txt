@@ -594,10 +594,10 @@ Internet-Draft              Yeti DNS Testbed               December 2017
    Each Yeti DM is configured with a full list of Yeti-Root Server
    addresses to send NOTIFY [RFC1996] messages to, which also forms the
    basis for an address-based access-control list for zone transfers.
-   Authentication by address could be replaced with more rigourous
+   Authentication by address could be replaced with more rigorous
    mechanisms (e.g. using Transaction Signatures (TSIG) [RFC2845]); this
    has not been done at the time of writing since the use of address-
-   based controls avoids the need for the distribution of shared secrets
+   based controls relieves the need for the distribution of shared secrets
    amongst the Yeti-Root Server Operators.
 
    Individual Yeti-Root Servers are configured with a full set of Yeti
