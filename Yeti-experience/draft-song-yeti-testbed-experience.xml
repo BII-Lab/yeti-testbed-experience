@@ -1244,9 +1244,9 @@
 	  <t>RIPE Atlas probes were used as described in <xref
 	    target="v6frag"/> to send DNSKEY queries directly to
 	    Yeti-Root servers. The numbers of queries and failures
-	    were recorded and categorised according to the response
+	    were recorded and categorized according to the response
 	    sizes at the time the queries were sent. A summary of
-            the results (<xref target="YetiLR">) is as follows:</t>
+            the results (<xref target="YetiLR"/>) is as follows:</t>
 
           <texttable>
 	    <ttcol>Response Size</ttcol><ttcol>Failures</ttcol><ttcol>Total
