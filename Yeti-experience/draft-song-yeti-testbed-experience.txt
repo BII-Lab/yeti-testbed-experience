@@ -5,12 +5,12 @@
 Internet Engineering Task Force (IETF)                      L. Song, Ed.
 Internet-Draft                                                    D. Liu
 Intended status: Informational                Beijing Internet Institute
-Expires: June 15, 2018                                          P. Vixie
+Expires: June 16, 2018                                          P. Vixie
                                                                     TISF
                                                                     Kato
                                             Keio University/WIDE Project
                                                                  S. Kerr
-                                                       December 12, 2017
+                                                       December 13, 2017
 
 
                             Yeti DNS Testbed
@@ -53,7 +53,7 @@ Abstract
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 1]
+Song, et al.              Expires June 16, 2018                 [Page 1]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -73,7 +73,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 15, 2018.
+   This Internet-Draft will expire on June 16, 2018.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 2]
+Song, et al.              Expires June 16, 2018                 [Page 2]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -165,7 +165,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 3]
+Song, et al.              Expires June 16, 2018                 [Page 3]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -221,7 +221,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 4]
+Song, et al.              Expires June 16, 2018                 [Page 4]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -277,7 +277,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 5]
+Song, et al.              Expires June 16, 2018                 [Page 5]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -333,7 +333,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 6]
+Song, et al.              Expires June 16, 2018                 [Page 6]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -389,7 +389,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 7]
+Song, et al.              Expires June 16, 2018                 [Page 7]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -445,7 +445,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 8]
+Song, et al.              Expires June 16, 2018                 [Page 8]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -501,7 +501,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                 [Page 9]
+Song, et al.              Expires June 16, 2018                 [Page 9]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -557,7 +557,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 10]
+Song, et al.              Expires June 16, 2018                [Page 10]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -613,7 +613,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 11]
+Song, et al.              Expires June 16, 2018                [Page 11]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -669,7 +669,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 12]
+Song, et al.              Expires June 16, 2018                [Page 12]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -725,7 +725,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 13]
+Song, et al.              Expires June 16, 2018                [Page 13]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -781,7 +781,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 14]
+Song, et al.              Expires June 16, 2018                [Page 14]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -837,7 +837,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 15]
+Song, et al.              Expires June 16, 2018                [Page 15]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -893,7 +893,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 16]
+Song, et al.              Expires June 16, 2018                [Page 16]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -949,7 +949,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 17]
+Song, et al.              Expires June 16, 2018                [Page 17]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1005,7 +1005,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 18]
+Song, et al.              Expires June 16, 2018                [Page 18]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1061,7 +1061,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 19]
+Song, et al.              Expires June 16, 2018                [Page 19]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1117,7 +1117,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 20]
+Song, et al.              Expires June 16, 2018                [Page 20]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1173,7 +1173,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 21]
+Song, et al.              Expires June 16, 2018                [Page 21]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1229,7 +1229,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 22]
+Song, et al.              Expires June 16, 2018                [Page 22]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1285,7 +1285,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 23]
+Song, et al.              Expires June 16, 2018                [Page 23]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1341,7 +1341,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 24]
+Song, et al.              Expires June 16, 2018                [Page 24]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1397,7 +1397,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 25]
+Song, et al.              Expires June 16, 2018                [Page 25]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1423,7 +1423,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
    Submissions Editorial Board, and of the following reviewers whose
    opinions helped improve the clarity of this document:
 
-      Subramanian Moonesamy, Joe Abley.
+      Subramanian Moonesamy, Joe Abley,Paul Mockapetris
 
 8.  References
 
@@ -1453,7 +1453,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 26]
+Song, et al.              Expires June 16, 2018                [Page 26]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1509,7 +1509,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 27]
+Song, et al.              Expires June 16, 2018                [Page 27]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1565,7 +1565,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 28]
+Song, et al.              Expires June 16, 2018                [Page 28]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1621,7 +1621,7 @@ Appendix A.  Yeti-Root Hints File
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 29]
+Song, et al.              Expires June 16, 2018                [Page 29]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1677,7 +1677,7 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 30]
+Song, et al.              Expires June 16, 2018                [Page 30]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1733,7 +1733,7 @@ Appendix B.  Yeti-Root Server Priming Response
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 31]
+Song, et al.              Expires June 16, 2018                [Page 31]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1789,7 +1789,7 @@ Appendix C.  Active IPv6 Prefixes in Yeti DNS testbed
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 32]
+Song, et al.              Expires June 16, 2018                [Page 32]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1845,7 +1845,7 @@ Appendix D.  Tools developed for Yeti DNS testbed
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 33]
+Song, et al.              Expires June 16, 2018                [Page 33]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1901,7 +1901,7 @@ Appendix F.  About This Document
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 34]
+Song, et al.              Expires June 16, 2018                [Page 34]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -1957,7 +1957,7 @@ F.2.2.  draft-song-yeti-testbed-experience-04
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 35]
+Song, et al.              Expires June 16, 2018                [Page 35]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -2013,7 +2013,7 @@ Authors' Addresses
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 36]
+Song, et al.              Expires June 16, 2018                [Page 36]
 
 Internet-Draft              Yeti DNS Testbed               December 2017
 
@@ -2069,4 +2069,4 @@ Internet-Draft              Yeti DNS Testbed               December 2017
 
 
 
-Song, et al.              Expires June 15, 2018                [Page 37]
+Song, et al.              Expires June 16, 2018                [Page 37]
