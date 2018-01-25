@@ -273,7 +273,7 @@
         Server system.  In particular, no delegation for any top-level
         zone is changed, added or removed from the IANA-published
         root zone to construct the root zone served by the Yeti
-        testbed system and changes in the root zone are reflected
+        testbed system, and changes in the root zone are reflected
         in the testbed in near real-time. In this document, for
         clarity, we refer to the zone derived from the IANA-published
         root zone as the Yeti-Root zone.</t>
@@ -291,6 +291,14 @@
         effective measurement and analysis, something that is
         difficult or simply impractical in the production Root
         Server System.</t>
+    </section>
+
+    <section title="Requirements Notation and Conventions">
+     <t>Through the document, any mention to "Root"  with
+       an uppercase R and without other prefix, refers to the
+       "IANA Root" systems used in the production Internet. Proper
+       mentions to the Yeti infrastructure will be prefixed with
+       "Yeti", like "Yeti-Root Zone", "Yeti-DNS", and so on.</t>
     </section>
 
     <section title="Areas of Study" anchor="areas_of_study">
@@ -398,7 +406,8 @@
        ^                   ^                    ^
        |  appropriate      |  Yeti-Root hints;  |  Yeti-Root zone
        `- resolver         `- Yeti-Root trust   `- with DNSKEY RRSet
-          configured          anchor               signed by Yeti-KSK
+          configured          anchor               signed by
+                                                   Yeti-Root KSK
 ]]>
         </artwork>
       </figure>
@@ -408,14 +417,14 @@
         consists of a list of names and addresses for the Yeti-Root
         servers (often referred to as a "hints file") that replaces
         the corresponding hints used for the production Root Server
-        System <xref target="yeti-hints"/>.  Resolvers also need
+        System (<xref target="yeti-hints"/>).  Resolvers also need
         to be configured with a DNSSEC trust anchor that corresponds
         to a KSK used in the Yeti DNS Project, in place of the
-        normal trust anchor set used for the root zone.</t>
+        normal trust anchor set used for the Root Zone.</t>
 
-      <t>The need for a Yeti-specific trust anchor in the resolver
-        stems from the need to make minimal changes to the root
-        zone, as retrieved from the IANA, to transform it into the
+      <t>The need for a Yeti-specific root trust anchor in the resolver
+        stems from the need to make minimal changes to the Root
+        Zone, as retrieved from the IANA, to transform it into the
         Yeti-Root zone that can be used in the testbed. Corresponding
         changes are required in the Yeti-Root hints file <xref
         target="yeti-hints"/>. Those changes would be properly
@@ -477,20 +486,20 @@
           target="RFC1996"/> messages from the Root Server System,
           a polling approach is used to determine when new revisions
           of the root zone are available from the production Root
-          Server System. Each Yeti DM requests the root zone SOA
-          record from a root server that permits unauthenticated
+          Server System. Each Yeti DM requests the Root Zone SOA
+          record from a Root server that permits unauthenticated
           zone transfers of the root zone, and performs a zone
           transfer from that server if the retrieved value of
           SOA.SERIAL is greater than that of the last retrieved
           zone.</t>
 
          <t>At the time of writing, unauthenticated zone transfers
-          of the root zone are available directly from B-Root,
+          of the Root Zone are available directly from B-Root,
           C-Root, F-Root, G-Root and K-Root, and from L-Root via
           the two servers XFR.CJR.DNS.ICANN.ORG and XFR.LAX.DNS.ICANN.ORG,
           as well as via FTP from sites maintained by the Root Zone
           Maintainer and the IANA Functions Operator. The Yeti DNS
-          Testbed retrieves the root zone from using zone transfers
+          Testbed retrieves the Root Zone using zone transfers
           from F-Root. The schedule on which F-Root is polled by
           each Yeti DM is as follows:</t>
 
@@ -569,7 +578,7 @@
 
               <t>The Yeti-Root Zone is signed: the NSEC chain is
                 regenerated; the Yeti KSK is used to sign the DNSKEY
-                RRSet, and the DM's local ZSK is used to sign every
+                RRSet, and the shared ZSK is used to sign every
                 other RRSet.</t>
             </list>
           </t>
@@ -585,7 +594,7 @@
             dedicated ZSK key pairs that are not shared with other
             DMs. A Yeti-Root DNSKEY RRSet is constructed and signed
             upstream of all DMs as the union of the set of active
-            KSKs and the set of active ZSKs for every individual
+            Yeti-Root KSKs and the set of active ZSKs for every individual
             DM. Each DM now only requires the secret part of its
             own dedicated ZSK key pairs to be available locally,
             and no other secret key material is shared. The high-level
@@ -624,7 +633,8 @@
 
           <t>Each DM carries out a similar transformation to that
             described in <xref target="trans1"/>, except that DMs
-            no longer need to modify or sign the DNSKEY RRSet.</t>
+            no longer need to modify or sign the DNSKEY RRSet, and
+            the DM's unique local ZSK is used to sign every other RRset.</t>
 
           <t>The Yeti-Root Zone served by any particular Yeti-Root
             Server will include signatures generated using the ZSK
@@ -652,7 +662,8 @@
             the NSEC chain from the Root Zone and all RRSIG RRs
             generated using the Root Zone's ZSKs. The DNSKEY RRSet
             would continue to be modified to replace the Root Zone
-            KSKs, and the Yeti KSK would be used to generate
+            KSKs, but Root Zone ZSKs will be kept intact, and the Yeti
+            KSK would be used to generate
             replacement signatures over the apex DNSKEY and NS
             RRSets. Source data would continue to flow from the
             Root Server System through the Hidden Master to the set
@@ -816,7 +827,7 @@
 
           <c>yeti-ns.switch.ch</c><c>SWITCH</c><c>Switzerland</c>
 
-          <c>yeti-ns.lab.nic.cl</c><c>CHILE NIC</c><c>Chile</c>
+          <c>yeti-ns.lab.nic.cl</c><c>NIC Chile</c><c>Chile</c>
 
           <c>yeti-ns1.dns-lab.net</c><c>BII</c><c>China</c>
 
@@ -851,7 +862,7 @@
           All Yeti-Root servers are IPv6-only, foreshadowing a
           future IPv6-only Internet, and hence the Yeti-Root hints
           file contains no IPv4 addresses and the Yeti-Root zone
-          contains no IPv4 glue.</t>
+          contains no IPv4 glues.</t>
 
         <t>At the time of writing, all root servers within the
           Root Server System serve the ROOT-SERVERS.NET zone in
@@ -1142,6 +1153,10 @@
             Yeti-Root zone, a delay in updating the Yeti-Root server
             would naturally result.</t>
         </section>
+
+        <section title="Mixed RRSIGs from different DM ZSKs">
+        </section>
+
       </section>
 
       <section title="DNSSEC KSK Rollover" anchor="ksk_rollover">
@@ -1235,12 +1250,12 @@
             </list>
           </t>
 
-	  <t>RIPE Atlast probes were used as described in <xref
+	  <t>RIPE Atlas probes were used as described in <xref
 	    target="v6frag"/> to send DNSKEY queries directly to
 	    Yeti-Root servers. The numbers of queries and failures
 	    were recorded and categorised according to the response
 	    sizes at the time the queries were sent. A summary of
-	    the results is as follows:</t>
+            the results (<xref target="YetiLR">) is as follows:</t>
 
           <texttable>
 	    <ttcol>Response Size</ttcol><ttcol>Failures</ttcol><ttcol>Total
@@ -1335,8 +1350,8 @@
 
         <t>This tool would not function unmodified when used in the
           Root Server System, since the names of individual Root
-          Servers (e.g. A.ROOT-SERVERS.NET) are not signed. All
-          Yeti-Root Server names are signed, however, and hence
+          Servers (e.g. A.ROOT-SERVERS.NET) are not DNSSEC signed. All
+          Yeti-Root Server names are DNSSEC signed, however, and hence
           this tool functions as expected in that environment.</t>
       </section>
 
@@ -1362,7 +1377,7 @@
           Although legal, this encoding increases the encoded size
           of the root label from one octet to two; it was also found
           to break some client software, in particular the Go DNS
-          library. Bug reports were filed against both knot and the
+          library. Bug reports were filed against both Knot and the
           Go DNS library, and both were resolved in subsequent
           releases.</t>
       </section>
@@ -1525,7 +1540,8 @@
 
 	  <t>Some tools were developed in response to the operational
 	    experience of running and using the Yeti DNS testbed:
-	    DNS fragment and DNS ATR for large DNS responses, a
+            DNS fragment and DNS Additional Truncated Response (ATR)
+            for large DNS responses, a
 	    BIND9 patch for additional section glue, YmmV and
 	    IPv6 defrag for capturing and mirroring traffic. In
 	    addition a tool to facilitate automatic maintenance
@@ -1599,7 +1615,7 @@
             Mickael Jouanne, Pierre Beyssac, Joao Damas, Pavel
             Khramtsov, Ma Yan, Otmar Lendl, Praveen Misra, Carsten
             Strotmann, Edwin Gomez, Remi Gacogne, Guillaume de Lafond,
-            Yves Bovard, Hugo Salgado-Hernandez, Li Zhen, Daobiao
+            Yves Bovard, Hugo Salgado, Li Zhen, Daobiao
             Gong, Runxia Wan.</t>
         </list>
       </t>
@@ -1762,6 +1778,15 @@
           <author fullname="Paul Vixie" initials="P." surname="Vixie"/>
           <author fullname="Vernon Schryver" initials="V." surname="Schryver"/>
           <date day="10" month="June" year="2012"/>
+        </front>
+      </reference>
+
+      <reference anchor="YetiLR"
+          target="http://yeti-dns.org/yeti/blog/2017/08/02/large-packet-impact-during-yeti-ksk-rollover.html">
+        <front>
+          <title>Observation on Large response issue during Yeti KSK rollover</title>
+          <author fullname="Davey Song"/>
+          <date day="2" month="August" year="2017"/>
         </front>
       </reference>
     </references>
@@ -1936,8 +1961,8 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
         <c>2001:62a::/31</c><c>Vienna University Computer Center</c><c>AT</c>
         <c>2001:67c:217c::/48</c><c>AFNIC</c><c>FR</c>
         <c>2a02:2478::/32</c><c>Profitbricks GmbH</c><c>DE</c>
-        <c>2001:1398:4::/48</c><c>BII</c><c>CN</c>
-        <c>240c::/28</c><c>NIC Chile</c><c>CL</c>
+        <c>2001:1398:1::/48</c><c>NIC Chile</c><c>CL</c>
+        <c>240c::/28</c><c>BII</c><c>CN</c>
         <c>2001:4490:dc4c::/46</c><c>NIB (National Internet Backbone)</c>
           <c>IN</c>
         <c>2001:4b98::/32</c><c>Gandi</c><c>FR</c> 
@@ -1973,7 +1998,8 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
         IP layer. See <eref
         target="https://github.com/BII-Lab/DNS-layer-Fragmentation"/>.</t>
 
-      <t>DNS_ATR is an implementation of DNS ATR, as described in
+      <t>DNS_ATR is an implementation of DNS Additional Truncated
+         Response (ATR), as described in
          <xref target="I-D.song-atr-large-resp"/>.  DNS_ATR acts
          as a proxy between resolver and authoritative servers,
          forwarding queries and responses as a silent and transparent
