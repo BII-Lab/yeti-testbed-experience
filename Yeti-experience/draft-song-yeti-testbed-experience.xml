@@ -847,7 +847,11 @@
           All Yeti-Root servers are IPv6-only, foreshadowing a
           future IPv6-only Internet, and hence the Yeti-Root hints
           file contains no IPv4 addresses and the Yeti-Root zone
-          contains no IPv4 glues.</t>
+          contains no IPv4 glues. Note that the rationale of 
+          IPv6-only testbed is to test whether IPv6-only root 
+          can survive or not. Any problem or impact when IPv4 
+          is turn off, much like the context of IETF sunset4 WG
+          (https://datatracker.ietf.org/wg/sunset4/about/).</t>
 
         <t>At the time of writing, all root servers within the
           Root Server System serve the ROOT-SERVERS.NET zone in
@@ -1133,9 +1137,9 @@
         <section title="Mixed RRSIGs from different DM ZSKs" anchor="Mixed">
 
           <t>The second approach doing the transformation of Root 
-            Zone to Yeti-Root Zone introduce a  situation that mixed 
-            RRSIGs from different DM ZSKs will be cached in one 
-            resolver.</t>
+            Zone to Yeti-Root Zone (<xref target="trans2"/>) 
+            introduce a situation that mixed RRSIGs from different 
+            DM ZSKs will be cached in one resolver.</t>
 
          <t>It is observed that the Yeti-Root Zone served by any 
             particular Yeti-Root Server will include signatures 
