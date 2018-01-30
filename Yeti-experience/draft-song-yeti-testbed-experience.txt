@@ -1075,8 +1075,8 @@ Internet-Draft              Yeti DNS Testbed                January 2018
 5.2.3.  Mixed RRSIGs from different DM ZSKs
 
    The second approach doing the transformation of Root Zone to Yeti-
-   Root Zone introduce a situation that mixed RRSIGs from different DM
-   ZSKs will be cached in one resolver.
+   Root Zone (Section 4.2.2) introduce a situation that mixed RRSIGs
+   from different DM ZSKs will be cached in one resolver.
 
    It is observed that the Yeti-Root Zone served by any particular Yeti-
    Root Server will include signatures generated using the ZSK from the
