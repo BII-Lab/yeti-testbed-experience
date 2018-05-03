@@ -36,6 +36,9 @@
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5890.xml">
   <!ENTITY RFC8109 SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8109.xml">
+  <!ENTITY RFC8324 SYSTEM
+    "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8324.xml">
+
 
   <!ENTITY I-D.muks-dns-message-fragments SYSTEM
     "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-muks-dns-message-fragments-00.xml">
@@ -94,7 +97,7 @@
 <?rfc comments="no" ?>
 <?rfc inline="yes" ?>
 
-<rfc category="info" docName="draft-song-yeti-testbed-experience-06"
+<rfc category="exp" docName="draft-song-yeti-testbed-experience-08"
     ipr="trust200902">
 
   <front>
@@ -182,37 +185,28 @@
     <!-- <keyword>dns</keyword> -->
 
     <abstract>
-      <t>The Internet's Domain Name System is designed and built 
-        on a single root, known as the Root Server System.</t>
+   <t>The Internet's Domain Name System is designed and built on a single
+   root, known as the Root Server System.</t>
 
-      <t>Yeti DNS is an experimental, non-production root server testbed 
-        that provides an environment where technical and operational 
-        experiments can safely be performed without risk to production 
-        root server infrastructure.This testbed has been used by a broad
-        community of participants to perform experiments that aim
-        to inform operations and future development of the production
-        DNS. Yeti DNS is an independently-coordinated project and
-        is not affiliated with ICANN, IANA or any Root Server
-        Operator.</t>
+   <t>Yeti DNS is an experimental, non-production root server testbed that
+   provides an environment where technical and operational experiments
+   can safely be performed without risk to production root server
+   infrastructure.  Yeti DNS is an independently-coordinated project and
+   is not affiliated with ICANN, IANA or any Root Server Operator.</t>
 
-      <t>The Yeti DNS testbed implementation includes various novel
-        and experimental components including IPv6-only transport,
-        independent, autonomous Zone Signing Key management, large
-        cryptographic keys and a large number of Yeti-Root
-        Servers names. These differences from the Root Server System have
-        operational consequences such as large responses to priming
-        queries and the coordination of a large pool of independent
-        operators; by deploying such a system globally but outside
-        the production DNS system, the Yeti DNS project provides
-        an opportunity to gain insight into those consequences
-        without threatening the stability of the DNS.</t>
+   <t>The Yeti DNS testbed implementation includes various novel and
+   experimental components.  These differences from the Root Server
+   System have operational consequences; by deploying such a system
+   globally but outside the production DNS system, the Yeti DNS project
+   provides an opportunity to gain insight into those consequences
+   without threatening the stability of the DNS.</t>
 
-      <t>This document neither addresses the relevant policies under
-        which the Root Server System is operated nor makes any
-        proposal for changing any aspect of its implementation or
-        operation. This document aims solely to document the technical
-        and operational experience of deploying a system which is
-        similar to but different from the Root Server System.</t>
+   <t>This document neither addresses the relevant policies under which the
+   Root Server System is operated nor makes any proposal for changing
+   any aspect of its implementation or operation.  This document aims
+   solely to document the technical and operational experience of
+   deploying a system which is similar to but different from the Root
+   Server System.</t>
     </abstract>
   </front>
 
@@ -237,8 +231,8 @@
         These projects created tremendous qualitative operational 
         change, and required impressive caution and study prior to 
         implementation.  They took place in parallel with the 
-        quantitative expansion or delegations for new TLDs. <eref
-        target="https://newgtlds.icann.org/"/>.</t>
+        quantitative expansion or delegations for <eref
+        target="https://newgtlds.icann.org/">new TLDs</eref>.</t>
 
       <t>Aspects of the operational structure of the Root Server
         System have been described in such documents as <xref
@@ -365,7 +359,7 @@
           <list style="symbols">
             <t>Is it practical to sign the Yeti-Root zone using multiple,
               independently-operated DNSSEC signers and multiple
-              corresponding ZSKs?</t>
+              corresponding Zone Signing Key(ZSK)?</t>
 
             <t>To what extent is <xref target="RFC5011"/>: "Automated 
             Updates of DNS Security (DNSSEC) Trust Anchors" supported by
@@ -465,12 +459,16 @@
                  ,--------------------V---------------------.
                  |            Yeti Stub Resolvers           |
                  `------------------------------------------'
+
+The three coordinators of Yeti DNS testbed : 
+BII : Beijing Internet Institute
+WIDE: Widely Integrated Distributed Environment Project
+TISF: A collaborative engineering and security project by Paul Vixie 
 ]]>
         </artwork>
       </figure>
 
-      <t>Note that the roots are not bound to DMs. DMs update their 
-        zone in a time schedule describe in section 3.1. Each of DMs 
+      <t>Note that the roots are not bound to Distribution Masters(DM). DMs update their zone in a time schedule describe in <xref target="retrieval"/> Each of DMs 
         who update the latest zone can send notify to all roots. 
         So the zone transfer can happened between any DM and any root. </t>
 
@@ -487,7 +485,7 @@
           target="RFC1996"/> messages from the Root Server System,
           a polling approach is used to determine when new revisions
           of the root zone are available from the production Root
-          Server System. Each Yeti DM requests the Root Zone SOA
+          Server System. Each Yeti DM requests the Root Zone Start of Authority(SOA)
           record from a Root server that permits unauthenticated
           zone transfers of the root zone, and performs a zone
           transfer from that server if the retrieved value of
@@ -536,7 +534,7 @@
 
         <t>A third approach has also been proposed, but not yet
           implemented. The motivations and changes implied by that
-          approach are described in <xref target="Mixed"/>.</t>
+          approach are described in <xref target="trans3"/>.</t>
 
         <section title="ZSK and KSK Key Sets Shared Between DMs"
           anchor="trans1">
@@ -564,7 +562,7 @@
   
               <t>All DNSKEY, RRSIG and NSEC records are removed.</t>
   
-              <t>The apex NS RRSet is removed, with the corresponding
+              <t>The apex Name Server(NS) RRSet is removed, with the corresponding
                 root server glue (A and AAAA) RRSets.</t>
 
               <t>A Yeti DNSKEY RRSet is added to the apex, comprising
@@ -642,24 +640,24 @@
          <section title="Preserving Root Zone NSEC Chain and ZSK RRSIGs"
           anchor="trans3">
           <t>A change to the transformation described in <xref
-            target="trans2"/> has been proposed that would preserve
-            the NSEC chain from the Root Zone and all RRSIG RRs
+            target="trans2"/> has been proposed as <eref target="http://yeti-dns.org/yeti/blog/2018/05/01/Experiment-plan-for-PINZ.html"> a Yeti 
+            experiment called PINZ</eref>which would preserve the 
+            NSEC chain from the Root Zone and all RRSIG RRs
             generated using the Root Zone's ZSKs. The DNSKEY RRSet
             would continue to be modified to replace the Root Zone
             KSKs, but Root Zone ZSKs will be kept intact, and the Yeti
-            KSK would be used to generate
-            replacement signatures over the apex DNSKEY and NS
-            RRSets. Source data would continue to flow from the
+            KSK would be used to generate replacement signatures over 
+            the apex DNSKEY and NS RRSets. Source data would continue to flow from the
             Root Server System through the Hidden Master to the set
             of DMs, but no DNSSEC operations would be required on
             the DMs and the source NSEC and most RRSIGs would remain
             intact.</t>
 
-          <t>This approach has been suggested in order to provide
-            cryptographically-verifiable confidence that no owner
-            name in the root zone had been changed in the process of
-            producing the Yeti-Root zone from the Root Zone, addressing
-            one of the concerns described in <xref target="controversy"/>
+          <t>This approach has been suggested in order to keep minimal 
+            changes from IANA root zone and provide cryptographically-verifiable 
+            confidence that no owner name in the root zone had been changed in 
+            the process of producing the Yeti-Root zone from the Root Zone, 
+            addressing one of the concerns described in <xref target="controversy"/>
             in a way that can be verified automatically.</t>
         </section>
  
@@ -670,7 +668,7 @@
           Server addresses to send NOTIFY <xref target="RFC1996"/>
           messages to, which also forms the basis for an address-based
           access-control list for zone transfers. Authentication
-          by address could be replaced with more rigourous mechanisms
+          by address could be replaced with more rigorous mechanisms
           (e.g. using Transaction Signatures (TSIG) <xref
           target="RFC2845"/>); this has not been done at the time
           of writing since the use of address-based controls avoids
@@ -678,7 +676,7 @@
           the Yeti-Root Server Operators.</t>
 
         <t>Individual Yeti-Root Servers are configured with a full
-          set of Yeti DM addresses to which SOA and AXFR queries
+          set of Yeti DM addresses to which SOA and Authoritative Transfer (AXFR) queries
           may be sent in the conventional manner.</t>
       </section>
 
@@ -721,7 +719,7 @@
           
           <t>
           More detailed information of DM Synchronization, please find 
-          the Yeti-DM-Sync-MZSK.md <eref target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Sync-MZSK.md"/> document in Yeti's GitHub repo. 
+          the <eref target="https://github.com/BII-Lab/Yeti-Project/blob/master/doc/Yeti-DM-Sync-MZSK.md">Yeti-DM-Sync-MZSK.md</eref> document in Yeti's GitHub repo. 
           </t>
 
       </section>
@@ -867,11 +865,10 @@
           All Yeti-Root servers are IPv6-only, foreshadowing a
           future IPv6-only Internet, and hence the Yeti-Root hints
           file contains no IPv4 addresses and the Yeti-Root zone
-          contains no IPv4 glues. Note that the rationale of 
-          IPv6-only testbed is to test whether IPv6-only root 
-          can survive or not. Any problem or impact when IPv4 
-          is turn off, much like the context of IETF sunset4 WG
-          (https://datatracker.ietf.org/wg/sunset4/about/).</t>
+          contains no IPv4 glues. Note that the rationale of an 
+          IPv6-only testbed is to test whether IPv6-only root can 
+          survive any problem or impact when IPv4 is turned off, much 
+          like the context of <eref target="https://datatracker.ietf.org/wg/sunset4/about/">IETF sunset4 WG</eref>.</t>
 
         <t>At the time of writing, all root servers within the
           Root Server System serve the ROOT-SERVERS.NET zone in
@@ -885,7 +882,7 @@
 
           <list style="symbols">
             <t>Platform: 18 of 25 Yeti-Root servers are implemented
-              on a VPS rather than bare metal.</t>
+              on a Virtual Private Server(VPS) rather than bare metal.</t>
 
             <t>Operating System: 15 Yeti-Root servers run
               on Linux (Ubuntu, Debian, CentOS, Red Hat and ArchLinux); 4
@@ -931,12 +928,11 @@
           visibility into DNS traffic.</t>
 
         <t>Traffic capture is performed on Yeti-Root servers using
-          either dnscap <eref
-          target="https://www.dns-oarc.net/tools/dnscap"/> or
-          pcapdump (part of the pcaputils Debian package <eref
-          target="https://packages.debian.org/sid/pcaputils"/>,
-          with a patch to facilitate triggered file upload <eref
-          target="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=545985"/>.
+          either <eref
+          target="https://www.dns-oarc.net/tools/dnscap">dnscap</eref> or
+          pcapdump (part of the <eref
+          target="https://packages.debian.org/sid/pcaputils">pcaputils Debian package</eref>,
+          with <eref target="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=545985">a patch to facilitate triggered file upload</eref>.
           PCAP-format files containing packet captures are uploaded
           using rsync to central storage.</t>
       </section>
@@ -946,11 +942,7 @@
       <t>The following sections provide commentary on the operation
         and impact analyses of the Yeti-DNS Testbed described in
         <xref target="testbed"/>.  More detailed descriptions of
-        observed phenomena are available in Yeti DNS mailing list
-        archives <eref
-        target="http://lists.yeti-dns.org/pipermail/discuss/"/> and
-        on the Yeti DNS blog <eref
-        target="https://yeti-dns.org/blog.html"/>.</t>
+        observed phenomena are available in <eref target="http://lists.yeti-dns.org/pipermail/discuss/">Yeti DNS mailing list archives </eref> and on the  <eref target="https://yeti-dns.org/blog.html">Yeti DNS blog</eref>.</t>
 
       <section title="Viability of IPv6-Only Operation">
         <t>All Yeti-Root servers were deployed with IPv6 connectivity,
@@ -1254,10 +1246,10 @@
           <t>BIND 9.10 requires "managed-keys" configuration to be
             specified in every view, a detail that was apparently not
 	    obvious to the operator in this case and which was
-	    subsequently highlighted by ISC in their general advice
+	    subsequently highlighted by ISC in their <eref
+      target="https://www.isc.org/blogs/2017-root-key-rollover-what-does-it-mean-for-bind-users/">general advice
 	    relating to KSK rollover in the root zone to users of
-	    BIND 9 <eref
-	    target="https://www.isc.org/blogs/2017-root-key-rollover-what-does-it-mean-for-bind-users/"/>.
+	    BIND 9 </eref>.
 	    When the "managed-keys" configuration is present in
 	    every view that is configured to perform validation,
 	    trust anchors for all views are updated during a KSK
@@ -1321,7 +1313,7 @@
 	  systems where operators require fine-grained insight into
 	  traffic in order to understand production traffic. For
 	  authoritative servers, capture of inbound query traffic
-	  is often sufficient, since responses can be synthesised
+	  is often sufficient, since responses can be synthesized
 	  with knowledge of the zones being served at the time the
 	  query was received. Queries are generally small enough
 	  not to be fragmented, and even with TCP transport are
@@ -1461,7 +1453,7 @@
 	    to views in BIND9 when configured with "managed-keys"
 	    (see <xref target="ksk_rollover"/>).</t>
 
-	  <t>Use of natural (non-normalised) names for Yeti-Root
+	  <t>Use of natural (non-normalized) names for Yeti-Root
 	    servers exposed some differences between implementations
             in the inclusion of additional-section glue in responses
             to priming queries; however, despite this inefficiency,
@@ -1531,6 +1523,11 @@
             are not ideally suited to systems with large numbers of
             transfer clients. Other approaches for key distribution
             and authentication could be considered.</t>
+
+     <t>In section 3.12 of <xref target="RFC8324"/>, a "Centrally Controlled Root" 
+        is viewed as a issue of DNS. It is interesting in future study to try and 
+        test some technical tools like <eref target="https://en.wikipedia.org/wiki/Blockchain">blockchain </eref> to to remove the technical 
+        requirement for a central authority over the root.</t>
         </list>
       </t>
 
@@ -1538,7 +1535,7 @@
     <section title="Security Considerations">
 
     <t>As introduced in <xref target="synch"/>,service metadata 
-      is synchronized among 3 DM using Git tool. Any security issue around 
+      is synchronized among 3 DMs using Git tool. Any security issue around 
       Git may affect Yeti DM operation. For example, hacker may compromise 
       one DM's git repository and push unwanted changes to Yeti DM system 
       which may introduce a bad root server or bad key for a period of time. 
@@ -1549,6 +1546,14 @@
       websites with a fake page, new resolver may lose its way and configured 
       with a bad root.</t>
 
+    <t>DNSSEC is an important research goal in Yeti DNS testbed. To reduce 
+      the central function of DNSSEC for Root zone, we sign the Yeti-Root 
+      zone using multiple, independently-operated DNSSEC signers and multiple 
+      corresponding ZSKs (see <xref target="transformation"/>). To verify 
+      ICANN's KSK rollover, we rolled the Yeti KSK three times according to 
+      RFC5011 and do have some observations(see <xref target="ksk_rollover"/>). 
+      In addition larger RSA key sizes was testbed before 2048-bits key was 
+      used in VeriSgin ZSK signing process.</t>
     </section>
     <section title="IANA Considerations">
       <t>This document requests no action of the IANA.</t>
@@ -1585,29 +1590,24 @@
   </middle>
 
   <back>
-    <references title="References">
-      &RFC1034;
-      &RFC1035;
-      &RFC1995;
-      &RFC1996;
+    <references title="Normative References">
+    &RFC1034; &RFC1035; &RFC1995; &RFC1996; &RFC5011; &RFC5890;
+
+    </references>
+    
+    <references title="Informative References">
       &RFC2826;
       &RFC2845;
-      &RFC5011;
-      &RFC5890;
-      <!-- &RFC5936; -->
       &RFC6219;
       &RFC6891;
       &RFC7720;
       &RFC7872;
       &RFC8109;
+      &RFC8324;
       &I-D.muks-dns-message-fragments;
-      <!-- &I-D.wkumari-dnsop-trust-management; -->
       &I-D.andrews-tcp-and-ipv6-use-minmtu;
-      <!-- &I-D.wessels-edns-key-tag; -->
-      <!-- &I-D.bortzmeyer-dname-root; -->
       &I-D.taylor-v6ops-fragdrop;
       &I-D.song-atr-large-resp;
-
       <reference anchor="ITI2014"
         target="https://www.icann.org/en/system/files/files/iti-report-15may14-en.pdf">
         <front>
@@ -1658,10 +1658,20 @@
             <front>
                 <title>Dealing with IPv6 fragmentation in the DNS</title>
                 <author fullname= "Goeff Huston">
-                  <organization></organization>
+                  <organization>APNIC</organization>
                   <address></address>
                 </author>
                 <date year="2017" month="August" day="22"/>
+            </front>
+     </reference>  
+     <reference anchor="How_ATR_work" target="https://blog.apnic.net/2018/04/16/how-well-does-atr-actually-work/">
+            <front>
+                <title>How well does ATR actually work?</title>
+                <author fullname= "Goeff Huston">
+                  <organization>APNIC</organization>
+                  <address></address>
+                </author>
+                <date year="2018" month="April  " day="16"/>
             </front>
      </reference>  
 
@@ -1951,7 +1961,7 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
 
       <t>DNS_ATR is an implementation of DNS Additional Truncated
          Response (ATR), as described in
-         <xref target="I-D.song-atr-large-resp"/>.  DNS_ATR acts
+         <xref target="I-D.song-atr-large-resp"/> <xref target="How_ATR_work"/>.  DNS_ATR acts
          as a proxy between resolver and authoritative servers,
          forwarding queries and responses as a silent and transparent
          listener. Responses that are larger than a nominated
@@ -2063,6 +2073,13 @@ yeti.mind-dns.nl.       86400 IN AAAA 2a02:990:100:b01::53:0
 
         <section title="draft-song-yeti-testbed-experience-06">
           <t>Conclusion; tools; editorial changes.</t>
+        </section>
+         <section title="draft-song-yeti-testbed-experience-07">
+          <t>Add section for requirements Notation and Conventions, 
+            editorial changes according to reviewers' comments.</t>
+        </section>
+        <section title="draft-song-yeti-testbed-experience-07">
+          <t>Editorial changes after ISE review.</t>
         </section>
       </section>
     </section>
